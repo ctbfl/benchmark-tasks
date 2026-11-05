@@ -5,6 +5,7 @@ from pathlib import Path
 
 import numpy as np
 from scipy.spatial.transform import Rotation
+from scoring import score_placement
 
 ROOT = Path(__file__).resolve().parent
 OUT = ROOT / "output/demo"
@@ -471,48 +472,10 @@ class Expert:
 
     def validate(self):
         surface = np.load(ROOT / "assets/iphone17pro/surface_points.npy")
-        samples = [r for r in self.rows if r["time"] > self.release_time]
-        heights, tilts = [], []
-        for row in samples:
-            rot = Rotation.from_quat(row["phone_quat"]).as_matrix()
-            heights.append(float((surface @ rot.T)[:, 2].min() + row["phone_pos"][2] - self.station.TABLE_TOP))
-            tilts.append(float(np.rad2deg(np.arccos(np.clip(abs(rot[2, 2]), 0, 1)))))
-        last = samples[-2 * HZ:]
-        phone_motion = float(np.linalg.norm(np.ptp([r["phone_pos"] for r in last], axis=0)))
-        cp, cr = self.body("cradle")
-        pp, pr = self.phone_pose()
-        local = (surface @ pr.T + pp - cp) @ cr
-        contacts = np.asarray([r["phone_contacts_N"] for r in samples])
-        pressing = [r["finger_force_N"][0][:2] for r in self.rows if r["phase"] == "rear panel lift"]
-        mean_press = np.mean(pressing, axis=0)
-        checks = {
-            "phone_angle_at_least_45": min(tilts) >= 45,
-            "phone_bottom_above_3cm": min(heights) > .03,
-            "phone_stable_last_2s": phone_motion < .002,
-            "phone_seated_in_tray": -.020 < local[:, 1].min() < -.015 and abs(((pp-cp) @ cr)[0]) < .008,
-            "phone_clear_of_table_and_robots": float(np.linalg.norm(contacts[:, 1:], axis=-1).max()) < .05,
-            "free_holder": not self.holder.is_fixed_base,
-            "holder_has_no_drives": bool((self.passive_view.get_dof_stiffnesses() == 0).all()),
-            "holder_has_no_actuation": bool((self.passive_view.get_dof_actuation_forces() == 0).all()),
-            "base_upright": max(r["base_tilt_deg"] for r in samples) < 4,
-            "holder_inside_red_tape": min(r["holder_frame_margin_m"] for r in self.rows) >= 0,
-            "holder_straight": max(abs(r["holder_heading_error_deg"]) for r in samples) < 2,
-            "phone_straight": max(abs(r["phone_heading_error_deg"]) for r in samples) < 2,
-            "phone_not_leaning_sideways": max(abs(r["phone_side_tilt_deg"]) for r in samples) < 2,
-            "two_left_fingers_press_base": mean_press.min() > 1,
-        }
-        checks = {name: bool(value) for name, value in checks.items()}
-        result = {"success": all(checks.values()), "checks": checks,
-                  "min_phone_angle_deg": min(tilts), "min_phone_bottom_height_m": min(heights),
-                  "phone_motion_last_2s_m": phone_motion, "release_time_s": self.release_time,
-                  "min_holder_frame_margin_m": min(r["holder_frame_margin_m"] for r in self.rows),
-                  "final_holder_heading_error_deg": samples[-1]["holder_heading_error_deg"],
-                  "final_phone_heading_error_deg": samples[-1]["phone_heading_error_deg"],
-                  "mean_left_press_contact_N": mean_press.tolist(),
-                  "final_holder_joint_angles_deg": self.angles().tolist()}
+        result = score_placement(self.rows[-1], surface, self.station.TABLE_TOP, self.step_id / HZ)
         (OUT / "result.json").write_text(json.dumps(result, indent=2) + "\n")
         print(json.dumps(result, indent=2), flush=True)
-        assert result["success"], checks
+        assert result["success"], result["checks"]
 
 
 def run():
@@ -520,7 +483,7 @@ def run():
     from yam_scene import make_env
 
     OUT.mkdir(parents=True, exist_ok=True)
-    for name in ("expert.py", "yam_scene.py", "camera_ready.py"):
+    for name in ("expert.py", "yam_scene.py", "camera_ready.py", "scoring.py"):
         (OUT / name).write_text((ROOT / name).read_text())
     env = make_env(control_hz=HZ, enable_cameras=RECORD_VIDEO, log_dir=OUT / "logs", use_fabric=True,
                    device="cpu", physics_dt=1 / 480)

@@ -15,6 +15,7 @@ import traceback
 
 import numpy as np
 from scipy.spatial.transform import Rotation
+from scoring import MAX_SECONDS, score_placement
 from inspect_robots import Action, Scene, StepResult, Task, eval as evaluate
 from inspect_robots_dream.policy import DreamPolicy
 from inspect_robots_dream.session import DreamSession
@@ -26,18 +27,8 @@ MODEL = "dreamlabs/dream-1-beta"
 CAMERAS = ("left_cam", "top_cam", "right_cam")
 CONTROL_HZ = 20
 PHYSICS_DT = 1 / 480
-MAX_SECONDS = 180
 MAX_STEPS = MAX_SECONDS * CONTROL_HZ
-STABLE_SECONDS = 10
-INSTRUCTION = (
-    "Unfold the phone holder and place the phone on it in portrait orientation. "
-    "The phone’s screen must be tilted at least 45 degrees above the tabletop, "
-    "and the lowest point of the phone must be more than 3 cm above the tabletop. "
-    "Leave the holder entirely inside the red masking-tape square. "
-    "Align the holder and phone with the square, with the phone centered on the holder "
-    "and its screen facing the robot. Release both objects and move both grippers away, "
-    "leaving the phone stably supported by the holder."
-)
+INSTRUCTION = json.loads((HERE / "task.json").read_text())["instruction"]
 
 
 def write_json(path, value):
@@ -96,8 +87,8 @@ class PhoneHolderEmbodiment(YamArenaEmbodiment):
             docs="\n\n".join((JOINT_GUIDE, ROOM_DOCS["station"], INSTRUCTION)))
         self.out, self.record, self.app, self.camera = out, record, None, None
         self.phase = "Dream-1 evaluation"
-        self.physics_ticks, self.control_steps, self.held_steps = 0, 0, 0
-        self.last_info, self.rows = {}, []
+        self.physics_ticks, self.control_steps = 0, 0
+        self.last_info = {}
         self.state_file = (out / "physics-f64.bin").open("xb")
         self.actions_file = (out / "executed-actions.jsonl").open("x")
         self.measurements = (out / "measurements.jsonl").open("x")
@@ -207,9 +198,6 @@ class PhoneHolderEmbodiment(YamArenaEmbodiment):
         pp, pr = m.phone_pose()
         bp, br = m.body("base")
         surface_w = self.surface @ pr.T + pp
-        local = (surface_w - cp) @ cr
-        angle = float(np.rad2deg(np.arccos(np.clip(abs(pr[2, 2]), 0, 1))))
-        height = float(surface_w[:, 2].min() - m.station.TABLE_TOP)
         hand_force = max(float(view.get_contact_force_matrix(PHYSICS_DT).norm(dim=-1).max())
                          for view in (self.holder_hands, self.phone_hands))
         holder_points = np.concatenate([local @ m.body(name)[1].T + m.body(name)[0]
@@ -220,7 +208,6 @@ class PhoneHolderEmbodiment(YamArenaEmbodiment):
         phone_contacts = m.phone_contacts.get_contact_force_matrix(PHYSICS_DT)[0].cpu().numpy()
         row = dict(time_s=self._t, control_steps=self.control_steps,
             joints_deg=m.angles().tolist(), panel_angle_deg=m.panel_angle(),
-            phone_angle_deg=angle, phone_bottom_height_m=height,
             phone_pos=pp.tolist(), phone_quat=Rotation.from_matrix(pr).as_quat().tolist(),
             base_pos=bp.tolist(), cradle_pos=cp.tolist(), cradle_quat=Rotation.from_matrix(cr).as_quat().tolist(),
             holder_frame_margin_m=m.frame_margin(), holder_heading_error_deg=m.heading_error(cr),
@@ -229,24 +216,7 @@ class PhoneHolderEmbodiment(YamArenaEmbodiment):
             base_tilt_deg=float(np.rad2deg(np.arccos(np.clip(br[2, 2], -1, 1)))),
             hand_contact_N=hand_force, gripper_clearance_m=clearance,
             phone_contacts_N=phone_contacts.tolist())
-        checks = dict(phone_angle_at_least_45=angle >= 45, phone_bottom_above_3cm=height > .03,
-            phone_seated_in_tray=-.020 < local[:, 1].min() < -.015 and abs(((pp-cp) @ cr)[0]) < .008,
-            holder_inside_red_tape=row["holder_frame_margin_m"] >= 0,
-            holder_straight=abs(row["holder_heading_error_deg"]) < 2,
-            phone_straight=abs(row["phone_heading_error_deg"]) < 2,
-            phone_not_leaning_sideways=abs(row["phone_side_tilt_deg"]) < 2,
-            phone_portrait_facing_robot=pr[2, 1] > 0 and pr[0, 2] < 0,
-            base_upright=row["base_tilt_deg"] < 4,
-            hands_clear=hand_force < .05 and clearance > .03,
-            phone_clear_of_table=np.linalg.norm(phone_contacts[1]) < .05)
-        self.held_steps = self.held_steps + 1 if all(checks.values()) else 0
-        window = self.rows[-(2 * CONTROL_HZ - 1):] + [row]
-        motion = float(np.linalg.norm(np.ptp([r["phone_pos"] for r in window], axis=0)))
-        checks["phone_stable_last_2s"] = len(window) == 2 * CONTROL_HZ and motion < .002
-        checks["hands_off_conditions_held_10s"] = self.held_steps >= STABLE_SECONDS * CONTROL_HZ
-        row.update(checks={k: bool(v) for k, v in checks.items()},
-                   success=bool(all(checks.values())), phone_motion_last_2s_m=motion,
-                   held_s=self.held_steps / CONTROL_HZ)
+        row.update(score_placement(row, self.surface, m.station.TABLE_TOP, self._t))
         return row
 
     def step(self, action):
@@ -270,14 +240,13 @@ class PhoneHolderEmbodiment(YamArenaEmbodiment):
         self.state_file.flush()
         os.fsync(self.state_file.fileno())
         self.last_info = self.measure()
-        self.rows.append(self.last_info)
         append_json(self.measurements, self.last_info)
         if self.control_steps % (5 * CONTROL_HZ) == 0:
             write_json(self.out / "progress.json", self.last_info)
             print(f"Trial {self._t:.1f}s: panel={self.last_info['panel_angle_deg']:.1f} deg, "
                   f"phone={self.last_info['phone_angle_deg']:.1f} deg / "
                   f"{1000*self.last_info['phone_bottom_height_m']:.1f} mm, "
-                  f"contained={self.last_info['checks']['holder_inside_red_tape']}, "
+                  f"placed={self.last_info['checks']['phone_placed_on_holder']}, "
                   f"success={self.last_info['success']}", flush=True)
         return StepResult(observation=self.capture(), terminated=self.last_info["success"],
             termination_reason="success" if self.last_info["success"] else None,
@@ -325,12 +294,12 @@ def main():
     out.mkdir(parents=True)
     source = out / "source"
     source.mkdir()
-    for name in ("dream_eval.py", "expert.py", "yam_scene.py", "camera_ready.py"):
+    for name in ("dream_eval.py", "expert.py", "yam_scene.py", "camera_ready.py", "scoring.py", "task.json"):
         shutil.copy2(HERE / name, source / name)
     shutil.copytree(HERE / "assets", source / "assets")
     write_json(out / "run.json", dict(model=MODEL, check_only=check_only, instruction=INSTRUCTION,
         max_steps=MAX_STEPS, max_seconds=MAX_SECONDS, control_hz=CONTROL_HZ, physics_dt=PHYSICS_DT,
-        stable_seconds=STABLE_SECONDS, camera_size=[640, 360], model_input_size=[320, 176],
+        camera_size=[640, 360], model_input_size=[320, 176],
         seed=0, renderer="RealTimePathTracing", scorer="success_at_end", layout="fixed YAM station",
         input_state_keys=["joint_pos"], input_cameras=list(CAMERAS),
         source_sha256={p.name: hashlib.sha256(p.read_bytes()).hexdigest() for p in source.glob("*.py")},

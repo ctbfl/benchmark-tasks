@@ -1,6 +1,6 @@
 # Unfold a phone holder and dock a phone
 
-Unfold a freely resting phone holder and place a phone upright on it. The phone must remain above the table at an angle of at least 45 degrees, with the holder inside the red tape square. See [task.json](task.json) for the complete setup and scoring criteria.
+Unfold a freely resting phone holder and place a phone on it. Success requires a released phone supported by the holder, screen tilt of at least 45 degrees, phone bottom more than 3 cm above the table, and holder/phone yaw errors of at most 30 degrees relative to the red square. See [task.json](task.json) for the setup and scoring criteria.
 
 Use the [YAM Arena setup](https://github.com/kairosiann/yam-isaac-lab-arena/tree/bd62771e60320433893bd1d2df0fc79b5ddcd6d1) to install the simulator, calibrated workstation and robot assets. Tested versions: Python 3.12, Isaac Sim 6.1, Isaac Lab 17.0.2, IsaacLab Arena 0.3.0 and YAM Arena 0.1.0. A supported NVIDIA GPU is required.
 
