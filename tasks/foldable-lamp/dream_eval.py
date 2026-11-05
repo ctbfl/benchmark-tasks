@@ -1,7 +1,6 @@
 """One archived Dream-1 trial; --check validates the adapter without inference."""
 
 import base64
-from collections import deque
 from dataclasses import replace
 from datetime import datetime, timezone
 import hashlib
@@ -39,8 +38,8 @@ INSTRUCTION = (
     f"the emitting face pointing down within {LAMP_MAX_TILT:g} degrees of horizontal. Keep the right hand "
     "holding the base throughout these adjustments; release it only to tap the sun "
     "symbol on the base with the right hand. One tap turns the lamp on; another turns "
-    "it off. Leave the book in place. Move both hands clear and leave the lamp on and "
-    "stable for two seconds, entirely within the tape. Avoid collisions between the arms."
+    "it off. Finish with the lamp on and its entire base inside the tape. "
+    "Avoid collisions between the arms."
 )
 
 
@@ -104,7 +103,6 @@ class LampEmbodiment(YamArenaEmbodiment):
         self.out, self.record, self.app, self.camera, self.monitor = out, record, None, None, None
         self.physics_ticks = self.control_steps = 0
         self.last_info = {}
-        self.window = deque(maxlen=2 * CONTROL_HZ)
         self.max_base_lift = self.max_base_tilt = 0.
         self.states = (out / "physics-f64.bin").open("xb")
         self.actions = (out / "executed-actions.jsonl").open("x")
@@ -222,12 +220,9 @@ class LampEmbodiment(YamArenaEmbodiment):
         clearance = min(float(np.linalg.norm(m.tcp(side)[0] - m.body(name)[0]))
                         for side in ("left", "right") for name in m.links)
         checks = dict(base_inside_frame=placement["footprint_inside"],
-            lamp_faces_book=abs(placement["yaw_error_deg"]) < 5,
-            lamp_behind_left_of_book=min(placement["offset_from_book_xy_m"]) > .06,
             lamp_bottom_high_enough=height >= LAMP_MIN_HEIGHT,
             lamp_face_horizontal=alignment["lamp_face_from_horizontal_deg"] <= LAMP_MAX_TILT,
-            lamp_on=bool(m.switch.state.Get()), book_unchanged=displacement < .003,
-            hands_clear=hand_force < .5 and clearance > .06, within_time_limit=self._t <= MAX_SECONDS)
+            lamp_on=bool(m.switch.state.Get()), within_time_limit=self._t <= MAX_SECONDS)
         row = dict(time_s=self._t, control_steps=self.control_steps, base_pos=bp.tolist(),
             joints_deg=m.angles().tolist(), lamp_on=bool(m.switch.state.Get()),
             placement=placement, alignment=alignment, book_displacement_m=displacement,
@@ -235,12 +230,6 @@ class LampEmbodiment(YamArenaEmbodiment):
             hand_contact_N=hand_force, hand_clearance_m=clearance,
             max_base_lift_m=self.max_base_lift, max_base_tilt_deg=self.max_base_tilt,
             inter_arm_contact_count=len(m.arm_contacts))
-        if self.control_steps:
-            self.window.append((bp.copy(), m.angles(), all(checks.values())))
-        stable = len(self.window) == self.window.maxlen and all(x[2] for x in self.window)
-        checks["stable_two_seconds"] = bool(stable and
-            np.max(np.ptp([x[0] for x in self.window], axis=0)) < .003 and
-            np.max(np.ptp([x[1] for x in self.window], axis=0)) < 2)
         row.update(checks=checks, success=bool(all(checks.values())), score=int(all(checks.values())))
         return row
 

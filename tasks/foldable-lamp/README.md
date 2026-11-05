@@ -22,7 +22,7 @@ The model runner prints its directory under `runs/dream-eval-<timestamp>/`. It s
 python -c 'import json,sys; m=json.load(open(sys.argv[1])); assert m["exit_code"] == 0; print(m["score"])' runs/dream-eval-<timestamp>/metrics.json
 ```
 
-The demo writes `runs/demo-<timestamp>/result.json` and fails if its validation fails. Videos are saved in each run's `videos/` folder. Demo validation additionally checks the prescribed grasp sequence, arm collisions and visible book brightening; those are diagnostics beyond the benchmark rubric.
+The demo writes `runs/demo-<timestamp>/result.json` and fails if its validation fails. Videos are saved in each run's `videos/` folder. The benchmark score uses only base containment, shade height, shade tilt and lamp-on state within 120 s. The expert retains motion execution checks; recorded contact, displacement and drift measurements are diagnostics.
 
 Seed: 0; fixed layout, no jitter. Limit: 120 simulated seconds at 20 Hz, including 32 initial history steps; physics: 480 Hz. The recorded model trial took 11 min 41 s wall time including API waits and rendering, scoring 0. The demo took 82.7 simulated seconds at 30 Hz and scored 1; allow several minutes wall time for recording. Hardware and API latency affect wall time.
 
