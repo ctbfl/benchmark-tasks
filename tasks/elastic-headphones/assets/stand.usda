@@ -1,0 +1,134 @@
+#usda 1.0
+(
+    defaultPrim = "Stand"
+    metersPerUnit = 1
+    upAxis = "Z"
+)
+
+def Xform "Stand" (
+    prepend apiSchemas = ["PhysicsRigidBodyAPI", "PhysicsMassAPI", "PhysxRigidBodyAPI"]
+)
+{
+    point3f physics:centerOfMass = (0, 0, 0.035)
+    float3 physics:diagonalInertia = (0.004, 0.004, 0.0015)
+    float physics:mass = 0.7
+    quatf physics:principalAxes = (1, 0, 0, 0)
+    float physxRigidBody:angularDamping = 0.01
+    float physxRigidBody:linearDamping = 0.01
+    quatf xformOp:orient = (1, 0, 0, 0)
+    double3 xformOp:translate = (0, 0, 0)
+    uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:orient"]
+
+    def Scope "Looks"
+    {
+        def Material "metal" (
+            prepend apiSchemas = ["PhysicsMaterialAPI"]
+        )
+        {
+            token outputs:surface.connect = </Stand/Looks/metal/shader.outputs:surface>
+            float physics:dynamicFriction = 0.6
+            float physics:restitution = 0
+            float physics:staticFriction = 0.7
+
+            def Shader "shader"
+            {
+                uniform token info:id = "UsdPreviewSurface"
+                color3f inputs:diffuseColor = (0.16, 0.19, 0.23)
+                float inputs:metallic = 0
+                float inputs:roughness = 0.65
+                token outputs:surface
+            }
+        }
+
+        def Material "cradle" (
+            prepend apiSchemas = ["PhysicsMaterialAPI"]
+        )
+        {
+            token outputs:surface.connect = </Stand/Looks/cradle/shader.outputs:surface>
+            float physics:dynamicFriction = 0.6
+            float physics:restitution = 0
+            float physics:staticFriction = 0.7
+
+            def Shader "shader"
+            {
+                uniform token info:id = "UsdPreviewSurface"
+                color3f inputs:diffuseColor = (0.29, 0.34, 0.39)
+                float inputs:metallic = 0
+                float inputs:roughness = 0.65
+                token outputs:surface
+            }
+        }
+    }
+
+    def Cube "base" (
+        prepend apiSchemas = ["MaterialBindingAPI", "PhysicsCollisionAPI", "PhysxCollisionAPI"]
+    )
+    {
+        rel material:binding = </Stand/Looks/metal>
+        rel material:binding:physics = </Stand/Looks/metal>
+        float physxCollision:contactOffset = 0.0005
+        float physxCollision:restOffset = 0
+        double size = 1
+        float3 xformOp:scale = (0.13, 0.11, 0.008)
+        double3 xformOp:translate = (0, 0, 0.004)
+        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+    }
+
+    def Cylinder "stem" (
+        prepend apiSchemas = ["MaterialBindingAPI", "PhysicsCollisionAPI", "PhysxCollisionAPI"]
+    )
+    {
+        uniform token axis = "Z"
+        double height = 0.22599999999999998
+        rel material:binding = </Stand/Looks/metal>
+        rel material:binding:physics = </Stand/Looks/metal>
+        float physxCollision:contactOffset = 0.0005
+        float physxCollision:restOffset = 0
+        double radius = 0.006
+        double3 xformOp:translate = (0, 0, 0.121)
+        uniform token[] xformOpOrder = ["xformOp:translate"]
+    }
+
+    def Cube "cradle_floor" (
+        prepend apiSchemas = ["MaterialBindingAPI", "PhysicsCollisionAPI", "PhysxCollisionAPI"]
+    )
+    {
+        rel material:binding = </Stand/Looks/cradle>
+        rel material:binding:physics = </Stand/Looks/cradle>
+        float physxCollision:contactOffset = 0.0005
+        float physxCollision:restOffset = 0
+        double size = 1
+        float3 xformOp:scale = (0.048, 0.042, 0.006)
+        double3 xformOp:translate = (0, 0, 0.237)
+        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+    }
+
+    def Cube "front_lip" (
+        prepend apiSchemas = ["MaterialBindingAPI", "PhysicsCollisionAPI", "PhysxCollisionAPI"]
+    )
+    {
+        rel material:binding = </Stand/Looks/cradle>
+        rel material:binding:physics = </Stand/Looks/cradle>
+        float physxCollision:contactOffset = 0.0005
+        float physxCollision:restOffset = 0
+        double size = 1
+        float3 xformOp:scale = (0.048, 0.004, 0.016)
+        double3 xformOp:translate = (0, -0.019000000000000003, 0.248)
+        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+    }
+
+    def Cube "back_lip" (
+        prepend apiSchemas = ["MaterialBindingAPI", "PhysicsCollisionAPI", "PhysxCollisionAPI"]
+    )
+    {
+        rel material:binding = </Stand/Looks/cradle>
+        rel material:binding:physics = </Stand/Looks/cradle>
+        float physxCollision:contactOffset = 0.0005
+        float physxCollision:restOffset = 0
+        double size = 1
+        float3 xformOp:scale = (0.048, 0.004, 0.016)
+        double3 xformOp:translate = (0, 0.019000000000000003, 0.248)
+        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+    }
+}
+
