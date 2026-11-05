@@ -12,9 +12,9 @@ python run.py expert              # Scripted demonstration; scored during execut
 python dream_eval.py              # One Dream-1 trial; requires configured Dream API key
 ```
 
-Dream uses the client's `~/.dreamlabs/credentials` configuration. Both runs use seed 0 and a fixed initial layout, with a limit of 2,400 steps at 20 Hz. Dream observes the calibrated top and wrist cameras (native 640x360, model input 320x176) and 14 measured joint positions. Actions are 14 joint/gripper targets. The observer camera is excluded from model input. The expert uses measured mechanism state for planning and applies only robot joint targets.
+Dream uses the client's `~/.dreamlabs/credentials` configuration. Both runs use seed 0 and a fixed initial layout, with a limit of 2,400 steps at 20 Hz. Dream observes the calibrated top and wrist cameras (native 640x360, model input 320x176) and 14 measured joint positions. Actions are 14 joint/gripper targets. The observer camera provides video for human review. The expert uses measured mechanism state for planning and applies only robot joint targets.
 
-`task.Score` evaluates measured geometry, contact, velocity and the one-second hold on every control step. Results and per-step measurements are saved under `outputs/`; no separate simulation is needed to score a run:
+`task.Score` evaluates measured geometry, contact, velocity and the one-second hold on every control step. Results and per-step measurements are saved under `outputs/`. Read the recorded scores and verify the archive with:
 
 ```bash
 python -c 'import json; print(json.load(open("outputs/expert/headless/result.json"))["final"]["score"])'
@@ -28,11 +28,11 @@ Additional offline checks and video generation:
 
 ```bash
 python run.py validate            # 34 physics checks, including all seven slots
-python run.py exercise            # Force-fixture mechanism test, not the robot demo
+python run.py exercise            # Force-fixture mechanism test
 python check_scoring.py           # 23 scoring cases using that measured fixture
 python run.py camera_ready        # Robot demo: 1080p observer + three 640x360 views
 python verify_camera_ready.py     # Timing, calibration and complete video decode
 python replay_dream.py outputs/dream-highest-<timestamp>  # Render archived states without API calls
 ```
 
-Video uses real-time RTX at 30 FPS. Generated data, logs and media stay in `outputs/` and are excluded from version control. The rigid-body material and joint parameters are estimates; this model has not been calibrated against a physical product.
+Video uses real-time RTX at 30 FPS. Generated data, logs and media stay in `outputs/` and are excluded from version control. The model uses estimated rigid-body material and joint parameters; calibration against a physical product remains pending.
