@@ -1,0 +1,33 @@
+#usda 1.0
+(
+    defaultPrim = "WaterTask"
+    metersPerUnit = 1
+    upAxis = "Z"
+)
+
+def Xform "WaterTask"
+{
+    def Xform "Dispenser" (
+        prepend references = @dispenser.usda@
+    )
+    {
+    }
+
+    def Xform "Scale" (
+        prepend references = @scale.usda@
+    )
+    {
+    }
+
+    def Xform "Cup" (
+        prepend references = @cup.usda@
+    )
+    {
+    }
+
+    def Xform "Stand" (
+        prepend references = @stand.usda@
+    )
+    {
+    }
+}
