@@ -14,6 +14,6 @@
   "run_limit": "2,400 control steps at 20 Hz (120 simulated seconds), including 32 initial history steps. The scripted demo uses 30 Hz with the same 120-second limit.",
   "reset_notes": "Restore READY arms and open grippers, folded lamp and book poses; zero velocities and hinge angles; lamp off. Clear touch state and elapsed time. Settle for 1 s before a model trial. Seed 0; fixed layout without object jitter.",
   "fidelity": "CPU PhysX PGS at 480 Hz; free four-body lamp, three passive friction hinges, no drives or world fixation. Approximate product geometry; estimated masses/friction, rigid plastic and paper, convex collisions. Tape is visual only. Contact toggles an RTX light; brightness is not calibrated lux. Expert uses simulator state. Dream sees three RGB cameras (640x360 resized to 320x176) and joint positions.",
-  "scores": "Dream-1: 0.0 after 120 s; lamp off, below 20 cm and outside the target. Scripted demo: 1.0 in 82.7 s; final shade height 22.368 cm and face tilt 2.219 deg. Saved final states were checked against the four-condition rubric. The recorded Dream prompt asked for a vertical upper support and a level shade; the current prompt states the 20 cm / 15 deg thresholds.",
+  "scores": "Dream-1: 0.0 after 120 s (lamp off, too low and outside frame). Scripted demo: 1.0 in 82.7 s; final shade height 22.368 cm, face tilt 2.219 deg. Both scores use the final rubric.",
   "media": "M-B95D46"
 }
