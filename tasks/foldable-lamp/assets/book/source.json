@@ -1,0 +1,18 @@
+{
+  "source": "libero/libero/assets/turbosquid_objects/yellow_book",
+  "upstream": "https://github.com/Lifelong-Robot-Learning/LIBERO",
+  "asset": "yellow_book",
+  "material_author_label": "Chocofur_Office_06 (from source MTL)",
+  "conversion": "Preserved mesh topology/UV/texture; laid flat and resized to a 180 x 110 x 20 mm closed novel.",
+  "dimensions_xyz_m": [
+    0.18,
+    0.11000000000000001,
+    0.02
+  ],
+  "mass_kg_estimated": 0.2,
+  "original_sha256": {
+    "yellow_book.obj": "44c0ce7858ee27bf831d72885c34e8f2947d7e0c4fc76504f219725226cee077",
+    "yellow_book.mtl": "35e8d4877d1630e1f21c65e8ba9af0d2912bfb9ab0c116c4bd0838799287df0f",
+    "yellow_book.png": "e73422fb9aad0cb0925954dce764dc1402bea13ab59a153e9dcfe0809850e767"
+  }
+}

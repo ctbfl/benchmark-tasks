@@ -1,0 +1,19 @@
+{
+  "title": "Unfold a desk lamp to illuminate a book",
+  "category": "Societal relevance",
+  "keywords": [
+    "bimanual manipulation",
+    "passive hinges",
+    "foldable desk lamp",
+    "touch switch"
+  ],
+  "instruction": "Unfold the desk lamp and turn it on to illuminate the closed book. Place the entire base inside the red tape rectangle behind and to the left of the book, facing the book. Raise the bottom of the shade at least 20 cm above the table and level its downward-facing light surface within 15 degrees. Tap the sun symbol to toggle the light. Leave the book in place, move both hands clear and keep the lamp stable and on for two seconds.",
+  "context": "Preparing a compact reading light requires one hand to steady and position its base while the other unfolds passive hinges and adjusts the shade. The task combines two-handed manipulation with a contact-operated switch in an everyday desk setup.",
+  "setup": "Fixed dual-arm YAM station, wood-look table, open READY grippers; tabletop z=0.7475 m. Plastic lamp with steel pins and rubber feet: 76x140 mm base and shade, two 106 mm links, 200 g, three folded passive hinges; XY=(0.50,0.18) m, yaw -90 deg. Closed paper novel: 180x110x20 mm, 200 g, XY=(0.34,0) m. Red paper tape: 96x160 mm inner rectangle, 4 mm strips, XY=(0.43,0.16) m, yaw -29.36 deg; 10 mm margin around the base. Robot faces +X, left is +Y. Ambient lights are at 50%; lamp off.",
+  "scoring": "Binary 1 if final 2 s satisfy: base footprint inside tape; yaw error <5 deg; base >6 cm behind and left of book; shade/diffuser bottom >=20 cm above table; emitting face down, tilt <=15 deg; lamp on; book displacement <3 mm; hand contact <0.5 N and both TCPs >6 cm from all lamp-body origins. Over this hold, base coordinate ranges <3 mm and hinge angle ranges <2 deg. Finish within 120 s; otherwise 0.",
+  "run_limit": "2,400 control steps at 20 Hz (120 simulated seconds), including 32 initial history steps. The scripted demo uses 30 Hz with the same 120-second limit.",
+  "reset_notes": "Restore READY arms and open grippers, folded lamp and book poses; zero velocities and hinge angles; lamp off. Clear touch state and scoring history. Settle for 1 s before a model trial. Seed 0; fixed layout without object jitter.",
+  "fidelity": "CPU PhysX PGS at 480 Hz; free four-body lamp, three passive friction hinges, no drives or world fixation. Approximate product geometry; estimated masses/friction, rigid plastic and paper, convex collisions. Tape is visual only. Contact toggles an RTX light; brightness is not calibrated lux. Expert uses simulator state. Dream sees three RGB cameras (640x360 resized to 320x176) and joint positions.",
+  "scores": "Dream-1: 0.0 after 120 s; lamp off, below 20 cm and outside the target. Scripted demo: 1.0 in 82.7 s; minimum shade height 22.368 cm and maximum face tilt 2.219 deg over the final 2 s. Saved trajectories were checked against this rubric. The recorded Dream prompt asked for a vertical upper support and a level shade; the current prompt states the 20 cm / 15 deg thresholds.",
+  "media": ""
+}
