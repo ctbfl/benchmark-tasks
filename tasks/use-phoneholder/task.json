@@ -1,0 +1,19 @@
+{
+  "title": "Unfold a phone holder and dock a phone",
+  "category": "Societal relevance",
+  "keywords": [
+    "bimanual manipulation",
+    "passive hinges",
+    "phone holder",
+    "precision placement"
+  ],
+  "instruction": "Unfold the phone holder and place the phone on it in portrait orientation, with its screen tilted at least 45 degrees above the tabletop and its lowest point more than 3 cm above it. Leave the holder entirely inside the red masking-tape square. Align both objects with the square, center the phone on the holder, and face its screen toward the robot. Release both objects and move both grippers away, leaving the phone stably supported.",
+  "context": "This task prepares a foldable phone stand for hands-free viewing during video calls, following recipes, or watching videos.",
+  "setup": "Fixed dual-arm YAM station; READY arms, open grippers; tabletop z=0.7475 m. Folded aluminum-look holder with rigid silicone pads: 80x80 mm base, 61x80x2 mm cradle, 54 mm arm, 171 g. Free iPhone 17 Pro, metal/glass appearance: 150x71.9x8.75 mm chassis, camera bump, 206 g; lying flat. Holder/phone XY=(0.30,+/-0.105) m, yaw -90 deg. Red paper tape: 120x120 mm inner square centered on holder, 8 mm strips. Initial hinge angles are zero. Exact poses and geometry are in the code and USD assets.",
+  "scoring": "Binary: 1 if final 10 s meet tilt >=45 deg; phone bottom >3 cm; holder inside square; absolute holder/phone yaw and phone roll <2 deg; base tilt <4 deg; portrait facing robot; lateral center error <8 mm; cradle-local lower edge strictly between -20 and -15 mm. Hand contact and phone-table force <0.05 N; both TCPs >3 cm from objects. Phone position range norm <2 mm over last 2 s. Otherwise 0. Deadline 180 s; no partial credit.",
+  "run_limit": "3,600 control steps at 20 Hz: 180 simulated seconds, including 32 initial history-warmup steps. Score the final state; the last 10 seconds must satisfy the release and support conditions. The scripted demo uses 30 Hz within the same time limit.",
+  "reset_notes": "Restore both arms to READY with open grippers, the holder to its folded pose and zero hinge angles, and the phone to its initial flat pose. Clear velocities, elapsed time and scoring history. Settle for 0.5 s before the scored episode. Seed 0; fixed layout, no object jitter.",
+  "fidelity": "CPU PhysX TGS at 480 Hz; free 4-body holder with 3 passive friction hinges, no drives or world fixation. Rigid iPhone with simplified convex collisions; rigid silicone pads. Hinge friction is estimated. Native PhysX sleep contributes to the settled hold; stability while kept awake or disturbed is unvalidated. Tape is visual only. Expert uses simulated state; Dream sees 3 calibrated RGB cameras (640x360 resized to 320x176) and joint positions.",
+  "scores": "Dream-1: 0.0 after 180 s; the holder remained folded and the phone remained on the table. Scripted demo: 1.0 in 125.233 s, including a 10 s hands-off hold; minimum phone tilt 49.312 deg and bottom height 40.672 mm. Final holder/phone heading errors: 0.297/0.687 deg.",
+  "media": "M-SZS8GV"
+}

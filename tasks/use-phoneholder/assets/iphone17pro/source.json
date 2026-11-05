@@ -1,0 +1,25 @@
+{
+  "title": "Iphone 17 pro",
+  "author": "Ibrahim.Bhl",
+  "license": "CC-BY-4.0",
+  "license_url": "https://creativecommons.org/licenses/by/4.0/",
+  "original_model_url": "https://skfb.ly/pzYOR",
+  "mirror_repository": "https://github.com/jessekorzan/themockitship",
+  "mirror_commit": "e63ea245ba435694468308ed7574adc502a71025",
+  "mirror_path": "devices/iPhone 17 Pro /iphone-17-pro/source/iphone 17_4.glb",
+  "attribution_source": "https://github.com/jessekorzan/themockitship/blob/e63ea245ba435694468308ed7574adc502a71025/README.md#credits",
+  "sha256": "fef80e9154a509d0f7a3aafd530661faea9f3ac4b65e8c8f9c0f9b4ab5f9c619",
+  "modifications": "None; original GLB downloaded unchanged.",
+  "derived_asset": {
+    "file": "iphone17pro.usda",
+    "modifications": "Converted to USD Preview Surface with embedded GLB textures extracted to PNG. Recentered and scaled along each axis using Rim_Buttons bounds to match the specified chassis dimensions. Added rigid-body mass/inertia and simplified chassis/camera collision geometry; original visual details retained.",
+    "collision_camera_protrusion_m": 0.0039
+  },
+  "target_physical_dimensions_m": {
+    "height": 0.15,
+    "width": 0.0719,
+    "body_depth": 0.00875
+  },
+  "target_mass_kg": 0.206,
+  "physical_specification_source": "https://support.apple.com/en-us/125090"
+}
