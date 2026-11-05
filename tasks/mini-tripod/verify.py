@@ -313,7 +313,7 @@ def run(render, out):
 if __name__ == "__main__":
     assert sys.argv[1:] in ([],["--render"]), "Usage: python verify.py [--render]"
     render = sys.argv[1:] == ["--render"]
-    out = ROOT/"output"/("demo" if render else "validation")
+    out = ROOT/"output"/("asset-demo" if render else "validation")
     (out/"logs").mkdir(parents=True,exist_ok=True)
     from isaaclab.app import AppLauncher
     app = AppLauncher(headless=True,enable_cameras=render,kit_args=

@@ -8,7 +8,7 @@ cd tasks/mini-tripod
 python dream_eval.py --check  # Scene, cameras, action and contact check; no API calls
 python verify.py              # Asset physics checks; fixtures are separate from the task
 python expert.py              # Successful robot demo; no model API
-python score.py demo output/expert-3x
+python score.py demo output/demo
 python dream_eval.py          # One Dream-1 trial; uses ~/.dreamlabs/credentials
 python score.py dream output/dream-eval-YYYYMMDDTHHMMSSZ
 python replay.py             # Render the demo trajectory

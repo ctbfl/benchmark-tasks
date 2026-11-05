@@ -7,7 +7,7 @@ import sys
 import traceback
 
 ROOT=Path(__file__).resolve().parent
-OUT=ROOT/"output/expert-3x"
+OUT=ROOT/"output/demo"
 IS_DREAM=len(sys.argv)==3 and sys.argv[1]=="--dream"
 assert IS_DREAM or sys.argv[1:] in ([],["--frames"]),"Usage: python replay.py [--frames | --dream RUN_DIRECTORY]"
 if IS_DREAM:
@@ -38,7 +38,7 @@ import yam_scene
 
 def run():
     trace=np.load(OUT/"trajectory.npz")
-    # Earlier archives stored the clock through float32; bound its rounding error.
+    # Validate the 30 Hz timeline within float32 timestamp precision.
     expected_time=trace["time"][0]+np.arange(len(trace["time"]))/30
     assert np.allclose(trace["time"],expected_time,rtol=0,atol=1e-5)
     changes=np.r_[0,np.flatnonzero(trace["phase"][1:]!=trace["phase"][:-1])+1,len(trace["time"])-1]

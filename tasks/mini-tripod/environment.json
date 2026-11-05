@@ -21,5 +21,5 @@
     "IsaacLab-Arena": "c7edf3a9d5d8276565208f72422f8f8a0806d6cf",
     "IsaacLab": "91a0906f93802eb859192dcb0bca879f891e92d6"
   },
-  "arena_local_configuration": "ARENA_NUCLEUS_DIR points to the production ISAACLAB_NUCLEUS_DIR instead of the staging bucket. No task code modifies shared dependencies."
+  "arena_asset_configuration": "ARENA_NUCLEUS_DIR = ISAACLAB_NUCLEUS_DIR (production asset bucket)."
 }

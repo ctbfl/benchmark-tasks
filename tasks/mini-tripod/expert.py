@@ -5,7 +5,7 @@ import json
 import traceback
 
 ROOT = Path(__file__).resolve().parent
-OUT = ROOT / "output/expert-3x"
+OUT = ROOT / "output/demo"
 CONTROL_RATE = 30
 MOTION_SPEED = 3.
 
