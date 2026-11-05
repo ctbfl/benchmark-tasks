@@ -1,0 +1,25 @@
+{
+  "python": "3.12",
+  "platform": "Linux x86_64, NVIDIA RTX GPU",
+  "packages": {
+    "isaacsim": "6.1.0.0",
+    "isaaclab": "17.0.2",
+    "isaaclab_arena": "0.3.0",
+    "yam-arena": "0.1.0",
+    "inspect-robots": "0.60.0",
+    "inspect-robots-dream": "0.1.0",
+    "dreamlabs-client": "1.0.14",
+    "numpy": "2.3.1",
+    "scipy": "1.17.0",
+    "trimesh": "4.11.1",
+    "pillow": "12.3.0",
+    "torch": "2.11.0+cu128",
+    "imageio-ffmpeg": "0.6.0"
+  },
+  "source_commits": {
+    "yam-isaac-lab-arena": "bd62771e60320433893bd1d2df0fc79b5ddcd6d1",
+    "IsaacLab-Arena": "c7edf3a9d5d8276565208f72422f8f8a0806d6cf",
+    "IsaacLab": "91a0906f93802eb859192dcb0bca879f891e92d6"
+  },
+  "arena_local_configuration": "ARENA_NUCLEUS_DIR points to the production ISAACLAB_NUCLEUS_DIR instead of the staging bucket. No task code modifies shared dependencies."
+}

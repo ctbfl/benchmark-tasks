@@ -1,0 +1,19 @@
+{
+  "title": "Unfold and place a mini tripod",
+  "category": "Societal relevance",
+  "keywords": [
+    "bimanual",
+    "passive hinges",
+    "tripod",
+    "equipment setup"
+  ],
+  "instruction": "Open the mini tripod lying on the left side of the table. Hold its central body and unfold all three fixed-length legs outward to their mechanical stops. Place it upright and centered inside the red tape square, with all three feet resting on the tabletop. Release the tripod and move both grippers clear. Leave it standing stably for at least 5 seconds. Any yaw orientation is acceptable. Complete the task within 120 seconds.",
+  "context": "Preparing compact camera equipment requires stabilizing a small body while opening three independent passive legs, then transferring its weight to the tabletop without folding them back.",
+  "setup": "Two YAM arms (bases 0.61 m apart) and three calibrated cameras over a 1.10 x 1.30 m wood table (top z=0.7475 m). A 110.3 g tripod lies folded at hub XY=(0.30,0.19) m: fixed head, aluminum hub, three 87 mm black metal legs and rubber feet. A 12 mm red tape square has 119.217 mm clear inner width and center XY=(0.36,0) m; fully open legs have 10 mm nominal edge clearance. Arms start in READY; layout is fixed.",
+  "scoring": "Binary: 1 if the final 5 s satisfy hinge errors <1 deg from 32 deg, tilt <5 deg, collision outline strictly inside the square, bounding-box center error <5 mm, feet within 1.5 mm of the table, hand contact <0.01 N, and gripper/finger link origins >2 cm from the object. Root-position range norm must be <2 mm; each foot must show peak table contact >0.03 N in that window. All conditions must be met by 120 s. Otherwise 0. Yaw is unrestricted.",
+  "run_limit": "2,400 control steps at 20 Hz (120 simulation seconds), including the final 5 s stability window. API waiting does not advance simulation. The scripted demo uses 30 Hz within the same 120 s limit.",
+  "reset_notes": "Fixed layout, seed 0, no jitter. Start a new process per trial; reset the arms to READY and let the folded tripod settle on the table for 2 s before the model clock starts.",
+  "fidelity": "CPU PhysX TGS at 480 Hz. Free four-link asset with three passive 0-32 deg hinges, fixed short legs and a fixed head. Convex mesh contacts; no object drives or grasp constraints. Hinge friction is 0.20/0.15 N m, viscous damping 0.020 N m s/rad, and numerical armature 0.001 kg m^2. Geometry, mass distribution and friction are engineering estimates. Dream receives calibrated camera images and robot joints only; privileged state is used for scoring and the scripted demo.",
+  "scores": "Dream-1 beta: 0/1 in one 120.0 s trial; the tripod was moved but stayed folded and horizontal. Scripted privileged-state demo: 1/1 in 82.833 s, including 5 s after release. Seed 0, fixed layout.",
+  "media": ""
+}
