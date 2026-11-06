@@ -16,5 +16,5 @@
   "reset_notes": "Restore the fixed scene and initial robot configuration. Let the free props settle for 2 seconds before starting the task clock. Clear the calculator to 0 and retract the tape.",
   "fidelity": "Rigid case and steel hook with a passive straight prismatic spring return; no lock, blade bending or internal coil. The graduated blade is visual and has no intermediate contact. Calculator keys use physical spring-loaded sliders. Masses, friction and springs are approximate. All execution uses CPU PhysX TGS at 240 Hz, native YAM actuators and the same 14-D position/gripper interface at 20 Hz.",
   "scores": "Dream-1 beta: 0.0/1.0 in 120 s; open-loop demo: 1.0/1.0 in 113.5 s.",
-  "media": ""
+  "media": "M-44HTPC"
 }
