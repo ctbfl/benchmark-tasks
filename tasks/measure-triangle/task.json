@@ -1,0 +1,20 @@
+{
+  "title": "Measure a right triangle",
+  "category": "Societal relevance",
+  "keywords": [
+    "measurement",
+    "geometry",
+    "ruler",
+    "calculator",
+    "active vision"
+  ],
+  "instruction": "Use the right arm to place the wooden ruler along both perpendicular sides of the right triangle on the fixed whiteboard. Use the wrist cameras to check zero alignment and read each side. Calculate the triangle's area in square centimetres, enter it on the calculator, then press = to submit. Leave the ruler at the second side. Complete the task within 120 seconds.",
+  "context": "Geometry measurement at a classroom or workshop bench: place a ruler, inspect its alignment and scale, and calculate an area using a physical calculator. This combines tool handling, active visual inspection and numerical entry.",
+  "setup": "A fixed whiteboard with a 230 x 200 x 6 mm white panel and metal frame sits on the left of a dual-YAM workbench. Its black right triangle has a 125 mm bottom leg, an 80 mm right leg and a lower-right right angle. A wooden 160 x 26 x 12 mm ruler with a 150 mm scale lies to its right, parallel to the board edge, zero toward the robot. A purple plastic calculator, 101.6 x 139.7 mm, sits farther right. Three calibrated robot cameras observe the fixed layout.",
+  "scoring": "The first physical = press submits and freezes the displayed result. Score 1 if its numeric value is 50 square centimetres and submission occurs within 120 seconds; otherwise score 0. No intermediate credit or measurement-sequence conditions.",
+  "run_limit": "2,400 control steps at 20 Hz (120 simulation seconds); network waits pause physics.",
+  "reset_notes": "Fixed layout, scene seed 0, no object jitter. Reset the calculator and settle the objects for 2 seconds before starting the trial clock.",
+  "fidelity": "240 Hz CPU PhysX with native YAM actuators. The board is static; the wooden ruler and calculator are free bodies. All 21 keys use passive spring-return prismatic joints and physical press detection. Seven-segment digits reflect calculator state. Geometry is procedural; masses, friction and springs are approximate. The ruler is thickened for grasping.",
+  "scores": "Dream-1 beta: 0.0/1.0 in 120 s (no submission); open-loop demo: 1.0/1.0, submitted 50 at 86.683 s, complete recording 96 s.",
+  "media": "M-Z68BL3"
+}
