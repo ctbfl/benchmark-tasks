@@ -1,0 +1,5 @@
+The binder, perforated red divider, wooden block, and their procedural materials
+are original geometry distributed under the MIT License in ../LICENSE.
+No reference photographs, third-party models, or downloaded textures are included.
+The YAM robot, calibrated cameras, and workstation are supplied by the external
+yam-arena dependency under its own licenses and are not redistributed here.

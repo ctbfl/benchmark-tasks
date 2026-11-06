@@ -1,0 +1,367 @@
+#usda 1.0
+(
+    defaultPrim = "Block"
+    metersPerUnit = 1
+    upAxis = "Z"
+)
+
+def Xform "Block"
+{
+    def "Looks"
+    {
+        def Material "cover" (
+            prepend apiSchemas = ["PhysicsMaterialAPI"]
+        )
+        {
+            token outputs:surface.connect = </Block/Looks/cover/Shader.outputs:surface>
+            float physics:dynamicFriction = 0.5
+            float physics:restitution = 0
+            float physics:staticFriction = 0.65
+
+            def Shader "Shader"
+            {
+                uniform token info:id = "UsdPreviewSurface"
+                color3f inputs:diffuseColor = (0.055, 0.12, 0.105)
+                float inputs:metallic = 0
+                float inputs:roughness = 0.7
+                token outputs:surface
+            }
+        }
+
+        def Material "ivory" (
+            prepend apiSchemas = ["PhysicsMaterialAPI"]
+        )
+        {
+            token outputs:surface.connect = </Block/Looks/ivory/Shader.outputs:surface>
+            float physics:dynamicFriction = 0.5
+            float physics:restitution = 0
+            float physics:staticFriction = 0.65
+
+            def Shader "Shader"
+            {
+                uniform token info:id = "UsdPreviewSurface"
+                color3f inputs:diffuseColor = (0.87, 0.84, 0.72)
+                float inputs:metallic = 0
+                float inputs:roughness = 0.85
+                token outputs:surface
+            }
+        }
+
+        def Material "steel" (
+            prepend apiSchemas = ["PhysicsMaterialAPI"]
+        )
+        {
+            token outputs:surface.connect = </Block/Looks/steel/Shader.outputs:surface>
+            float physics:dynamicFriction = 0.5
+            float physics:restitution = 0
+            float physics:staticFriction = 0.65
+
+            def Shader "Shader"
+            {
+                uniform token info:id = "UsdPreviewSurface"
+                color3f inputs:diffuseColor = (0.65, 0.68, 0.71)
+                float inputs:metallic = 0.85
+                float inputs:roughness = 0.24
+                token outputs:surface
+            }
+        }
+
+        def Material "red" (
+            prepend apiSchemas = ["PhysicsMaterialAPI"]
+        )
+        {
+            token outputs:surface.connect = </Block/Looks/red/Shader.outputs:surface>
+            float physics:dynamicFriction = 0.5
+            float physics:restitution = 0
+            float physics:staticFriction = 0.65
+
+            def Shader "Shader"
+            {
+                uniform token info:id = "UsdPreviewSurface"
+                color3f inputs:diffuseColor = (0.62, 0.018, 0.027)
+                float inputs:metallic = 0
+                float inputs:roughness = 0.48
+                token outputs:surface
+            }
+        }
+
+        def Material "wood" (
+            prepend apiSchemas = ["PhysicsMaterialAPI"]
+        )
+        {
+            token outputs:surface.connect = </Block/Looks/wood/Shader.outputs:surface>
+            float physics:dynamicFriction = 0.5
+            float physics:restitution = 0
+            float physics:staticFriction = 0.65
+
+            def Shader "Shader"
+            {
+                uniform token info:id = "UsdPreviewSurface"
+                color3f inputs:diffuseColor = (0.37, 0.2, 0.085)
+                float inputs:metallic = 0
+                float inputs:roughness = 0.7
+                token outputs:surface
+            }
+        }
+
+        def Material "grain" (
+            prepend apiSchemas = ["PhysicsMaterialAPI"]
+        )
+        {
+            token outputs:surface.connect = </Block/Looks/grain/Shader.outputs:surface>
+            float physics:dynamicFriction = 0.5
+            float physics:restitution = 0
+            float physics:staticFriction = 0.65
+
+            def Shader "Shader"
+            {
+                uniform token info:id = "UsdPreviewSurface"
+                color3f inputs:diffuseColor = (0.25, 0.12, 0.045)
+                float inputs:metallic = 0
+                float inputs:roughness = 0.8
+                token outputs:surface
+            }
+        }
+    }
+
+    def Xform "body" (
+        prepend apiSchemas = ["PhysicsRigidBodyAPI", "PhysicsMassAPI", "PhysxContactReportAPI"]
+    )
+    {
+        float physics:mass = 0.65
+        float physxContactReport:threshold = 0
+        double3 xformOp:translate = (0, 0, 0)
+        uniform token[] xformOpOrder = ["xformOp:translate"]
+
+        def Cube "wood" (
+            prepend apiSchemas = ["MaterialBindingAPI", "PhysicsCollisionAPI", "PhysxCollisionAPI"]
+        )
+        {
+            rel material:binding = </Block/Looks/wood>
+            rel material:binding:physics = </Block/Looks/wood>
+            float physxCollision:contactOffset = 0.0003
+            float physxCollision:restOffset = 0
+            double size = 1
+            float3 xformOp:scale = (0.1, 0.1, 0.1)
+            double3 xformOp:translate = (0, 0, 0.05)
+            uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+        }
+
+        def Cube "grain0" (
+            prepend apiSchemas = ["MaterialBindingAPI"]
+        )
+        {
+            rel material:binding = </Block/Looks/grain>
+            rel material:binding:physics = </Block/Looks/grain>
+            double size = 1
+            float3 xformOp:scale = (0.1, 0.00035, 0.00005)
+            double3 xformOp:translate = (0, -0.046, 0.10003)
+            uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+        }
+
+        def Cube "grain1" (
+            prepend apiSchemas = ["MaterialBindingAPI"]
+        )
+        {
+            rel material:binding = </Block/Looks/grain>
+            rel material:binding:physics = </Block/Looks/grain>
+            double size = 1
+            float3 xformOp:scale = (0.1, 0.00035, 0.00005)
+            double3 xformOp:translate = (0, -0.04058823529411765, 0.10003)
+            uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+        }
+
+        def Cube "grain2" (
+            prepend apiSchemas = ["MaterialBindingAPI"]
+        )
+        {
+            rel material:binding = </Block/Looks/grain>
+            rel material:binding:physics = </Block/Looks/grain>
+            double size = 1
+            float3 xformOp:scale = (0.1, 0.00035, 0.00005)
+            double3 xformOp:translate = (0, -0.035176470588235295, 0.10003)
+            uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+        }
+
+        def Cube "grain3" (
+            prepend apiSchemas = ["MaterialBindingAPI"]
+        )
+        {
+            rel material:binding = </Block/Looks/grain>
+            rel material:binding:physics = </Block/Looks/grain>
+            double size = 1
+            float3 xformOp:scale = (0.1, 0.00035, 0.00005)
+            double3 xformOp:translate = (0, -0.02976470588235294, 0.10003)
+            uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+        }
+
+        def Cube "grain4" (
+            prepend apiSchemas = ["MaterialBindingAPI"]
+        )
+        {
+            rel material:binding = </Block/Looks/grain>
+            rel material:binding:physics = </Block/Looks/grain>
+            double size = 1
+            float3 xformOp:scale = (0.1, 0.00035, 0.00005)
+            double3 xformOp:translate = (0, -0.024352941176470588, 0.10003)
+            uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+        }
+
+        def Cube "grain5" (
+            prepend apiSchemas = ["MaterialBindingAPI"]
+        )
+        {
+            rel material:binding = </Block/Looks/grain>
+            rel material:binding:physics = </Block/Looks/grain>
+            double size = 1
+            float3 xformOp:scale = (0.1, 0.00035, 0.00005)
+            double3 xformOp:translate = (0, -0.018941176470588236, 0.10003)
+            uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+        }
+
+        def Cube "grain6" (
+            prepend apiSchemas = ["MaterialBindingAPI"]
+        )
+        {
+            rel material:binding = </Block/Looks/grain>
+            rel material:binding:physics = </Block/Looks/grain>
+            double size = 1
+            float3 xformOp:scale = (0.1, 0.00035, 0.00005)
+            double3 xformOp:translate = (0, -0.01352941176470588, 0.10003)
+            uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+        }
+
+        def Cube "grain7" (
+            prepend apiSchemas = ["MaterialBindingAPI"]
+        )
+        {
+            rel material:binding = </Block/Looks/grain>
+            rel material:binding:physics = </Block/Looks/grain>
+            double size = 1
+            float3 xformOp:scale = (0.1, 0.00035, 0.00005)
+            double3 xformOp:translate = (0, -0.008117647058823528, 0.10003)
+            uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+        }
+
+        def Cube "grain8" (
+            prepend apiSchemas = ["MaterialBindingAPI"]
+        )
+        {
+            rel material:binding = </Block/Looks/grain>
+            rel material:binding:physics = </Block/Looks/grain>
+            double size = 1
+            float3 xformOp:scale = (0.1, 0.00035, 0.00005)
+            double3 xformOp:translate = (0, -0.002705882352941176, 0.10003)
+            uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+        }
+
+        def Cube "grain9" (
+            prepend apiSchemas = ["MaterialBindingAPI"]
+        )
+        {
+            rel material:binding = </Block/Looks/grain>
+            rel material:binding:physics = </Block/Looks/grain>
+            double size = 1
+            float3 xformOp:scale = (0.1, 0.00035, 0.00005)
+            double3 xformOp:translate = (0, 0.002705882352941176, 0.10003)
+            uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+        }
+
+        def Cube "grain10" (
+            prepend apiSchemas = ["MaterialBindingAPI"]
+        )
+        {
+            rel material:binding = </Block/Looks/grain>
+            rel material:binding:physics = </Block/Looks/grain>
+            double size = 1
+            float3 xformOp:scale = (0.1, 0.00035, 0.00005)
+            double3 xformOp:translate = (0, 0.008117647058823528, 0.10003)
+            uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+        }
+
+        def Cube "grain11" (
+            prepend apiSchemas = ["MaterialBindingAPI"]
+        )
+        {
+            rel material:binding = </Block/Looks/grain>
+            rel material:binding:physics = </Block/Looks/grain>
+            double size = 1
+            float3 xformOp:scale = (0.1, 0.00035, 0.00005)
+            double3 xformOp:translate = (0, 0.01352941176470588, 0.10003)
+            uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+        }
+
+        def Cube "grain12" (
+            prepend apiSchemas = ["MaterialBindingAPI"]
+        )
+        {
+            rel material:binding = </Block/Looks/grain>
+            rel material:binding:physics = </Block/Looks/grain>
+            double size = 1
+            float3 xformOp:scale = (0.1, 0.00035, 0.00005)
+            double3 xformOp:translate = (0, 0.01894117647058824, 0.10003)
+            uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+        }
+
+        def Cube "grain13" (
+            prepend apiSchemas = ["MaterialBindingAPI"]
+        )
+        {
+            rel material:binding = </Block/Looks/grain>
+            rel material:binding:physics = </Block/Looks/grain>
+            double size = 1
+            float3 xformOp:scale = (0.1, 0.00035, 0.00005)
+            double3 xformOp:translate = (0, 0.02435294117647059, 0.10003)
+            uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+        }
+
+        def Cube "grain14" (
+            prepend apiSchemas = ["MaterialBindingAPI"]
+        )
+        {
+            rel material:binding = </Block/Looks/grain>
+            rel material:binding:physics = </Block/Looks/grain>
+            double size = 1
+            float3 xformOp:scale = (0.1, 0.00035, 0.00005)
+            double3 xformOp:translate = (0, 0.029764705882352943, 0.10003)
+            uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+        }
+
+        def Cube "grain15" (
+            prepend apiSchemas = ["MaterialBindingAPI"]
+        )
+        {
+            rel material:binding = </Block/Looks/grain>
+            rel material:binding:physics = </Block/Looks/grain>
+            double size = 1
+            float3 xformOp:scale = (0.1, 0.00035, 0.00005)
+            double3 xformOp:translate = (0, 0.035176470588235295, 0.10003)
+            uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+        }
+
+        def Cube "grain16" (
+            prepend apiSchemas = ["MaterialBindingAPI"]
+        )
+        {
+            rel material:binding = </Block/Looks/grain>
+            rel material:binding:physics = </Block/Looks/grain>
+            double size = 1
+            float3 xformOp:scale = (0.1, 0.00035, 0.00005)
+            double3 xformOp:translate = (0, 0.04058823529411765, 0.10003)
+            uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+        }
+
+        def Cube "grain17" (
+            prepend apiSchemas = ["MaterialBindingAPI"]
+        )
+        {
+            rel material:binding = </Block/Looks/grain>
+            rel material:binding:physics = </Block/Looks/grain>
+            double size = 1
+            float3 xformOp:scale = (0.1, 0.00035, 0.00005)
+            double3 xformOp:translate = (0, 0.046, 0.10003)
+            uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+        }
+    }
+}
+

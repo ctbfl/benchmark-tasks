@@ -1,0 +1,19 @@
+{
+  "title": "Insert a tabbed divider into a six-ring binder",
+  "category": "Societal relevance",
+  "keywords": [
+    "bimanual",
+    "ring binder",
+    "multi-hole insertion",
+    "mechanical latch"
+  ],
+  "instruction": "Insert the red six-hole tabbed divider into the open notebook. Hold the notebook down with the open right gripper across its spine and press the near-end lever with the closed left gripper to open all six rings. Pick up the divider from its overhanging right edge on the wooden block. Tilt the card and gripper down-left to match the right ring ends, thread all six holes, release, and withdraw right/down. Squeeze the two sides of the far three rings together to close the binder.",
+  "context": "Students and office workers add indexed dividers when organizing loose-leaf notes. This task combines stabilizing a notebook, operating a spring latch, aligning six holes with curved ring ends, and securing the inserted divider.",
+  "setup": "A 24 x 34.2 cm open green binder sits 27 cm in front of the dual YAM arms, with six closed steel rings and fixed ivory paper stacks on both sides. A 10 x 10 x 10 cm wooden block sits 49 cm ahead. A red 21 x 14.8 cm, 1.6 mm thick rigid divider rests on it, with six 9 mm holes on the left and a right-facing tab. Its right edge overhangs the block for side grasping. All objects are free bodies.",
+  "scoring": "0.2 for opening all six rings; 0.6 for releasing the divider on the right with all six holes threaded; 0.2 for closing all rings after insertion. Initially closed rings earn no credit. Insertion and closure are assessed in the final state.",
+  "run_limit": "2,400 control steps at 20 Hz: 120 simulation seconds, including final settling. API waits pause physics.",
+  "reset_notes": "Fixed initial layout, seed 0. Start a fresh process for each episode; no consumables or random placement.",
+  "fidelity": "CPU PhysX at 240 Hz with native YAM drives. Two hinged rails carry six curved half-rings each; contact forces trigger a spring latch. Paper stacks are rigid parts of the open cover. The divider has real perforated collision geometry. Latch forces are prototype values, not calibrated product measurements.",
+  "scores": "Dream-1 beta: 0.0/1.0 in 120 s; open-loop demo: 1.0/1.0 in 85.2 s.",
+  "media": "M-DUBV53"
+}

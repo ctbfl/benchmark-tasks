@@ -1,0 +1,8 @@
+numpy==2.3.1
+scipy==1.17.0
+shapely==2.1.2
+pillow==12.3.0
+imageio-ffmpeg==0.6.0
+inspect-robots==0.60.0
+inspect-robots-dream==0.1.0
+dreamlabs-client==1.0.14
