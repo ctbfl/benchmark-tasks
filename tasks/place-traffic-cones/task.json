@@ -14,6 +14,6 @@
   "run_limit": "2,400 control steps at 20 Hz: 120 simulation seconds, including final settling. API waiting does not advance physics.",
   "fidelity": "CPU PhysX TGS at 240 Hz; native YAM position/gripper control. Hollow rigid cones have a top 5 mm cap represented by four passive radial spring quadrants. Mutual cap-segment collisions are filtered; all external contacts remain enabled. This approximates compression, not continuum PVC. Height/base scale is 1:16; road width, wall thickness, mass and nesting shoulder are simplified. No grasp attachments or object-state control during execution.",
   "reset_notes": "Fixed layout, seed 0. Reset the six-cone stack and robot joints, then allow 2 seconds of physical settling before the episode.",
-  "media": "",
+  "media": "M-Z3QTEE",
   "scores": "Dream-1 run: 0.0/1.0 in 120 s; open-loop demo: 1.0/1.0 in 108.1 s."
 }
