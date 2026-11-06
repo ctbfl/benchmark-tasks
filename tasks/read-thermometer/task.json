@@ -16,5 +16,5 @@
   "reset_notes": "Fixed layout, seed 0. Settle mechanics for two seconds, then reset the timer to a running 00:15, thermometer to 35 C, and calculator to 0.",
   "fidelity": "CPU PhysX at 240 Hz with native YAM control at 20 Hz. The free clamp uses screw coupling, spring jaws and contact friction. Keys are spring joints; displays and the red column are geometry. Water is a fixed visual volume and heating is prescribed, without fluid or heat-transfer simulation. Material and spring values are engineering approximations.",
   "scores": "Dream-1 beta: 0.0/1.0 in 120 s, no submission. Open-loop demo: 1.0/1.0 in 40.2 s, submitted 45.",
-  "media": ""
+  "media": "M-NY6XEB"
 }
