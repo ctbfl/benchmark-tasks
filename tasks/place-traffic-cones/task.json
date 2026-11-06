@@ -1,0 +1,19 @@
+{
+  "title": "Place traffic cones along a curved road",
+  "category": "Societal relevance",
+  "keywords": [
+    "bimanual",
+    "stack separation",
+    "traffic cones",
+    "curved-path spacing"
+  ],
+  "instruction": "Take the six stacked traffic cones from the right of the white board, gripping only the top 5 mm of each cone. Place them upright along the road's dashed centre line, one at each end and four evenly between. Each base must rest directly on the board. Release all cones and move the grippers clear. Finish within 120 seconds.",
+  "context": "Races, concerts and other events require temporary traffic guidance. This tabletop analogue tests separating nested cones and distributing them along a curved route, including both endpoints, to create a continuous and evenly spaced guide.",
+  "setup": "A 64 x 70 x 0.2 cm rigid white board carries a 24 cm wide road with black boundaries and a dashed centreline: two tangent 25 cm radius, 60-degree arcs, total length 52.36 cm. Six orange hollow plastic cones are stacked on the right at 1.6 cm pitch. Each cone is 4.445 cm tall, has a 2.242 cm square black base, weighs 12 g and has a compliant top 5 mm. Dual YAM arms and three calibrated cameras use a fixed initial layout.",
+  "scoring": "Binary: 1 only if all six cones are upright within 10 degrees, released and directly supported, with base centres within 2 cm of the continuous centreline. Sort their nearest curve points by arc length. The first and last points must be within 2 cm of the respective ends. The largest of the five adjacent arc-length gaps must differ from total curve length / 5 by at most 5 cm. Otherwise 0. Only the final state is scored.",
+  "run_limit": "2,400 control steps at 20 Hz: 120 simulation seconds, including final settling. API waiting does not advance physics.",
+  "fidelity": "CPU PhysX TGS at 240 Hz; native YAM position/gripper control. Hollow rigid cones have a top 5 mm cap represented by four passive radial spring quadrants. Mutual cap-segment collisions are filtered; all external contacts remain enabled. This approximates compression, not continuum PVC. Height/base scale is 1:16; road width, wall thickness, mass and nesting shoulder are simplified. No grasp attachments or object-state control during execution.",
+  "reset_notes": "Fixed layout, seed 0. Reset the six-cone stack and robot joints, then allow 2 seconds of physical settling before the episode.",
+  "media": "",
+  "scores": "Dream-1 run: 0.0/1.0 in 120 s; open-loop demo: 1.0/1.0 in 108.1 s."
+}
