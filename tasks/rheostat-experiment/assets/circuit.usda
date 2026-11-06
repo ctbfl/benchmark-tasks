@@ -1,0 +1,773 @@
+#usda 1.0
+(
+    defaultPrim = "Circuit"
+    metersPerUnit = 1
+    upAxis = "Z"
+)
+
+def Xform "Circuit"
+{
+    def "Looks"
+    {
+        def Material "dark"
+        {
+            token outputs:surface.connect = </Circuit/Looks/dark/Shader.outputs:surface>
+
+            def Shader "Shader"
+            {
+                uniform token info:id = "UsdPreviewSurface"
+                color3f inputs:diffuseColor = (0.025, 0.035, 0.045)
+                color3f inputs:emissiveColor = (0, 0, 0)
+                float inputs:metallic = 0
+                float inputs:roughness = 0.5
+                token outputs:surface
+            }
+        }
+
+        def Material "ceramic"
+        {
+            token outputs:surface.connect = </Circuit/Looks/ceramic/Shader.outputs:surface>
+
+            def Shader "Shader"
+            {
+                uniform token info:id = "UsdPreviewSurface"
+                color3f inputs:diffuseColor = (0.72, 0.73, 0.67)
+                color3f inputs:emissiveColor = (0, 0, 0)
+                float inputs:metallic = 0
+                float inputs:roughness = 0.5
+                token outputs:surface
+            }
+        }
+
+        def Material "brass"
+        {
+            token outputs:surface.connect = </Circuit/Looks/brass/Shader.outputs:surface>
+
+            def Shader "Shader"
+            {
+                uniform token info:id = "UsdPreviewSurface"
+                color3f inputs:diffuseColor = (0.52, 0.32, 0.1)
+                color3f inputs:emissiveColor = (0, 0, 0)
+                float inputs:metallic = 0
+                float inputs:roughness = 0.5
+                token outputs:surface
+            }
+        }
+
+        def Material "red"
+        {
+            token outputs:surface.connect = </Circuit/Looks/red/Shader.outputs:surface>
+
+            def Shader "Shader"
+            {
+                uniform token info:id = "UsdPreviewSurface"
+                color3f inputs:diffuseColor = (0.65, 0.015, 0.01)
+                color3f inputs:emissiveColor = (0, 0, 0)
+                float inputs:metallic = 0
+                float inputs:roughness = 0.5
+                token outputs:surface
+            }
+        }
+
+        def Material "black"
+        {
+            token outputs:surface.connect = </Circuit/Looks/black/Shader.outputs:surface>
+
+            def Shader "Shader"
+            {
+                uniform token info:id = "UsdPreviewSurface"
+                color3f inputs:diffuseColor = (0.008, 0.009, 0.01)
+                color3f inputs:emissiveColor = (0, 0, 0)
+                float inputs:metallic = 0
+                float inputs:roughness = 0.5
+                token outputs:surface
+            }
+        }
+
+        def Material "blue"
+        {
+            token outputs:surface.connect = </Circuit/Looks/blue/Shader.outputs:surface>
+
+            def Shader "Shader"
+            {
+                uniform token info:id = "UsdPreviewSurface"
+                color3f inputs:diffuseColor = (0.02, 0.22, 0.5)
+                color3f inputs:emissiveColor = (0, 0, 0)
+                float inputs:metallic = 0
+                float inputs:roughness = 0.5
+                token outputs:surface
+            }
+        }
+
+        def Material "white"
+        {
+            token outputs:surface.connect = </Circuit/Looks/white/Shader.outputs:surface>
+
+            def Shader "Shader"
+            {
+                uniform token info:id = "UsdPreviewSurface"
+                color3f inputs:diffuseColor = (0.8, 0.85, 0.84)
+                color3f inputs:emissiveColor = (0, 0, 0)
+                float inputs:metallic = 0
+                float inputs:roughness = 0.5
+                token outputs:surface
+            }
+        }
+
+        def Material "bulb"
+        {
+            token outputs:surface.connect = </Circuit/Looks/bulb/Shader.outputs:surface>
+
+            def Shader "Shader"
+            {
+                uniform token info:id = "UsdPreviewSurface"
+                color3f inputs:diffuseColor = (0.32, 0.3, 0.23)
+                color3f inputs:emissiveColor = (0, 0, 0)
+                float inputs:metallic = 0
+                float inputs:roughness = 0.5
+                token outputs:surface
+            }
+        }
+
+        def Material "lit"
+        {
+            token outputs:surface.connect = </Circuit/Looks/lit/Shader.outputs:surface>
+
+            def Shader "Shader"
+            {
+                uniform token info:id = "UsdPreviewSurface"
+                color3f inputs:diffuseColor = (0.1, 0.85, 0.55)
+                color3f inputs:emissiveColor = (0.18, 1.5300001, 0.99)
+                float inputs:metallic = 0
+                float inputs:roughness = 0.5
+                token outputs:surface
+            }
+        }
+
+        def Material "unlit"
+        {
+            token outputs:surface.connect = </Circuit/Looks/unlit/Shader.outputs:surface>
+
+            def Shader "Shader"
+            {
+                uniform token info:id = "UsdPreviewSurface"
+                color3f inputs:diffuseColor = (0, 0, 0)
+                color3f inputs:emissiveColor = (0, 0, 0)
+                float inputs:metallic = 0
+                float inputs:roughness = 0.5
+                token outputs:surface
+            }
+        }
+    }
+
+    def Cube "battery" (
+        prepend apiSchemas = ["MaterialBindingAPI", "PhysicsCollisionAPI", "PhysxCollisionAPI"]
+    )
+    {
+        rel material:binding = </Circuit/Looks/dark>
+        float physxCollision:contactOffset = 0.0005
+        float physxCollision:restOffset = 0
+        double size = 1
+        float3 xformOp:scale = (0.16, 0.105, 0.07)
+        double3 xformOp:translate = (0.31, 0.27, 0.035)
+        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+    }
+
+    def Material "BatteryLabelMaterial"
+    {
+        token outputs:surface.connect = </Circuit/BatteryLabelMaterial/Shader.outputs:surface>
+
+        def Shader "Shader"
+        {
+            uniform token info:id = "UsdPreviewSurface"
+            color3f inputs:diffuseColor = (1, 1, 1)
+            color3f inputs:diffuseColor.connect = </Circuit/BatteryLabelMaterial/Texture.outputs:rgb>
+            color3f inputs:emissiveColor = (0, 0, 0)
+            float inputs:metallic = 0
+            float inputs:roughness = 0.5
+            token outputs:surface
+        }
+
+        def Shader "Texture"
+        {
+            uniform token info:id = "UsdUVTexture"
+            asset inputs:file = @BatteryLabel.png@
+            float2 inputs:st.connect = </Circuit/BatteryLabelMaterial/UV.outputs:result>
+            color3f outputs:rgb
+        }
+
+        def Shader "UV"
+        {
+            uniform token info:id = "UsdPrimvarReader_float2"
+            token inputs:varname = "st"
+            float2 outputs:result
+        }
+    }
+
+    def Mesh "BatteryLabel" (
+        prepend apiSchemas = ["MaterialBindingAPI"]
+    )
+    {
+        int[] faceVertexCounts = [4]
+        int[] faceVertexIndices = [0, 1, 2, 3]
+        rel material:binding = </Circuit/BatteryLabelMaterial>
+        point3f[] points = [(0.29, 0.3175, 0.071), (0.29, 0.2225, 0.071), (0.33, 0.2225, 0.071), (0.33, 0.3175, 0.071)]
+        texCoord2f[] primvars:st = [(0, 0), (1, 0), (1, 1), (0, 1)] (
+            interpolation = "vertex"
+        )
+        uniform token subdivisionScheme = "none"
+    }
+
+    def Cube "lamp_base" (
+        prepend apiSchemas = ["MaterialBindingAPI", "PhysicsCollisionAPI", "PhysxCollisionAPI"]
+    )
+    {
+        rel material:binding = </Circuit/Looks/ceramic>
+        float physxCollision:contactOffset = 0.0005
+        float physxCollision:restOffset = 0
+        double size = 1
+        float3 xformOp:scale = (0.105, 0.14, 0.024)
+        double3 xformOp:translate = (0.21, 0, 0.012)
+        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+    }
+
+    def Cylinder "lamp_socket" (
+        prepend apiSchemas = ["MaterialBindingAPI", "PhysicsCollisionAPI", "PhysxCollisionAPI"]
+    )
+    {
+        uniform token axis = "Z"
+        double height = 0.035
+        rel material:binding = </Circuit/Looks/brass>
+        float physxCollision:contactOffset = 0.0005
+        float physxCollision:restOffset = 0
+        double radius = 0.022
+        double3 xformOp:translate = (0.21, 0, 0.04)
+        uniform token[] xformOpOrder = ["xformOp:translate"]
+    }
+
+    def Sphere "bulb" (
+        prepend apiSchemas = ["MaterialBindingAPI", "PhysicsCollisionAPI", "PhysxCollisionAPI"]
+    )
+    {
+        rel material:binding = </Circuit/Looks/bulb>
+        float physxCollision:contactOffset = 0.0005
+        float physxCollision:restOffset = 0
+        double radius = 0.029
+        double3 xformOp:translate = (0.21, 0, 0.084)
+        uniform token[] xformOpOrder = ["xformOp:translate"]
+    }
+
+    def SphereLight "bulb_light"
+    {
+        color3f inputs:color = (1, 0.6, 0.12)
+        float inputs:intensity = 0
+        float inputs:radius = 0.031
+        double3 xformOp:translate = (0.21, 0, 0.084)
+        uniform token[] xformOpOrder = ["xformOp:translate"]
+    }
+
+    def Material "BulbLabelMaterial"
+    {
+        token outputs:surface.connect = </Circuit/BulbLabelMaterial/Shader.outputs:surface>
+
+        def Shader "Shader"
+        {
+            uniform token info:id = "UsdPreviewSurface"
+            color3f inputs:diffuseColor = (1, 1, 1)
+            color3f inputs:diffuseColor.connect = </Circuit/BulbLabelMaterial/Texture.outputs:rgb>
+            color3f inputs:emissiveColor = (0, 0, 0)
+            float inputs:metallic = 0
+            float inputs:roughness = 0.5
+            token outputs:surface
+        }
+
+        def Shader "Texture"
+        {
+            uniform token info:id = "UsdUVTexture"
+            asset inputs:file = @BulbLabel.png@
+            float2 inputs:st.connect = </Circuit/BulbLabelMaterial/UV.outputs:result>
+            color3f outputs:rgb
+        }
+
+        def Shader "UV"
+        {
+            uniform token info:id = "UsdPrimvarReader_float2"
+            token inputs:varname = "st"
+            float2 outputs:result
+        }
+    }
+
+    def Mesh "BulbLabel" (
+        prepend apiSchemas = ["MaterialBindingAPI"]
+    )
+    {
+        int[] faceVertexCounts = [4]
+        int[] faceVertexIndices = [0, 1, 2, 3]
+        rel material:binding = </Circuit/BulbLabelMaterial>
+        point3f[] points = [(0.154, 0.0525, 0.026), (0.154, -0.0525, 0.026), (0.172, -0.0525, 0.026), (0.172, 0.0525, 0.026)]
+        texCoord2f[] primvars:st = [(0, 0), (1, 0), (1, 1), (0, 1)] (
+            interpolation = "vertex"
+        )
+        uniform token subdivisionScheme = "none"
+    }
+
+    def Cube "meter" (
+        prepend apiSchemas = ["MaterialBindingAPI", "PhysicsCollisionAPI", "PhysxCollisionAPI"]
+    )
+    {
+        rel material:binding = </Circuit/Looks/dark>
+        float physxCollision:contactOffset = 0.0005
+        float physxCollision:restOffset = 0
+        double size = 1
+        float3 xformOp:scale = (0.12, 0.245, 0.046)
+        double3 xformOp:translate = (0.365, 0, 0.023)
+        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+    }
+
+    def Cube "screen" (
+        prepend apiSchemas = ["MaterialBindingAPI"]
+    )
+    {
+        rel material:binding = </Circuit/Looks/black>
+        double size = 1
+        float3 xformOp:scale = (0.085, 0.21, 0.003)
+        double3 xformOp:translate = (0.365, 0, 0.047)
+        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+    }
+
+    def "digits"
+    {
+        def "d0"
+        {
+            def Cube "a" (
+                prepend apiSchemas = ["MaterialBindingAPI"]
+            )
+            {
+                rel material:binding = </Circuit/Looks/lit>
+                double size = 1
+                float3 xformOp:scale = (0.006, 0.025, 0.001)
+                double3 xformOp:translate = (0.393, 0.065, 0.049)
+                uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+            }
+
+            def Cube "g" (
+                prepend apiSchemas = ["MaterialBindingAPI"]
+            )
+            {
+                rel material:binding = </Circuit/Looks/lit>
+                double size = 1
+                float3 xformOp:scale = (0.006, 0.025, 0.001)
+                double3 xformOp:translate = (0.365, 0.065, 0.049)
+                uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+            }
+
+            def Cube "d" (
+                prepend apiSchemas = ["MaterialBindingAPI"]
+            )
+            {
+                rel material:binding = </Circuit/Looks/lit>
+                double size = 1
+                float3 xformOp:scale = (0.006, 0.025, 0.001)
+                double3 xformOp:translate = (0.33699999999999997, 0.065, 0.049)
+                uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+            }
+
+            def Cube "b" (
+                prepend apiSchemas = ["MaterialBindingAPI"]
+            )
+            {
+                rel material:binding = </Circuit/Looks/lit>
+                double size = 1
+                float3 xformOp:scale = (0.022, 0.006, 0.001)
+                double3 xformOp:translate = (0.379, 0.049, 0.049)
+                uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+            }
+
+            def Cube "c" (
+                prepend apiSchemas = ["MaterialBindingAPI"]
+            )
+            {
+                rel material:binding = </Circuit/Looks/lit>
+                double size = 1
+                float3 xformOp:scale = (0.022, 0.006, 0.001)
+                double3 xformOp:translate = (0.351, 0.049, 0.049)
+                uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+            }
+
+            def Cube "f" (
+                prepend apiSchemas = ["MaterialBindingAPI"]
+            )
+            {
+                rel material:binding = </Circuit/Looks/lit>
+                double size = 1
+                float3 xformOp:scale = (0.022, 0.006, 0.001)
+                double3 xformOp:translate = (0.379, 0.081, 0.049)
+                uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+            }
+
+            def Cube "e" (
+                prepend apiSchemas = ["MaterialBindingAPI"]
+            )
+            {
+                rel material:binding = </Circuit/Looks/lit>
+                double size = 1
+                float3 xformOp:scale = (0.022, 0.006, 0.001)
+                double3 xformOp:translate = (0.351, 0.081, 0.049)
+                uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+            }
+        }
+
+        def "d1"
+        {
+            def Cube "a" (
+                prepend apiSchemas = ["MaterialBindingAPI"]
+            )
+            {
+                rel material:binding = </Circuit/Looks/lit>
+                double size = 1
+                float3 xformOp:scale = (0.006, 0.025, 0.001)
+                double3 xformOp:translate = (0.393, 0.018, 0.049)
+                uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+            }
+
+            def Cube "g" (
+                prepend apiSchemas = ["MaterialBindingAPI"]
+            )
+            {
+                rel material:binding = </Circuit/Looks/lit>
+                double size = 1
+                float3 xformOp:scale = (0.006, 0.025, 0.001)
+                double3 xformOp:translate = (0.365, 0.018, 0.049)
+                uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+            }
+
+            def Cube "d" (
+                prepend apiSchemas = ["MaterialBindingAPI"]
+            )
+            {
+                rel material:binding = </Circuit/Looks/lit>
+                double size = 1
+                float3 xformOp:scale = (0.006, 0.025, 0.001)
+                double3 xformOp:translate = (0.33699999999999997, 0.018, 0.049)
+                uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+            }
+
+            def Cube "b" (
+                prepend apiSchemas = ["MaterialBindingAPI"]
+            )
+            {
+                rel material:binding = </Circuit/Looks/lit>
+                double size = 1
+                float3 xformOp:scale = (0.022, 0.006, 0.001)
+                double3 xformOp:translate = (0.379, 0.0019999999999999983, 0.049)
+                uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+            }
+
+            def Cube "c" (
+                prepend apiSchemas = ["MaterialBindingAPI"]
+            )
+            {
+                rel material:binding = </Circuit/Looks/lit>
+                double size = 1
+                float3 xformOp:scale = (0.022, 0.006, 0.001)
+                double3 xformOp:translate = (0.351, 0.0019999999999999983, 0.049)
+                uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+            }
+
+            def Cube "f" (
+                prepend apiSchemas = ["MaterialBindingAPI"]
+            )
+            {
+                rel material:binding = </Circuit/Looks/lit>
+                double size = 1
+                float3 xformOp:scale = (0.022, 0.006, 0.001)
+                double3 xformOp:translate = (0.379, 0.034, 0.049)
+                uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+            }
+
+            def Cube "e" (
+                prepend apiSchemas = ["MaterialBindingAPI"]
+            )
+            {
+                rel material:binding = </Circuit/Looks/lit>
+                double size = 1
+                float3 xformOp:scale = (0.022, 0.006, 0.001)
+                double3 xformOp:translate = (0.351, 0.034, 0.049)
+                uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+            }
+        }
+
+        def "d2"
+        {
+            def Cube "a" (
+                prepend apiSchemas = ["MaterialBindingAPI"]
+            )
+            {
+                rel material:binding = </Circuit/Looks/lit>
+                double size = 1
+                float3 xformOp:scale = (0.006, 0.025, 0.001)
+                double3 xformOp:translate = (0.393, -0.043, 0.049)
+                uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+            }
+
+            def Cube "g" (
+                prepend apiSchemas = ["MaterialBindingAPI"]
+            )
+            {
+                rel material:binding = </Circuit/Looks/lit>
+                double size = 1
+                float3 xformOp:scale = (0.006, 0.025, 0.001)
+                double3 xformOp:translate = (0.365, -0.043, 0.049)
+                uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+            }
+
+            def Cube "d" (
+                prepend apiSchemas = ["MaterialBindingAPI"]
+            )
+            {
+                rel material:binding = </Circuit/Looks/lit>
+                double size = 1
+                float3 xformOp:scale = (0.006, 0.025, 0.001)
+                double3 xformOp:translate = (0.33699999999999997, -0.043, 0.049)
+                uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+            }
+
+            def Cube "b" (
+                prepend apiSchemas = ["MaterialBindingAPI"]
+            )
+            {
+                rel material:binding = </Circuit/Looks/lit>
+                double size = 1
+                float3 xformOp:scale = (0.022, 0.006, 0.001)
+                double3 xformOp:translate = (0.379, -0.059, 0.049)
+                uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+            }
+
+            def Cube "c" (
+                prepend apiSchemas = ["MaterialBindingAPI"]
+            )
+            {
+                rel material:binding = </Circuit/Looks/lit>
+                double size = 1
+                float3 xformOp:scale = (0.022, 0.006, 0.001)
+                double3 xformOp:translate = (0.351, -0.059, 0.049)
+                uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+            }
+
+            def Cube "f" (
+                prepend apiSchemas = ["MaterialBindingAPI"]
+            )
+            {
+                rel material:binding = </Circuit/Looks/lit>
+                double size = 1
+                float3 xformOp:scale = (0.022, 0.006, 0.001)
+                double3 xformOp:translate = (0.379, -0.026999999999999996, 0.049)
+                uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+            }
+
+            def Cube "e" (
+                prepend apiSchemas = ["MaterialBindingAPI"]
+            )
+            {
+                rel material:binding = </Circuit/Looks/lit>
+                double size = 1
+                float3 xformOp:scale = (0.022, 0.006, 0.001)
+                double3 xformOp:translate = (0.351, -0.026999999999999996, 0.049)
+                uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+            }
+        }
+    }
+
+    def Cube "decimal" (
+        prepend apiSchemas = ["MaterialBindingAPI"]
+    )
+    {
+        rel material:binding = </Circuit/Looks/lit>
+        double size = 1
+        float3 xformOp:scale = (0.007, 0.007, 0.001)
+        double3 xformOp:translate = (0.339, -0.009, 0.049)
+        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+    }
+
+    def Material "MeterLabelMaterial"
+    {
+        token outputs:surface.connect = </Circuit/MeterLabelMaterial/Shader.outputs:surface>
+
+        def Shader "Shader"
+        {
+            uniform token info:id = "UsdPreviewSurface"
+            color3f inputs:diffuseColor = (1, 1, 1)
+            color3f inputs:diffuseColor.connect = </Circuit/MeterLabelMaterial/Texture.outputs:rgb>
+            color3f inputs:emissiveColor = (0, 0, 0)
+            float inputs:metallic = 0
+            float inputs:roughness = 0.5
+            token outputs:surface
+        }
+
+        def Shader "Texture"
+        {
+            uniform token info:id = "UsdUVTexture"
+            asset inputs:file = @MeterLabel.png@
+            float2 inputs:st.connect = </Circuit/MeterLabelMaterial/UV.outputs:result>
+            color3f outputs:rgb
+        }
+
+        def Shader "UV"
+        {
+            uniform token info:id = "UsdPrimvarReader_float2"
+            token inputs:varname = "st"
+            float2 outputs:result
+        }
+    }
+
+    def Mesh "MeterLabel" (
+        prepend apiSchemas = ["MaterialBindingAPI"]
+    )
+    {
+        int[] faceVertexCounts = [4]
+        int[] faceVertexIndices = [0, 1, 2, 3]
+        rel material:binding = </Circuit/MeterLabelMaterial>
+        point3f[] points = [(0.4085, 0.07, 0.048), (0.4085, -0.07, 0.048), (0.4255, -0.07, 0.048), (0.4255, 0.07, 0.048)]
+        texCoord2f[] primvars:st = [(0, 0), (1, 0), (1, 1), (0, 1)] (
+            interpolation = "vertex"
+        )
+        uniform token subdivisionScheme = "none"
+    }
+
+    def BasisCurves "supply_positive" (
+        prepend apiSchemas = ["MaterialBindingAPI"]
+    )
+    {
+        int[] curveVertexCounts = [3]
+        rel material:binding = </Circuit/Looks/red>
+        point3f[] points = [(0.265, 0.27, 0.071), (0.25, 0.27, 0.012), (0.21, 0.07, 0.026)]
+        uniform token type = "linear"
+        float[] widths = [0.005] (
+            interpolation = "constant"
+        )
+    }
+
+    def BasisCurves "lamp_to_resistor" (
+        prepend apiSchemas = ["MaterialBindingAPI"]
+    )
+    {
+        int[] curveVertexCounts = [4]
+        rel material:binding = </Circuit/Looks/red>
+        point3f[] points = [(0.21, -0.07, 0.026), (0.26, -0.23, 0.008), (0.545, -0.23, 0.008), (0.545, -0.16, 0.053)]
+        uniform token type = "linear"
+        float[] widths = [0.005] (
+            interpolation = "constant"
+        )
+    }
+
+    def BasisCurves "rail_to_negative" (
+        prepend apiSchemas = ["MaterialBindingAPI"]
+    )
+    {
+        int[] curveVertexCounts = [3]
+        rel material:binding = </Circuit/Looks/black>
+        point3f[] points = [(0.505, 0.16, 0.053), (0.48, 0.23, 0.008), (0.36, 0.27, 0.071)]
+        uniform token type = "linear"
+        float[] widths = [0.005] (
+            interpolation = "constant"
+        )
+    }
+
+    def BasisCurves "meter_positive" (
+        prepend apiSchemas = ["MaterialBindingAPI"]
+    )
+    {
+        int[] curveVertexCounts = [3]
+        rel material:binding = </Circuit/Looks/red>
+        point3f[] points = [(0.365, 0.12, 0.025), (0.28, 0.12, 0.008), (0.21, 0.07, 0.026)]
+        uniform token type = "linear"
+        float[] widths = [0.005] (
+            interpolation = "constant"
+        )
+    }
+
+    def BasisCurves "meter_negative" (
+        prepend apiSchemas = ["MaterialBindingAPI"]
+    )
+    {
+        int[] curveVertexCounts = [3]
+        rel material:binding = </Circuit/Looks/black>
+        point3f[] points = [(0.365, -0.12, 0.025), (0.28, -0.12, 0.008), (0.21, -0.07, 0.026)]
+        uniform token type = "linear"
+        float[] widths = [0.005] (
+            interpolation = "constant"
+        )
+    }
+
+    def Cylinder "terminal0" (
+        prepend apiSchemas = ["MaterialBindingAPI"]
+    )
+    {
+        uniform token axis = "Z"
+        double height = 0.007
+        rel material:binding = </Circuit/Looks/red>
+        double radius = 0.007
+        double3 xformOp:translate = (0.265, 0.27, 0.071)
+        uniform token[] xformOpOrder = ["xformOp:translate"]
+    }
+
+    def Cylinder "terminal1" (
+        prepend apiSchemas = ["MaterialBindingAPI"]
+    )
+    {
+        uniform token axis = "Z"
+        double height = 0.007
+        rel material:binding = </Circuit/Looks/black>
+        double radius = 0.007
+        double3 xformOp:translate = (0.36, 0.27, 0.071)
+        uniform token[] xformOpOrder = ["xformOp:translate"]
+    }
+
+    def Cylinder "terminal2" (
+        prepend apiSchemas = ["MaterialBindingAPI"]
+    )
+    {
+        uniform token axis = "Z"
+        double height = 0.007
+        rel material:binding = </Circuit/Looks/red>
+        double radius = 0.007
+        double3 xformOp:translate = (0.21, 0.07, 0.026)
+        uniform token[] xformOpOrder = ["xformOp:translate"]
+    }
+
+    def Cylinder "terminal3" (
+        prepend apiSchemas = ["MaterialBindingAPI"]
+    )
+    {
+        uniform token axis = "Z"
+        double height = 0.007
+        rel material:binding = </Circuit/Looks/black>
+        double radius = 0.007
+        double3 xformOp:translate = (0.21, -0.07, 0.026)
+        uniform token[] xformOpOrder = ["xformOp:translate"]
+    }
+
+    def Cylinder "terminal4" (
+        prepend apiSchemas = ["MaterialBindingAPI"]
+    )
+    {
+        uniform token axis = "Z"
+        double height = 0.007
+        rel material:binding = </Circuit/Looks/red>
+        double radius = 0.007
+        double3 xformOp:translate = (0.365, 0.12, 0.025)
+        uniform token[] xformOpOrder = ["xformOp:translate"]
+    }
+
+    def Cylinder "terminal5" (
+        prepend apiSchemas = ["MaterialBindingAPI"]
+    )
+    {
+        uniform token axis = "Z"
+        double height = 0.007
+        rel material:binding = </Circuit/Looks/black>
+        double radius = 0.007
+        double3 xformOp:translate = (0.365, -0.12, 0.025)
+        uniform token[] xformOpOrder = ["xformOp:translate"]
+    }
+}

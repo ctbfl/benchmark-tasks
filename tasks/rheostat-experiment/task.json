@@ -1,0 +1,19 @@
+{
+  "title": "Set a bulb to its rated voltage with a sliding rheostat",
+  "category": "Societal relevance",
+  "keywords": [
+    "bimanual",
+    "electrical experiment",
+    "rheostat",
+    "voltage control"
+  ],
+  "instruction": "Light the 5 V bulb safely using the sliding rheostat. Inspect the wiring and digital voltmeter to choose the sliding direction. Use the left hand to steady the rheostat base and the right hand to move its slider. Bring the bulb voltage to 5.0 V (4.8 to 5.2 V) and hold it there for at least one second. Do not exceed 7 V at any time. Keep the base flat on the table within 3 cm of its starting position. Complete within 120 seconds.",
+  "context": "In school and electronics teaching labs, adjusting a series rheostat demonstrates voltage division and protects a lamp from excessive voltage. A robot must interpret visible wiring and a voltmeter, stabilize the instrument, and make a fine adjustment near the rated operating point.",
+  "setup": "Calibrated dual-arm YAM station. A 16 x 10.5 x 7 cm plastic 15 V source sits left. On the centerline, near to far: a 5 V bulb on a 10.5 x 14 cm ceramic base; a 12 x 24.5 x 4.6 cm digital voltmeter; and a 12 x 41 cm free rheostat base with a ceramic resistor, metal rail and blue plastic slider. The slider starts halfway along its 26 cm travel. The 280 ohm rheostat and 10 ohm bulb are in series; the meter is across the bulb. Initial bulb voltage: 1 V.",
+  "scoring": "1.0 if the final voltage is 4.8-5.2 V continuously for 1 s and no physical step exceeds 7 V; otherwise 0. During that second the wired base must remain within 3 cm horizontally and 1 cm vertically of its reset position, with at most 15 degrees tilt. Both hands may remain in contact. Final-state scoring; passing through the target does not count.",
+  "run_limit": "2,400 control steps at 20 Hz (120 s simulation time), including final stabilization.",
+  "reset_notes": "Fixed layout, seed 0. Reset both arms to READY and the slider to its midpoint; let the free base settle for 1 s before the episode. No consumed materials.",
+  "fidelity": "PhysX passive prismatic slider on a free rigid base, moved only by native YAM contact. Ideal 15 V source, constant 10 ohm bulb, linear 280 ohm rheostat; no wire dynamics, thermal resistance or bulb damage. Brightness is zero through 3 V, increases to 7 V, then saturates. Geometry is procedural. Demo and Dream share 240 Hz physics and 20 Hz control.",
+  "scores": "Dream-1 trials: 0.0, 0.0; latest: 120 s, final 1.000 V. Open-loop demo: 1.0 at 50.65 s, final 4.960 V, peak 5.157 V.",
+  "media": "M-QZWESM"
+}
