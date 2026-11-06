@@ -1,0 +1,20 @@
+{
+  "title": "Measure a wooden bar and enter its length",
+  "category": "Impact on jobs",
+  "keywords": [
+    "bimanual",
+    "measurement",
+    "tape measure",
+    "calculator",
+    "woodworking"
+  ],
+  "instruction": "Use the tape measure on the right to measure the longest edge of the wooden bar behind it. Enter the measured length as an integer in millimetres on the calculator on the left, then press = to submit and finish. The tape measure retracts automatically when released; it has no lock. Complete the task within 120 seconds.",
+  "context": "Workshop and assembly work often requires measuring an unlabelled part and entering its dimension into a tool. This task combines handling a spring-return measuring tape, reading its scale and physically entering the result.",
+  "setup": "On the standard YAM workbench: a purple plastic 21-key calculator (about 140 x 102 x 18 mm) at the robot's front left, displaying 0; an upright black/yellow tape case (about 76 x 42 x 68 mm) at front right, retracted with its steel hook and outlet facing left; and an unlabelled wooden bar (173 x 70 x 70 mm) behind both, lying flat with its long edge running left to right. All three props are free to move. Fixed initial layout; no position randomization.",
+  "scoring": "Score 1 if the first = press submits the correct integer length in millimetres within 120 simulation seconds; otherwise 0. The scorer compares the submitted integer with the bar's longest dimension. Measurement motions, tape retraction and final placement do not add scoring conditions.",
+  "run_limit": "2,400 control steps at 20 Hz: 120 simulation seconds. Network waiting does not advance physics.",
+  "reset_notes": "Restore the fixed scene and initial robot configuration. Let the free props settle for 2 seconds before starting the task clock. Clear the calculator to 0 and retract the tape.",
+  "fidelity": "Rigid case and steel hook with a passive straight prismatic spring return; no lock, blade bending or internal coil. The graduated blade is visual and has no intermediate contact. Calculator keys use physical spring-loaded sliders. Masses, friction and springs are approximate. All execution uses CPU PhysX TGS at 240 Hz, native YAM actuators and the same 14-D position/gripper interface at 20 Hz.",
+  "scores": "Dream-1 beta: 0.0/1.0 in 120 s; open-loop demo: 1.0/1.0 in 113.5 s.",
+  "media": ""
+}
