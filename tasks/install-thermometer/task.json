@@ -1,0 +1,19 @@
+{
+  "title": "Install a laboratory thermometer",
+  "category": "Societal relevance",
+  "keywords": [
+    "bimanual",
+    "laboratory",
+    "screw",
+    "spring clamp"
+  ],
+  "instruction": "Use the right hand to mount the loose clamp on the iron stand and the left hand to tighten its knob. Pick up the thermometer with the right hand; squeeze the spring handles with the left to insert it. Leave it securely held within 20 degrees of vertical, with its tip in the water and its 20-60 C scale clear. Open both grippers and withdraw.",
+  "context": "Laboratory staff mount thermometers before monitoring heated liquids. Securing the instrument without covering its working scale keeps the bulb immersed, frees both hands for other equipment, and allows repeatable visual readings without holding the glass stem.",
+  "setup": "Dual YAM arms and three calibrated cameras. Left: a free 2 kg iron stand with a 150 x 250 mm base and 12 x 440 mm upright, and a glass 500 mL beaker (90 x 120 mm) holding about 405 mL of water. Right: a 320 x 9 mm glass thermometer, scale facing left, in a 65 x 65 x 140 mm square polymer holder with a 13 mm bore. A 178 g metal screw-and-spring clamp lies in front, parallel to the table long edge, with its screw one turn open.",
+  "scoring": "Four 0.25 items: clamp fixed to the stand; thermometer held by the clamp within 20 degrees of vertical; tip immersed; 20-60 C scale clear. Thermometer credit requires the mounted clamp; immersion and scale credit require a secured thermometer. The final 1 s must remain within 2 mm and 2 degrees, with robot contact below 0.01 N. Stand feet remain on the table. Asset geometry defines the socket, jaws and water boundary.",
+  "run_limit": "2,400 native control steps (120 simulation seconds at 20 Hz), including final settling.",
+  "reset_notes": "Restore the fixed layout and seed 0. Open the screw by one turn, let the spring jaws close, and place the thermometer in its holder. Settle for two seconds before starting the clock. No consumables are depleted.",
+  "fidelity": "CPU PhysX TGS at 240 Hz with native YAM position/gripper actions at 20 Hz. All objects are free rigid bodies; the clamp has a passive torsion spring and a native rotary-to-linear screw coupling with friction. No grasp attachments are used. Threads, material properties and spring values are engineering approximations. Water is a fixed visible volume, not a fluid simulation.",
+  "scores": "Dream-1 beta: 0.0/1.0 in 120 s; open-loop demo: 1.0/1.0 in 116 s.",
+  "media": "M-CJRDTE"
+}

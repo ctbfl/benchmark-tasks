@@ -1,0 +1,69 @@
+{
+  "stand": {
+    "body": "/stand",
+    "base_size_m": [
+      0.15,
+      0.25,
+      0.014
+    ],
+    "rod_center_xy_m": [
+      0.0,
+      0.09
+    ],
+    "rod_radius_m": 0.006,
+    "rod_top_m": 0.44,
+    "mass_kg": 2.0
+  },
+  "clamp": {
+    "articulation_root": "/clamp/boss",
+    "root_body": "/clamp/boss",
+    "thermometer_center_m": [
+      0.0,
+      -0.12,
+      0.0
+    ],
+    "jaw_pivot_m": [
+      0.0,
+      -0.095,
+      0.0
+    ],
+    "thermometer_diameter_m": 0.009,
+    "jaw_initial_gap_m": 0.009,
+    "fixed_jaw_profile": "90 degree longitudinal V groove with two rubber contact faces",
+    "jaw_joint": "/clamp/joints/jaw_hinge",
+    "jaw_open_range_deg": [
+      -35,
+      6
+    ],
+    "jaw_spring_rest_deg": 4,
+    "jaw_spring_stiffness_Nm_per_rad": 0.8,
+    "jaw_spring_damping_Nms_per_rad": 0.012,
+    "knob_joint": "/clamp/joints/screw_turn",
+    "slider_joint": "/clamp/joints/screw_travel",
+    "knob_center_m": [
+      -0.031,
+      0,
+      0
+    ],
+    "screw_outward_axis": [
+      -1,
+      0,
+      0
+    ],
+    "rod_socket_opening_axis": [
+      0,
+      1,
+      0
+    ],
+    "rod_socket_opening_width_m": 0.0182,
+    "coupling_api": "/clamp/joints/screw_travel.physxMimicJoint:rotX",
+    "screw_lead_m_per_turn": 0.002,
+    "screw_travel_limits_m": [
+      -0.0002,
+      0.009
+    ],
+    "screw_static_friction_Nm": 0.018,
+    "actuators": {},
+    "mass_kg": 0.178
+  }
+}
