@@ -1,0 +1,199 @@
+#usda 1.0
+(
+    defaultPrim = "stand"
+    metersPerUnit = 1
+    upAxis = "Z"
+)
+
+def Xform "stand" (
+    prepend apiSchemas = ["PhysicsRigidBodyAPI", "PhysicsMassAPI"]
+    customData = {
+        string asset_description = "Free iron stand; threaded upright fixed to heavy base."
+    }
+)
+{
+    point3f physics:centerOfMass = (0, 0.01, 0.031)
+    float3 physics:diagonalInertia = (0.014, 0.009, 0.016)
+    float physics:mass = 2
+
+    def "Looks"
+    {
+        def Material "paint" (
+            prepend apiSchemas = ["PhysicsMaterialAPI"]
+        )
+        {
+            token outputs:surface.connect = </stand/Looks/paint/surface.outputs:surface>
+            float physics:dynamicFriction = 0.56
+            float physics:restitution = 0
+            float physics:staticFriction = 0.7
+
+            def Shader "surface"
+            {
+                uniform token info:id = "UsdPreviewSurface"
+                color3f inputs:diffuseColor = (0.038, 0.043, 0.05)
+                float inputs:metallic = 0.35
+                float inputs:roughness = 0.38
+                token outputs:surface
+            }
+        }
+
+        def Material "steel" (
+            prepend apiSchemas = ["PhysicsMaterialAPI"]
+        )
+        {
+            token outputs:surface.connect = </stand/Looks/steel/surface.outputs:surface>
+            float physics:dynamicFriction = 0.44
+            float physics:restitution = 0
+            float physics:staticFriction = 0.55
+
+            def Shader "surface"
+            {
+                uniform token info:id = "UsdPreviewSurface"
+                color3f inputs:diffuseColor = (0.47, 0.5, 0.53)
+                float inputs:metallic = 0.92
+                float inputs:roughness = 0.22
+                token outputs:surface
+            }
+        }
+
+        def Material "rubber" (
+            prepend apiSchemas = ["PhysicsMaterialAPI"]
+        )
+        {
+            token outputs:surface.connect = </stand/Looks/rubber/surface.outputs:surface>
+            float physics:dynamicFriction = 0.88
+            float physics:restitution = 0
+            float physics:staticFriction = 1.1
+
+            def Shader "surface"
+            {
+                uniform token info:id = "UsdPreviewSurface"
+                color3f inputs:diffuseColor = (0.021, 0.024, 0.026)
+                float inputs:metallic = 0
+                float inputs:roughness = 0.9
+                token outputs:surface
+            }
+        }
+    }
+
+    def Mesh "plate" (
+        prepend apiSchemas = ["MaterialBindingAPI", "PhysicsCollisionAPI", "PhysicsMeshCollisionAPI", "PhysxCollisionAPI"]
+    )
+    {
+        int[] faceVertexCounts = [36, 36, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4]
+        int[] faceVertexIndices = [35, 34, 33, 32, 31, 30, 29, 28, 27, 26, 25, 24, 23, 22, 21, 20, 19, 18, 17, 16, 15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1, 0, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64, 65, 66, 67, 68, 69, 70, 71, 0, 1, 37, 36, 1, 2, 38, 37, 2, 3, 39, 38, 3, 4, 40, 39, 4, 5, 41, 40, 5, 6, 42, 41, 6, 7, 43, 42, 7, 8, 44, 43, 8, 9, 45, 44, 9, 10, 46, 45, 10, 11, 47, 46, 11, 12, 48, 47, 12, 13, 49, 48, 13, 14, 50, 49, 14, 15, 51, 50, 15, 16, 52, 51, 16, 17, 53, 52, 17, 18, 54, 53, 18, 19, 55, 54, 19, 20, 56, 55, 20, 21, 57, 56, 21, 22, 58, 57, 22, 23, 59, 58, 23, 24, 60, 59, 24, 25, 61, 60, 25, 26, 62, 61, 26, 27, 63, 62, 27, 28, 64, 63, 28, 29, 65, 64, 29, 30, 66, 65, 30, 31, 67, 66, 31, 32, 68, 67, 32, 33, 69, 68, 33, 34, 70, 69, 34, 35, 71, 70, 35, 0, 36, 71]
+        rel material:binding = </stand/Looks/paint>
+        rel material:binding:physics = </stand/Looks/paint>
+        uniform token physics:approximation = "convexHull"
+        custom float physxCollision:contactOffset = 0.00025
+        custom float physxCollision:restOffset = 0
+        point3f[] points = [(0.075, 0.122, 0.004), (0.07494236, 0.122585274, 0.004), (0.074771635, 0.123148054, 0.004), (0.07449441, 0.12366671, 0.004), (0.07412132, 0.12412132, 0.004), (0.073666714, 0.12449441, 0.004), (0.07314805, 0.12477164, 0.004), (0.07258527, 0.124942355, 0.004), (0.072, 0.125, 0.004), (-0.072, 0.125, 0.004), (-0.07258527, 0.124942355, 0.004), (-0.07314805, 0.12477164, 0.004), (-0.073666714, 0.12449441, 0.004), (-0.07412132, 0.12412132, 0.004), (-0.07449441, 0.12366671, 0.004), (-0.074771635, 0.123148054, 0.004), (-0.07494236, 0.122585274, 0.004), (-0.075, 0.122, 0.004), (-0.075, -0.122, 0.004), (-0.07494236, -0.122585274, 0.004), (-0.074771635, -0.123148054, 0.004), (-0.07449441, -0.12366671, 0.004), (-0.07412132, -0.12412132, 0.004), (-0.073666714, -0.12449441, 0.004), (-0.07314805, -0.12477164, 0.004), (-0.07258527, -0.124942355, 0.004), (-0.072, -0.125, 0.004), (0.072, -0.125, 0.004), (0.07258527, -0.124942355, 0.004), (0.07314805, -0.12477164, 0.004), (0.073666714, -0.12449441, 0.004), (0.07412132, -0.12412132, 0.004), (0.07449441, -0.12366671, 0.004), (0.074771635, -0.123148054, 0.004), (0.07494236, -0.122585274, 0.004), (0.075, -0.122, 0.004), (0.075, 0.122, 0.014), (0.07494236, 0.122585274, 0.014), (0.074771635, 0.123148054, 0.014), (0.07449441, 0.12366671, 0.014), (0.07412132, 0.12412132, 0.014), (0.073666714, 0.12449441, 0.014), (0.07314805, 0.12477164, 0.014), (0.07258527, 0.124942355, 0.014), (0.072, 0.125, 0.014), (-0.072, 0.125, 0.014), (-0.07258527, 0.124942355, 0.014), (-0.07314805, 0.12477164, 0.014), (-0.073666714, 0.12449441, 0.014), (-0.07412132, 0.12412132, 0.014), (-0.07449441, 0.12366671, 0.014), (-0.074771635, 0.123148054, 0.014), (-0.07494236, 0.122585274, 0.014), (-0.075, 0.122, 0.014), (-0.075, -0.122, 0.014), (-0.07494236, -0.122585274, 0.014), (-0.074771635, -0.123148054, 0.014), (-0.07449441, -0.12366671, 0.014), (-0.07412132, -0.12412132, 0.014), (-0.073666714, -0.12449441, 0.014), (-0.07314805, -0.12477164, 0.014), (-0.07258527, -0.124942355, 0.014), (-0.072, -0.125, 0.014), (0.072, -0.125, 0.014), (0.07258527, -0.124942355, 0.014), (0.07314805, -0.12477164, 0.014), (0.073666714, -0.12449441, 0.014), (0.07412132, -0.12412132, 0.014), (0.07449441, -0.12366671, 0.014), (0.074771635, -0.123148054, 0.014), (0.07494236, -0.122585274, 0.014), (0.075, -0.122, 0.014)]
+        uniform token subdivisionScheme = "none"
+    }
+
+    def Cylinder "foot_0_0" (
+        prepend apiSchemas = ["MaterialBindingAPI", "PhysicsCollisionAPI", "PhysxCollisionAPI"]
+    )
+    {
+        uniform token axis = "Z"
+        double height = 0.004
+        rel material:binding = </stand/Looks/rubber>
+        rel material:binding:physics = </stand/Looks/rubber>
+        custom float physxCollision:contactOffset = 0.00025
+        custom float physxCollision:restOffset = 0
+        double radius = 0.011
+        double3 xformOp:translate = (-0.055, -0.105, 0.002)
+        uniform token[] xformOpOrder = ["xformOp:translate"]
+    }
+
+    def Cylinder "foot_0_1" (
+        prepend apiSchemas = ["MaterialBindingAPI", "PhysicsCollisionAPI", "PhysxCollisionAPI"]
+    )
+    {
+        uniform token axis = "Z"
+        double height = 0.004
+        rel material:binding = </stand/Looks/rubber>
+        rel material:binding:physics = </stand/Looks/rubber>
+        custom float physxCollision:contactOffset = 0.00025
+        custom float physxCollision:restOffset = 0
+        double radius = 0.011
+        double3 xformOp:translate = (-0.055, 0.105, 0.002)
+        uniform token[] xformOpOrder = ["xformOp:translate"]
+    }
+
+    def Cylinder "foot_1_0" (
+        prepend apiSchemas = ["MaterialBindingAPI", "PhysicsCollisionAPI", "PhysxCollisionAPI"]
+    )
+    {
+        uniform token axis = "Z"
+        double height = 0.004
+        rel material:binding = </stand/Looks/rubber>
+        rel material:binding:physics = </stand/Looks/rubber>
+        custom float physxCollision:contactOffset = 0.00025
+        custom float physxCollision:restOffset = 0
+        double radius = 0.011
+        double3 xformOp:translate = (0.055, -0.105, 0.002)
+        uniform token[] xformOpOrder = ["xformOp:translate"]
+    }
+
+    def Cylinder "foot_1_1" (
+        prepend apiSchemas = ["MaterialBindingAPI", "PhysicsCollisionAPI", "PhysxCollisionAPI"]
+    )
+    {
+        uniform token axis = "Z"
+        double height = 0.004
+        rel material:binding = </stand/Looks/rubber>
+        rel material:binding:physics = </stand/Looks/rubber>
+        custom float physxCollision:contactOffset = 0.00025
+        custom float physxCollision:restOffset = 0
+        double radius = 0.011
+        double3 xformOp:translate = (0.055, 0.105, 0.002)
+        uniform token[] xformOpOrder = ["xformOp:translate"]
+    }
+
+    def Cylinder "rod" (
+        prepend apiSchemas = ["MaterialBindingAPI", "PhysicsCollisionAPI", "PhysxCollisionAPI"]
+    )
+    {
+        uniform token axis = "Z"
+        double height = 0.426
+        rel material:binding = </stand/Looks/steel>
+        rel material:binding:physics = </stand/Looks/steel>
+        custom float physxCollision:contactOffset = 0.00025
+        custom float physxCollision:restOffset = 0
+        double radius = 0.006
+        double3 xformOp:translate = (0, 0.09, 0.227)
+        uniform token[] xformOpOrder = ["xformOp:translate"]
+    }
+
+    def Cylinder "rod_socket" (
+        prepend apiSchemas = ["MaterialBindingAPI", "PhysicsCollisionAPI", "PhysxCollisionAPI"]
+    )
+    {
+        uniform token axis = "Z"
+        double height = 0.01
+        rel material:binding = </stand/Looks/steel>
+        rel material:binding:physics = </stand/Looks/steel>
+        custom float physxCollision:contactOffset = 0.00025
+        custom float physxCollision:restOffset = 0
+        double radius = 0.01
+        double3 xformOp:translate = (0, 0.09, 0.019)
+        uniform token[] xformOpOrder = ["xformOp:translate"]
+    }
+
+    def Cylinder "socket_flange" (
+        prepend apiSchemas = ["MaterialBindingAPI", "PhysicsCollisionAPI", "PhysxCollisionAPI"]
+    )
+    {
+        uniform token axis = "Z"
+        double height = 0.003
+        rel material:binding = </stand/Looks/paint>
+        rel material:binding:physics = </stand/Looks/paint>
+        custom float physxCollision:contactOffset = 0.00025
+        custom float physxCollision:restOffset = 0
+        double radius = 0.013
+        double3 xformOp:translate = (0, 0.09, 0.0155)
+        uniform token[] xformOpOrder = ["xformOp:translate"]
+    }
+}
+

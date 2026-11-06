@@ -1,0 +1,13 @@
+diff --git a/isaaclab_arena/assets/nucleus.py b/isaaclab_arena/assets/nucleus.py
+index a7da76a1a4..d27d0beaab 100644
+--- a/isaaclab_arena/assets/nucleus.py
++++ b/isaaclab_arena/assets/nucleus.py
+@@ -10,7 +10,6 @@ from isaaclab.utils.assets import ISAAC_NUCLEUS_DIR, ISAACLAB_NUCLEUS_DIR
+ ARENA_STAGING_NUCLEUS_DIR: str = "omniverse://isaac-dev.ov.nvidia.com/Isaac/IsaacLab"
+ """Internal upload location, available immediately before the staging S3 mirror syncs."""
+ 
+-# TODO(2026.07.14, Point Arena assets to the production bucket before release)
+-ARENA_NUCLEUS_DIR: str = ISAACLAB_NUCLEUS_DIR.replace("omniverse-content-production", "omniverse-content-staging")
++ARENA_NUCLEUS_DIR: str = ISAACLAB_NUCLEUS_DIR
+ # TODO(2026.08.12, Fill request to sync Replicator kitchens to the production bucket once Sim 6.1 is released)
+ ISAAC_STAGING_NUCLEUS_DIR: str = ISAAC_NUCLEUS_DIR.replace("omniverse-content-production", "omniverse-content-staging")

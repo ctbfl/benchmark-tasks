@@ -1,0 +1,59 @@
+#usda 1.0
+(
+    defaultPrim = "Scene"
+    metersPerUnit = 1
+    upAxis = "Z"
+)
+
+def Xform "Scene"
+{
+    def Xform "stand" (
+        prepend references = @stand_clamp/stand.usda@
+    )
+    {
+        double3 xformOp:translate = (0.43, 0.19, 0)
+        uniform token[] xformOpOrder = ["xformOp:translate"]
+    }
+
+    def Xform "beaker" (
+        prepend references = @lab_glass/beaker.usda@
+    )
+    {
+        double3 xformOp:translate = (0.43, 0.16, 0.014)
+        uniform token[] xformOpOrder = ["xformOp:translate"]
+    }
+
+    def Xform "clamp" (
+        prepend references = @stand_clamp/clamp.usda@
+    )
+    {
+        double3 xformOp:translate = (0.43, 0.28, 0.345)
+        uniform token[] xformOpOrder = ["xformOp:translate"]
+    }
+
+    def Xform "thermometer" (
+        prepend references = @lab_glass/thermometer.usda@
+    )
+    {
+        double3 xformOp:translate = (0.43, 0.16, 0.04)
+        uniform token[] xformOpOrder = ["xformOp:translate"]
+    }
+
+    def Xform "timer" (
+        prepend references = @electronics/timer.usda@
+    )
+    {
+        double3 xformOp:translate = (0.46, -0.235, 0.001)
+        uniform token[] xformOpOrder = ["xformOp:translate"]
+    }
+
+    def Xform "calculator" (
+        prepend references = @electronics/calculator.usda@
+    )
+    {
+        float xformOp:rotateZ = -90
+        double3 xformOp:translate = (0.23, -0.235, 0.001)
+        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:rotateZ"]
+    }
+}
+

@@ -1,0 +1,5 @@
+runs/
+validation/
+submission/
+__pycache__/
+*.pyc

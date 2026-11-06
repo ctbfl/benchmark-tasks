@@ -1,0 +1,483 @@
+{
+  "timer": {
+    "root": "/Timer",
+    "body": "body",
+    "buttons": {
+      "START": {
+        "joint": "key_START",
+        "body": "key_START",
+        "center": [
+          -0.014190687691664088,
+          0.043,
+          0.059032778371046556
+        ],
+        "rotation_wxyz": [
+          -0.5963678105290182,
+          -0.3799281965909152,
+          0.3799281965909152,
+          0.596367810529018
+        ],
+        "travel_m": 0.003,
+        "press_threshold_m": -0.0016,
+        "release_threshold_m": -0.0007
+      },
+      "M": {
+        "joint": "key_M",
+        "body": "key_M",
+        "center": [
+          -0.014190687691664088,
+          -0.007,
+          0.059032778371046556
+        ],
+        "rotation_wxyz": [
+          -0.5963678105290182,
+          -0.3799281965909152,
+          0.3799281965909152,
+          0.596367810529018
+        ],
+        "travel_m": 0.003,
+        "press_threshold_m": -0.0016,
+        "release_threshold_m": -0.0007
+      },
+      "S": {
+        "joint": "key_S",
+        "body": "key_S",
+        "center": [
+          -0.014190687691664088,
+          -0.046,
+          0.059032778371046556
+        ],
+        "rotation_wxyz": [
+          -0.5963678105290182,
+          -0.3799281965909152,
+          0.3799281965909152,
+          0.596367810529018
+        ],
+        "travel_m": 0.003,
+        "press_threshold_m": -0.0016,
+        "release_threshold_m": -0.0007
+      }
+    },
+    "face_normal": [
+      -0.9063077870366499,
+      0.0,
+      0.42261826174069944
+    ],
+    "size_m": [
+      0.122,
+      0.14,
+      0.146
+    ],
+    "initial_display": "00:15",
+    "initial_running": true,
+    "travel_m": 0.003,
+    "press_threshold_m": -0.0016,
+    "release_threshold_m": -0.0007,
+    "button_order_left_to_right": [
+      "START",
+      "M",
+      "S"
+    ],
+    "stand": "Open rear folding-stand geometry, rigid in this task"
+  },
+  "calculator": {
+    "root": "/Calculator",
+    "body": "base",
+    "buttons": {
+      "%": {
+        "joint": "press_percent",
+        "body": "key_percent",
+        "center": [
+          -0.038,
+          0.008,
+          0.011
+        ],
+        "rotation_wxyz": [
+          1,
+          0,
+          0,
+          0
+        ],
+        "travel_m": 0.0015,
+        "press_threshold_m": -0.0008,
+        "release_threshold_m": -0.00025
+      },
+      "7": {
+        "joint": "press_7",
+        "body": "key_7",
+        "center": [
+          -0.019,
+          0.008,
+          0.011
+        ],
+        "rotation_wxyz": [
+          1,
+          0,
+          0,
+          0
+        ],
+        "travel_m": 0.0015,
+        "press_threshold_m": -0.0008,
+        "release_threshold_m": -0.00025
+      },
+      "8": {
+        "joint": "press_8",
+        "body": "key_8",
+        "center": [
+          0.0,
+          0.008,
+          0.011
+        ],
+        "rotation_wxyz": [
+          1,
+          0,
+          0,
+          0
+        ],
+        "travel_m": 0.0015,
+        "press_threshold_m": -0.0008,
+        "release_threshold_m": -0.00025
+      },
+      "9": {
+        "joint": "press_9",
+        "body": "key_9",
+        "center": [
+          0.019,
+          0.008,
+          0.011
+        ],
+        "rotation_wxyz": [
+          1,
+          0,
+          0,
+          0
+        ],
+        "travel_m": 0.0015,
+        "press_threshold_m": -0.0008,
+        "release_threshold_m": -0.00025
+      },
+      "/": {
+        "joint": "press_divide",
+        "body": "key_divide",
+        "center": [
+          0.038,
+          0.008,
+          0.011
+        ],
+        "rotation_wxyz": [
+          1,
+          0,
+          0,
+          0
+        ],
+        "travel_m": 0.0015,
+        "press_threshold_m": -0.0008,
+        "release_threshold_m": -0.00025
+      },
+      "SQRT": {
+        "joint": "press_sqrt",
+        "body": "key_sqrt",
+        "center": [
+          -0.038,
+          -0.008,
+          0.011
+        ],
+        "rotation_wxyz": [
+          1,
+          0,
+          0,
+          0
+        ],
+        "travel_m": 0.0015,
+        "press_threshold_m": -0.0008,
+        "release_threshold_m": -0.00025
+      },
+      "4": {
+        "joint": "press_4",
+        "body": "key_4",
+        "center": [
+          -0.019,
+          -0.008,
+          0.011
+        ],
+        "rotation_wxyz": [
+          1,
+          0,
+          0,
+          0
+        ],
+        "travel_m": 0.0015,
+        "press_threshold_m": -0.0008,
+        "release_threshold_m": -0.00025
+      },
+      "5": {
+        "joint": "press_5",
+        "body": "key_5",
+        "center": [
+          0.0,
+          -0.008,
+          0.011
+        ],
+        "rotation_wxyz": [
+          1,
+          0,
+          0,
+          0
+        ],
+        "travel_m": 0.0015,
+        "press_threshold_m": -0.0008,
+        "release_threshold_m": -0.00025
+      },
+      "6": {
+        "joint": "press_6",
+        "body": "key_6",
+        "center": [
+          0.019,
+          -0.008,
+          0.011
+        ],
+        "rotation_wxyz": [
+          1,
+          0,
+          0,
+          0
+        ],
+        "travel_m": 0.0015,
+        "press_threshold_m": -0.0008,
+        "release_threshold_m": -0.00025
+      },
+      "*": {
+        "joint": "press_multiply",
+        "body": "key_multiply",
+        "center": [
+          0.038,
+          -0.008,
+          0.011
+        ],
+        "rotation_wxyz": [
+          1,
+          0,
+          0,
+          0
+        ],
+        "travel_m": 0.0015,
+        "press_threshold_m": -0.0008,
+        "release_threshold_m": -0.00025
+      },
+      "CE": {
+        "joint": "press_CE",
+        "body": "key_CE",
+        "center": [
+          -0.038,
+          -0.024,
+          0.011
+        ],
+        "rotation_wxyz": [
+          1,
+          0,
+          0,
+          0
+        ],
+        "travel_m": 0.0015,
+        "press_threshold_m": -0.0008,
+        "release_threshold_m": -0.00025
+      },
+      "1": {
+        "joint": "press_1",
+        "body": "key_1",
+        "center": [
+          -0.019,
+          -0.024,
+          0.011
+        ],
+        "rotation_wxyz": [
+          1,
+          0,
+          0,
+          0
+        ],
+        "travel_m": 0.0015,
+        "press_threshold_m": -0.0008,
+        "release_threshold_m": -0.00025
+      },
+      "2": {
+        "joint": "press_2",
+        "body": "key_2",
+        "center": [
+          0.0,
+          -0.024,
+          0.011
+        ],
+        "rotation_wxyz": [
+          1,
+          0,
+          0,
+          0
+        ],
+        "travel_m": 0.0015,
+        "press_threshold_m": -0.0008,
+        "release_threshold_m": -0.00025
+      },
+      "3": {
+        "joint": "press_3",
+        "body": "key_3",
+        "center": [
+          0.019,
+          -0.024,
+          0.011
+        ],
+        "rotation_wxyz": [
+          1,
+          0,
+          0,
+          0
+        ],
+        "travel_m": 0.0015,
+        "press_threshold_m": -0.0008,
+        "release_threshold_m": -0.00025
+      },
+      "-": {
+        "joint": "press_minus",
+        "body": "key_minus",
+        "center": [
+          0.038,
+          -0.024,
+          0.011
+        ],
+        "rotation_wxyz": [
+          1,
+          0,
+          0,
+          0
+        ],
+        "travel_m": 0.0015,
+        "press_threshold_m": -0.0008,
+        "release_threshold_m": -0.00025
+      },
+      "C": {
+        "joint": "press_C",
+        "body": "key_C",
+        "center": [
+          -0.038,
+          -0.04,
+          0.011
+        ],
+        "rotation_wxyz": [
+          1,
+          0,
+          0,
+          0
+        ],
+        "travel_m": 0.0015,
+        "press_threshold_m": -0.0008,
+        "release_threshold_m": -0.00025
+      },
+      "0": {
+        "joint": "press_0",
+        "body": "key_0",
+        "center": [
+          -0.019,
+          -0.04,
+          0.011
+        ],
+        "rotation_wxyz": [
+          1,
+          0,
+          0,
+          0
+        ],
+        "travel_m": 0.0015,
+        "press_threshold_m": -0.0008,
+        "release_threshold_m": -0.00025
+      },
+      ".": {
+        "joint": "press_dot",
+        "body": "key_dot",
+        "center": [
+          0.0,
+          -0.04,
+          0.011
+        ],
+        "rotation_wxyz": [
+          1,
+          0,
+          0,
+          0
+        ],
+        "travel_m": 0.0015,
+        "press_threshold_m": -0.0008,
+        "release_threshold_m": -0.00025
+      },
+      "+/-": {
+        "joint": "press_sign",
+        "body": "key_sign",
+        "center": [
+          0.019,
+          -0.04,
+          0.011
+        ],
+        "rotation_wxyz": [
+          1,
+          0,
+          0,
+          0
+        ],
+        "travel_m": 0.0015,
+        "press_threshold_m": -0.0008,
+        "release_threshold_m": -0.00025
+      },
+      "+": {
+        "joint": "press_plus",
+        "body": "key_plus",
+        "center": [
+          0.038,
+          -0.046,
+          0.011
+        ],
+        "rotation_wxyz": [
+          1,
+          0,
+          0,
+          0
+        ],
+        "travel_m": 0.0015,
+        "press_threshold_m": -0.0008,
+        "release_threshold_m": -0.00025
+      },
+      "=": {
+        "joint": "press_equals",
+        "body": "key_equals",
+        "center": [
+          0.0,
+          -0.057,
+          0.011
+        ],
+        "rotation_wxyz": [
+          1,
+          0,
+          0,
+          0
+        ],
+        "travel_m": 0.0015,
+        "press_threshold_m": -0.0008,
+        "release_threshold_m": -0.00025
+      }
+    },
+    "face_normal": [
+      0,
+      0,
+      1
+    ],
+    "size_m": [
+      0.1016,
+      0.1397,
+      0.021
+    ],
+    "initial_display": "0",
+    "travel_m": 0.0015,
+    "press_threshold_m": -0.0008,
+    "release_threshold_m": -0.00025,
+    "scene_rotation_z_deg": -90,
+    "source": "tape-measure/assets/calculator.usda"
+  }
+}

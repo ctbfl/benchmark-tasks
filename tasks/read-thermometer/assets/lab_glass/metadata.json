@@ -1,0 +1,28 @@
+{
+  "beaker": {
+    "height_m": 0.12,
+    "outer_radius_m": 0.045,
+    "inner_radius_m": 0.042,
+    "capacity_ml": 500,
+    "water_height_m": 0.078,
+    "floor_height_m": 0.005,
+    "root_path": "/Beaker",
+    "water_volume_ml": 397.96093523422167,
+    "collision_wall_segments": 48,
+    "fluid_simulation": false
+  },
+  "thermometer": {
+    "height_m": 0.32,
+    "radius_m": 0.0045,
+    "bulb_center_m": 0.01,
+    "scale_bottom_m": 0.065,
+    "scale_top_m": 0.295,
+    "min_celsius": -20,
+    "max_celsius": 110,
+    "clamp_height_m": 0.305,
+    "root_path": "/Thermometer",
+    "initial_celsius": 35.0,
+    "column_path": "/Thermometer/RedColumn",
+    "glass_optics": "thin-walled optical envelope"
+  }
+}
