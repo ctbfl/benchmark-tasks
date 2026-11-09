@@ -1,0 +1,20 @@
+{
+  "title": "Flip a steak at the right time",
+  "category": "Impact on jobs",
+  "keywords": [
+    "tool use",
+    "cooking",
+    "timing",
+    "contact",
+    "bimanual"
+  ],
+  "instruction": "Use the spatula to flip the steak in the pan. Keep its entire initial bottom face in uninterrupted contact with the pan for at least 50 seconds, but do not let any part of that face contact the pan for more than 70 seconds. Leave the flipped steak resting in the pan, cooked side up. The timer counts up from zero.",
+  "context": "Food-service robots must time cooking while manipulating utensils. Sliding a spatula under food progressively ends surface contact; turning too early or leaving an edge on the hot pan too long produces uneven cooking. This task combines a timed contact window with a physical utensil-assisted inversion.",
+  "setup": "Dual YAM workstation. Center: a 31 cm speckled nonstick pan with wooden handle on a black 40 x 34 x 2.8 cm heater; a raw 14 x 10 x 1.8 cm steak lies flat inside. Upper right: a white 12.2 x 14 x 14.6 cm count-up timer. Lower right: a 29.7 x 8.8 cm black nylon spatula, blade-down/handle-up in a light-gray 7.5 x 12.5 x 6.4 cm slotted holder. Fixed layout, three calibrated cameras.",
+  "scoring": "0.5: the original bottom completely leaves the pan and the steak rests in the pan on its opposite face, released from hands and tool. +0.5: full-face contact persists until at least 50 s and the original bottom completely separates by 70 s. No complete departure or no completed flip scores 0; an early or late completed flip scores 0.5.",
+  "run_limit": "2,400 control steps (120 seconds at 20 Hz), including final settling. The episode clock starts after reset settling.",
+  "reset_notes": "Restore the fixed initial poses and robot ready state. Reset the timer to 00:00 and both steak surfaces to raw. Seed 0; no layout randomization.",
+  "fidelity": "CPU PhysX at 240 Hz with native YAM joint-position/gripper control at 20 Hz. Free rigid objects interact through collision and friction; no grasp attachments. The steak keeps one geometry and body while its bottom material changes from raw to seared after 50 s of full contact. No heat transfer, deformation, smoke or internal doneness is simulated. Heater and timer controls are visual only.",
+  "scores": "Dream-1: 0.0/1.0 in 120 s; open-loop demo: 1.0/1.0 in 80.2 s.",
+  "media": ""
+}

@@ -1,0 +1,107 @@
+#usda 1.0
+(
+    defaultPrim = "Asset"
+    metersPerUnit = 1
+    upAxis = "Z"
+)
+
+def Xform "Asset" (
+    prepend apiSchemas = ["PhysicsRigidBodyAPI", "PhysicsMassAPI", "PhysxContactReportAPI"]
+)
+{
+    float physics:mass = 0.75
+    float physxContactReport:threshold = 0
+
+    def "Looks"
+    {
+        def Material "Stone" (
+            prepend apiSchemas = ["PhysicsMaterialAPI"]
+        )
+        {
+            token outputs:surface.connect = </Asset/Looks/Stone/Shader.outputs:surface>
+            float physics:dynamicFriction = 0.72
+            float physics:restitution = 0
+            float physics:staticFriction = 0.9
+
+            def Shader "Shader"
+            {
+                uniform token info:id = "UsdPreviewSurface"
+                color3f inputs:diffuseColor = (0.48, 0.5, 0.52)
+                float inputs:metallic = 0
+                float inputs:roughness = 0.82
+                token outputs:surface
+            }
+        }
+    }
+
+    def Cube "base" (
+        prepend apiSchemas = ["MaterialBindingAPI", "PhysicsCollisionAPI", "PhysxCollisionAPI"]
+    )
+    {
+        rel material:binding = </Asset/Looks/Stone>
+        rel material:binding:physics = </Asset/Looks/Stone>
+        float physxCollision:contactOffset = 0.0003
+        float physxCollision:restOffset = 0
+        double size = 1
+        float3 xformOp:scale = (0.075, 0.125, 0.014)
+        double3 xformOp:translate = (0, 0, 0.007)
+        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+    }
+
+    def Cube "cheek0" (
+        prepend apiSchemas = ["MaterialBindingAPI", "PhysicsCollisionAPI", "PhysxCollisionAPI"]
+    )
+    {
+        rel material:binding = </Asset/Looks/Stone>
+        rel material:binding:physics = </Asset/Looks/Stone>
+        float physxCollision:contactOffset = 0.0003
+        float physxCollision:restOffset = 0
+        double size = 1
+        float3 xformOp:scale = (0.03, 0.106, 0.05)
+        double3 xformOp:translate = (-0.02, 0, 0.039)
+        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+    }
+
+    def Cube "cheek2" (
+        prepend apiSchemas = ["MaterialBindingAPI", "PhysicsCollisionAPI", "PhysxCollisionAPI"]
+    )
+    {
+        rel material:binding = </Asset/Looks/Stone>
+        rel material:binding:physics = </Asset/Looks/Stone>
+        float physxCollision:contactOffset = 0.0003
+        float physxCollision:restOffset = 0
+        double size = 1
+        float3 xformOp:scale = (0.03, 0.106, 0.05)
+        double3 xformOp:translate = (0.02, 0, 0.039)
+        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+    }
+
+    def Cube "end0" (
+        prepend apiSchemas = ["MaterialBindingAPI", "PhysicsCollisionAPI", "PhysxCollisionAPI"]
+    )
+    {
+        rel material:binding = </Asset/Looks/Stone>
+        rel material:binding:physics = </Asset/Looks/Stone>
+        float physxCollision:contactOffset = 0.0003
+        float physxCollision:restOffset = 0
+        double size = 1
+        float3 xformOp:scale = (0.01, 0.008, 0.05)
+        double3 xformOp:translate = (0, -0.052, 0.039)
+        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+    }
+
+    def Cube "end2" (
+        prepend apiSchemas = ["MaterialBindingAPI", "PhysicsCollisionAPI", "PhysxCollisionAPI"]
+    )
+    {
+        rel material:binding = </Asset/Looks/Stone>
+        rel material:binding:physics = </Asset/Looks/Stone>
+        float physxCollision:contactOffset = 0.0003
+        float physxCollision:restOffset = 0
+        double size = 1
+        float3 xformOp:scale = (0.01, 0.008, 0.05)
+        double3 xformOp:translate = (0, 0.052, 0.039)
+        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+    }
+}
+
