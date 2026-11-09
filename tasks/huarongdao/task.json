@@ -1,0 +1,18 @@
+{
+  "title": "Solve a sliding number puzzle",
+  "category": "Societal relevance",
+  "keywords": [
+    "sliding puzzle",
+    "sequential planning",
+    "contact manipulation"
+  ],
+  "instruction": "Slide adjacent numbered tiles into the empty space in the fixed tray until the rows read 1 2 3 / 4 5 6 / 7 8 blank. Keep the tiles flat in the tray and release them when finished.",
+  "context": "A robot solves a tabletop educational puzzle used for play and spatial reasoning. The task combines planning around one empty cell with precise gripper access between neighboring tiles.",
+  "setup": "Dual YAM arms and three calibrated cameras. A fixed 236 x 236 mm plastic tray holds eight 55 g plastic tiles on a 72 mm grid. Each tile has a 70 x 70 x 7 mm foot, a 42 x 42 mm face and 27 mm total height, leaving a recessed rim. Initial rows: 1 2 3 / 5 blank 6 / 4 7 8. Tray center: x=0.30 m, y=-0.04 m on the table.",
+  "scoring": "Final state only: 1 if the rows are 123 / 456 / 78 blank; otherwise 0. Seven tile centers must be within 3 mm of their targets; one may be within 10 mm. Tiles must be seated (base height within 1 mm), correctly oriented (within 10 degrees) and released (robot contact below 0.05 N). No partial credit.",
+  "run_limit": "2,400 control steps at 20 Hz (120 simulation seconds), including the observation preroll and final settling.",
+  "reset_notes": "Fixed initial layout, seed 0, no random jitter. Reload the scene and settle for 2 seconds before starting the task clock.",
+  "fidelity": "Isaac Sim 6.1 CPU PhysX TGS at 240 Hz. Fixed rigid tray; eight free rigid tiles with compound convex collision meshes and Coulomb friction. Native YAM actuators and 14-D joint-position/gripper actions for both policies. No tile drives or grasp attachments; plastic compliance is not modeled.",
+  "scores": "Dream-1 run: 0.0/1.0; open-loop demo: 1.0/1.0",
+  "media": ""
+}
