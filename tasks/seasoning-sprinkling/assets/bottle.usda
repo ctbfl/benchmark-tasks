@@ -1,0 +1,1684 @@
+#usda 1.0
+(
+    defaultPrim = "Asset"
+    metersPerUnit = 1
+    upAxis = "Z"
+)
+
+def Xform "Asset" (
+    prepend apiSchemas = ["PhysicsArticulationRootAPI", "PhysxArticulationAPI"]
+)
+{
+    bool physxArticulation:enabledSelfCollisions = 1
+
+    def "Looks"
+    {
+        def Material "bottle" (
+            prepend apiSchemas = ["PhysicsMaterialAPI"]
+        )
+        {
+            token outputs:surface.connect = </Asset/Looks/bottle/Shader.outputs:surface>
+            float physics:dynamicFriction = 0.5
+            float physics:restitution = 0
+            float physics:staticFriction = 0.65
+
+            def Shader "Shader"
+            {
+                uniform token info:id = "UsdPreviewSurface"
+                color3f inputs:diffuseColor = (0.44, 0.29, 0.12)
+                float inputs:metallic = 0
+                float inputs:roughness = 0.38
+                token outputs:surface
+            }
+        }
+
+        def Material "cap" (
+            prepend apiSchemas = ["PhysicsMaterialAPI"]
+        )
+        {
+            token outputs:surface.connect = </Asset/Looks/cap/Shader.outputs:surface>
+            float physics:dynamicFriction = 0.5
+            float physics:restitution = 0
+            float physics:staticFriction = 0.65
+
+            def Shader "Shader"
+            {
+                uniform token info:id = "UsdPreviewSurface"
+                color3f inputs:diffuseColor = (0.53, 0.025, 0.018)
+                float inputs:metallic = 0
+                float inputs:roughness = 0.35
+                token outputs:surface
+            }
+        }
+
+        def Material "label" (
+            prepend apiSchemas = ["PhysicsMaterialAPI"]
+        )
+        {
+            token outputs:surface.connect = </Asset/Looks/label/Shader.outputs:surface>
+            float physics:dynamicFriction = 0.5
+            float physics:restitution = 0
+            float physics:staticFriction = 0.65
+
+            def Shader "Shader"
+            {
+                uniform token info:id = "UsdPreviewSurface"
+                color3f inputs:diffuseColor = (0.5, 0.5, 0.5)
+                color3f inputs:diffuseColor.connect = </Asset/Looks/label/texture.outputs:rgb>
+                float inputs:metallic = 0
+                float inputs:roughness = 0.75
+                token outputs:surface
+            }
+
+            def Shader "texture"
+            {
+                uniform token info:id = "UsdUVTexture"
+                asset inputs:file = @label.png@
+                token inputs:sourceColorSpace = "sRGB"
+                float2 inputs:st.connect = </Asset/Looks/label/uv.outputs:result>
+                float3 outputs:rgb
+            }
+
+            def Shader "uv"
+            {
+                uniform token info:id = "UsdPrimvarReader_float2"
+                token inputs:varname = "st"
+                float2 outputs:result
+            }
+        }
+
+        def Material "ink" (
+            prepend apiSchemas = ["PhysicsMaterialAPI"]
+        )
+        {
+            token outputs:surface.connect = </Asset/Looks/ink/Shader.outputs:surface>
+            float physics:dynamicFriction = 0.5
+            float physics:restitution = 0
+            float physics:staticFriction = 0.65
+
+            def Shader "Shader"
+            {
+                uniform token info:id = "UsdPreviewSurface"
+                color3f inputs:diffuseColor = (0.095, 0.035, 0.012)
+                float inputs:metallic = 0
+                float inputs:roughness = 0.8
+                token outputs:surface
+            }
+        }
+    }
+
+    def Xform "body" (
+        prepend apiSchemas = ["PhysicsRigidBodyAPI", "PhysicsMassAPI", "PhysxContactReportAPI"]
+    )
+    {
+        float physics:mass = 0.085
+        float physxContactReport:threshold = 0
+        double3 xformOp:translate = (0, 0, 0)
+        uniform token[] xformOpOrder = ["xformOp:translate"]
+
+        def Cube "base" (
+            prepend apiSchemas = ["MaterialBindingAPI", "PhysicsCollisionAPI", "PhysxCollisionAPI"]
+        )
+        {
+            rel material:binding = </Asset/Looks/bottle>
+            rel material:binding:physics = </Asset/Looks/bottle>
+            float physxCollision:contactOffset = 0.0003
+            float physxCollision:restOffset = 0
+            double size = 1
+            float3 xformOp:scale = (0.044, 0.06, 0.004)
+            double3 xformOp:translate = (0, 0, 0.002)
+            uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+        }
+
+        def Cube "xwall0" (
+            prepend apiSchemas = ["MaterialBindingAPI", "PhysicsCollisionAPI", "PhysxCollisionAPI"]
+        )
+        {
+            rel material:binding = </Asset/Looks/bottle>
+            rel material:binding:physics = </Asset/Looks/bottle>
+            float physxCollision:contactOffset = 0.0003
+            float physxCollision:restOffset = 0
+            double size = 1
+            float3 xformOp:scale = (0.003, 0.06, 0.104)
+            double3 xformOp:translate = (-0.0205, 0, 0.054)
+            uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+        }
+
+        def Cube "ywall0" (
+            prepend apiSchemas = ["MaterialBindingAPI", "PhysicsCollisionAPI", "PhysxCollisionAPI"]
+        )
+        {
+            rel material:binding = </Asset/Looks/bottle>
+            rel material:binding:physics = </Asset/Looks/bottle>
+            float physxCollision:contactOffset = 0.0003
+            float physxCollision:restOffset = 0
+            double size = 1
+            float3 xformOp:scale = (0.038, 0.003, 0.104)
+            double3 xformOp:translate = (0, -0.0285, 0.054)
+            uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+        }
+
+        def Mesh "label0" (
+            prepend apiSchemas = ["MaterialBindingAPI"]
+        )
+        {
+            int[] faceVertexCounts = [4]
+            int[] faceVertexIndices = [0, 1, 2, 3]
+            rel material:binding = </Asset/Looks/label>
+            rel material:binding:physics = </Asset/Looks/label>
+            point3f[] points = [(-0.02205, 0.029, 0.028), (-0.02205, -0.029, 0.028), (-0.02205, -0.029, 0.088), (-0.02205, 0.029, 0.088)]
+            texCoord2f[] primvars:st = [(0, 0), (1, 0), (1, 1), (0, 1)] (
+                interpolation = "vertex"
+            )
+            uniform token subdivisionScheme = "none"
+        }
+
+        def Cube "xwall2" (
+            prepend apiSchemas = ["MaterialBindingAPI", "PhysicsCollisionAPI", "PhysxCollisionAPI"]
+        )
+        {
+            rel material:binding = </Asset/Looks/bottle>
+            rel material:binding:physics = </Asset/Looks/bottle>
+            float physxCollision:contactOffset = 0.0003
+            float physxCollision:restOffset = 0
+            double size = 1
+            float3 xformOp:scale = (0.003, 0.06, 0.104)
+            double3 xformOp:translate = (0.0205, 0, 0.054)
+            uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+        }
+
+        def Cube "ywall2" (
+            prepend apiSchemas = ["MaterialBindingAPI", "PhysicsCollisionAPI", "PhysxCollisionAPI"]
+        )
+        {
+            rel material:binding = </Asset/Looks/bottle>
+            rel material:binding:physics = </Asset/Looks/bottle>
+            float physxCollision:contactOffset = 0.0003
+            float physxCollision:restOffset = 0
+            double size = 1
+            float3 xformOp:scale = (0.038, 0.003, 0.104)
+            double3 xformOp:translate = (0, 0.0285, 0.054)
+            uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+        }
+
+        def Mesh "label2" (
+            prepend apiSchemas = ["MaterialBindingAPI"]
+        )
+        {
+            int[] faceVertexCounts = [4]
+            int[] faceVertexIndices = [0, 1, 2, 3]
+            rel material:binding = </Asset/Looks/label>
+            rel material:binding:physics = </Asset/Looks/label>
+            point3f[] points = [(0.02205, -0.029, 0.028), (0.02205, 0.029, 0.028), (0.02205, 0.029, 0.088), (0.02205, -0.029, 0.088)]
+            texCoord2f[] primvars:st = [(0, 0), (1, 0), (1, 1), (0, 1)] (
+                interpolation = "vertex"
+            )
+            uniform token subdivisionScheme = "none"
+        }
+
+        def Mesh "deck0" (
+            prepend apiSchemas = ["PhysicsMeshCollisionAPI", "MaterialBindingAPI", "PhysicsCollisionAPI", "PhysxCollisionAPI"]
+        )
+        {
+            int[] faceVertexCounts = [3, 3, 4, 4, 4]
+            int[] faceVertexIndices = [2, 1, 0, 3, 4, 5, 0, 1, 4, 3, 1, 2, 5, 4, 2, 0, 3, 5]
+            rel material:binding = </Asset/Looks/cap>
+            rel material:binding:physics = </Asset/Looks/cap>
+            uniform token physics:approximation = "convexHull"
+            float physxCollision:contactOffset = 0.0003
+            float physxCollision:restOffset = 0
+            point3f[] points = [(-0.022, 0.03, 0.106), (-0.022, -0.03, 0.106), (-0.017, 0.006, 0.106), (-0.022, 0.03, 0.11), (-0.022, -0.03, 0.11), (-0.017, 0.006, 0.11)]
+            uniform token subdivisionScheme = "none"
+        }
+
+        def Mesh "deck1" (
+            prepend apiSchemas = ["PhysicsMeshCollisionAPI", "MaterialBindingAPI", "PhysicsCollisionAPI", "PhysxCollisionAPI"]
+        )
+        {
+            int[] faceVertexCounts = [3, 3, 4, 4, 4]
+            int[] faceVertexIndices = [2, 1, 0, 3, 4, 5, 0, 1, 4, 3, 1, 2, 5, 4, 2, 0, 3, 5]
+            rel material:binding = </Asset/Looks/cap>
+            rel material:binding:physics = </Asset/Looks/cap>
+            uniform token physics:approximation = "convexHull"
+            float physxCollision:contactOffset = 0.0003
+            float physxCollision:restOffset = 0
+            point3f[] points = [(-0.022, 0.03, 0.106), (-0.017, 0.006, 0.106), (-0.017, 0.025, 0.106), (-0.022, 0.03, 0.11), (-0.017, 0.006, 0.11), (-0.017, 0.025, 0.11)]
+            uniform token subdivisionScheme = "none"
+        }
+
+        def Mesh "deck2" (
+            prepend apiSchemas = ["PhysicsMeshCollisionAPI", "MaterialBindingAPI", "PhysicsCollisionAPI", "PhysxCollisionAPI"]
+        )
+        {
+            int[] faceVertexCounts = [3, 3, 4, 4, 4]
+            int[] faceVertexIndices = [2, 1, 0, 3, 4, 5, 0, 1, 4, 3, 1, 2, 5, 4, 2, 0, 3, 5]
+            rel material:binding = </Asset/Looks/cap>
+            rel material:binding:physics = </Asset/Looks/cap>
+            uniform token physics:approximation = "convexHull"
+            float physxCollision:contactOffset = 0.0003
+            float physxCollision:restOffset = 0
+            point3f[] points = [(-0.022, 0.03, 0.106), (-0.017, 0.025, 0.106), (0.017, 0.025, 0.106), (-0.022, 0.03, 0.11), (-0.017, 0.025, 0.11), (0.017, 0.025, 0.11)]
+            uniform token subdivisionScheme = "none"
+        }
+
+        def Mesh "deck3" (
+            prepend apiSchemas = ["PhysicsMeshCollisionAPI", "MaterialBindingAPI", "PhysicsCollisionAPI", "PhysxCollisionAPI"]
+        )
+        {
+            int[] faceVertexCounts = [3, 3, 4, 4, 4]
+            int[] faceVertexIndices = [2, 1, 0, 3, 4, 5, 0, 1, 4, 3, 1, 2, 5, 4, 2, 0, 3, 5]
+            rel material:binding = </Asset/Looks/cap>
+            rel material:binding:physics = </Asset/Looks/cap>
+            uniform token physics:approximation = "convexHull"
+            float physxCollision:contactOffset = 0.0003
+            float physxCollision:restOffset = 0
+            point3f[] points = [(-0.022, 0.03, 0.106), (0.017, 0.025, 0.106), (0.022, 0.03, 0.106), (-0.022, 0.03, 0.11), (0.017, 0.025, 0.11), (0.022, 0.03, 0.11)]
+            uniform token subdivisionScheme = "none"
+        }
+
+        def Mesh "deck4" (
+            prepend apiSchemas = ["PhysicsMeshCollisionAPI", "MaterialBindingAPI", "PhysicsCollisionAPI", "PhysxCollisionAPI"]
+        )
+        {
+            int[] faceVertexCounts = [3, 3, 4, 4, 4]
+            int[] faceVertexIndices = [2, 1, 0, 3, 4, 5, 0, 1, 4, 3, 1, 2, 5, 4, 2, 0, 3, 5]
+            rel material:binding = </Asset/Looks/cap>
+            rel material:binding:physics = </Asset/Looks/cap>
+            uniform token physics:approximation = "convexHull"
+            float physxCollision:contactOffset = 0.0003
+            float physxCollision:restOffset = 0
+            point3f[] points = [(0.022, 0.03, 0.106), (0.017, 0.025, 0.106), (0.017, 0.006, 0.106), (0.022, 0.03, 0.11), (0.017, 0.025, 0.11), (0.017, 0.006, 0.11)]
+            uniform token subdivisionScheme = "none"
+        }
+
+        def Mesh "deck5" (
+            prepend apiSchemas = ["PhysicsMeshCollisionAPI", "MaterialBindingAPI", "PhysicsCollisionAPI", "PhysxCollisionAPI"]
+        )
+        {
+            int[] faceVertexCounts = [3, 3, 4, 4, 4]
+            int[] faceVertexIndices = [2, 1, 0, 3, 4, 5, 0, 1, 4, 3, 1, 2, 5, 4, 2, 0, 3, 5]
+            rel material:binding = </Asset/Looks/cap>
+            rel material:binding:physics = </Asset/Looks/cap>
+            uniform token physics:approximation = "convexHull"
+            float physxCollision:contactOffset = 0.0003
+            float physxCollision:restOffset = 0
+            point3f[] points = [(0.022, 0.03, 0.106), (0.017, 0.006, 0.106), (0.022, -0.03, 0.106), (0.022, 0.03, 0.11), (0.017, 0.006, 0.11), (0.022, -0.03, 0.11)]
+            uniform token subdivisionScheme = "none"
+        }
+
+        def Mesh "deck6" (
+            prepend apiSchemas = ["PhysicsMeshCollisionAPI", "MaterialBindingAPI", "PhysicsCollisionAPI", "PhysxCollisionAPI"]
+        )
+        {
+            int[] faceVertexCounts = [3, 3, 4, 4, 4]
+            int[] faceVertexIndices = [2, 1, 0, 3, 4, 5, 0, 1, 4, 3, 1, 2, 5, 4, 2, 0, 3, 5]
+            rel material:binding = </Asset/Looks/cap>
+            rel material:binding:physics = </Asset/Looks/cap>
+            uniform token physics:approximation = "convexHull"
+            float physxCollision:contactOffset = 0.0003
+            float physxCollision:restOffset = 0
+            point3f[] points = [(0.022, -0.03, 0.106), (0.017, 0.006, 0.106), (0.013, -0.009, 0.106), (0.022, -0.03, 0.11), (0.017, 0.006, 0.11), (0.013, -0.009, 0.11)]
+            uniform token subdivisionScheme = "none"
+        }
+
+        def Mesh "deck7" (
+            prepend apiSchemas = ["PhysicsMeshCollisionAPI", "MaterialBindingAPI", "PhysicsCollisionAPI", "PhysxCollisionAPI"]
+        )
+        {
+            int[] faceVertexCounts = [3, 3, 4, 4, 4]
+            int[] faceVertexIndices = [2, 1, 0, 3, 4, 5, 0, 1, 4, 3, 1, 2, 5, 4, 2, 0, 3, 5]
+            rel material:binding = </Asset/Looks/cap>
+            rel material:binding:physics = </Asset/Looks/cap>
+            uniform token physics:approximation = "convexHull"
+            float physxCollision:contactOffset = 0.0003
+            float physxCollision:restOffset = 0
+            point3f[] points = [(0.022, -0.03, 0.106), (0.013, -0.009, 0.106), (0.012771639, -0.01014805, 0.106), (0.022, -0.03, 0.11), (0.013, -0.009, 0.11), (0.012771639, -0.01014805, 0.11)]
+            uniform token subdivisionScheme = "none"
+        }
+
+        def Mesh "deck8" (
+            prepend apiSchemas = ["PhysicsMeshCollisionAPI", "MaterialBindingAPI", "PhysicsCollisionAPI", "PhysxCollisionAPI"]
+        )
+        {
+            int[] faceVertexCounts = [3, 3, 4, 4, 4]
+            int[] faceVertexIndices = [2, 1, 0, 3, 4, 5, 0, 1, 4, 3, 1, 2, 5, 4, 2, 0, 3, 5]
+            rel material:binding = </Asset/Looks/cap>
+            rel material:binding:physics = </Asset/Looks/cap>
+            uniform token physics:approximation = "convexHull"
+            float physxCollision:contactOffset = 0.0003
+            float physxCollision:restOffset = 0
+            point3f[] points = [(0.022, -0.03, 0.106), (0.012771639, -0.01014805, 0.106), (0.012771639, -0.018851949, 0.106), (0.022, -0.03, 0.11), (0.012771639, -0.01014805, 0.11), (0.012771639, -0.018851949, 0.11)]
+            uniform token subdivisionScheme = "none"
+        }
+
+        def Mesh "deck9" (
+            prepend apiSchemas = ["PhysicsMeshCollisionAPI", "MaterialBindingAPI", "PhysicsCollisionAPI", "PhysxCollisionAPI"]
+        )
+        {
+            int[] faceVertexCounts = [3, 3, 4, 4, 4]
+            int[] faceVertexIndices = [2, 1, 0, 3, 4, 5, 0, 1, 4, 3, 1, 2, 5, 4, 2, 0, 3, 5]
+            rel material:binding = </Asset/Looks/cap>
+            rel material:binding:physics = </Asset/Looks/cap>
+            uniform token physics:approximation = "convexHull"
+            float physxCollision:contactOffset = 0.0003
+            float physxCollision:restOffset = 0
+            point3f[] points = [(0.022, -0.03, 0.106), (0.012771639, -0.018851949, 0.106), (0.013, -0.02, 0.106), (0.022, -0.03, 0.11), (0.012771639, -0.018851949, 0.11), (0.013, -0.02, 0.11)]
+            uniform token subdivisionScheme = "none"
+        }
+
+        def Mesh "deck10" (
+            prepend apiSchemas = ["PhysicsMeshCollisionAPI", "MaterialBindingAPI", "PhysicsCollisionAPI", "PhysxCollisionAPI"]
+        )
+        {
+            int[] faceVertexCounts = [3, 3, 4, 4, 4]
+            int[] faceVertexIndices = [2, 1, 0, 3, 4, 5, 0, 1, 4, 3, 1, 2, 5, 4, 2, 0, 3, 5]
+            rel material:binding = </Asset/Looks/cap>
+            rel material:binding:physics = </Asset/Looks/cap>
+            uniform token physics:approximation = "convexHull"
+            float physxCollision:contactOffset = 0.0003
+            float physxCollision:restOffset = 0
+            point3f[] points = [(0.022, -0.03, 0.106), (0.013, -0.02, 0.106), (0.012771639, -0.02114805, 0.106), (0.022, -0.03, 0.11), (0.013, -0.02, 0.11), (0.012771639, -0.02114805, 0.11)]
+            uniform token subdivisionScheme = "none"
+        }
+
+        def Mesh "deck11" (
+            prepend apiSchemas = ["PhysicsMeshCollisionAPI", "MaterialBindingAPI", "PhysicsCollisionAPI", "PhysxCollisionAPI"]
+        )
+        {
+            int[] faceVertexCounts = [3, 3, 4, 4, 4]
+            int[] faceVertexIndices = [2, 1, 0, 3, 4, 5, 0, 1, 4, 3, 1, 2, 5, 4, 2, 0, 3, 5]
+            rel material:binding = </Asset/Looks/cap>
+            rel material:binding:physics = </Asset/Looks/cap>
+            uniform token physics:approximation = "convexHull"
+            float physxCollision:contactOffset = 0.0003
+            float physxCollision:restOffset = 0
+            point3f[] points = [(0.022, -0.03, 0.106), (0.012771639, -0.02114805, 0.106), (0.012121321, -0.02212132, 0.106), (0.022, -0.03, 0.11), (0.012771639, -0.02114805, 0.11), (0.012121321, -0.02212132, 0.11)]
+            uniform token subdivisionScheme = "none"
+        }
+
+        def Mesh "deck12" (
+            prepend apiSchemas = ["PhysicsMeshCollisionAPI", "MaterialBindingAPI", "PhysicsCollisionAPI", "PhysxCollisionAPI"]
+        )
+        {
+            int[] faceVertexCounts = [3, 3, 4, 4, 4]
+            int[] faceVertexIndices = [2, 1, 0, 3, 4, 5, 0, 1, 4, 3, 1, 2, 5, 4, 2, 0, 3, 5]
+            rel material:binding = </Asset/Looks/cap>
+            rel material:binding:physics = </Asset/Looks/cap>
+            uniform token physics:approximation = "convexHull"
+            float physxCollision:contactOffset = 0.0003
+            float physxCollision:restOffset = 0
+            point3f[] points = [(0.022, -0.03, 0.106), (0.012121321, -0.02212132, 0.106), (0.01114805, -0.022771638, 0.106), (0.022, -0.03, 0.11), (0.012121321, -0.02212132, 0.11), (0.01114805, -0.022771638, 0.11)]
+            uniform token subdivisionScheme = "none"
+        }
+
+        def Mesh "deck13" (
+            prepend apiSchemas = ["PhysicsMeshCollisionAPI", "MaterialBindingAPI", "PhysicsCollisionAPI", "PhysxCollisionAPI"]
+        )
+        {
+            int[] faceVertexCounts = [3, 3, 4, 4, 4]
+            int[] faceVertexIndices = [2, 1, 0, 3, 4, 5, 0, 1, 4, 3, 1, 2, 5, 4, 2, 0, 3, 5]
+            rel material:binding = </Asset/Looks/cap>
+            rel material:binding:physics = </Asset/Looks/cap>
+            uniform token physics:approximation = "convexHull"
+            float physxCollision:contactOffset = 0.0003
+            float physxCollision:restOffset = 0
+            point3f[] points = [(0.022, -0.03, 0.106), (0.01114805, -0.022771638, 0.106), (0.01, -0.023, 0.106), (0.022, -0.03, 0.11), (0.01114805, -0.022771638, 0.11), (0.01, -0.023, 0.11)]
+            uniform token subdivisionScheme = "none"
+        }
+
+        def Mesh "deck14" (
+            prepend apiSchemas = ["PhysicsMeshCollisionAPI", "MaterialBindingAPI", "PhysicsCollisionAPI", "PhysxCollisionAPI"]
+        )
+        {
+            int[] faceVertexCounts = [3, 3, 4, 4, 4]
+            int[] faceVertexIndices = [2, 1, 0, 3, 4, 5, 0, 1, 4, 3, 1, 2, 5, 4, 2, 0, 3, 5]
+            rel material:binding = </Asset/Looks/cap>
+            rel material:binding:physics = </Asset/Looks/cap>
+            uniform token physics:approximation = "convexHull"
+            float physxCollision:contactOffset = 0.0003
+            float physxCollision:restOffset = 0
+            point3f[] points = [(0.022, -0.03, 0.106), (0.01, -0.023, 0.106), (0.00885195, -0.022771638, 0.106), (0.022, -0.03, 0.11), (0.01, -0.023, 0.11), (0.00885195, -0.022771638, 0.11)]
+            uniform token subdivisionScheme = "none"
+        }
+
+        def Mesh "deck15" (
+            prepend apiSchemas = ["PhysicsMeshCollisionAPI", "MaterialBindingAPI", "PhysicsCollisionAPI", "PhysxCollisionAPI"]
+        )
+        {
+            int[] faceVertexCounts = [3, 3, 4, 4, 4]
+            int[] faceVertexIndices = [2, 1, 0, 3, 4, 5, 0, 1, 4, 3, 1, 2, 5, 4, 2, 0, 3, 5]
+            rel material:binding = </Asset/Looks/cap>
+            rel material:binding:physics = </Asset/Looks/cap>
+            uniform token physics:approximation = "convexHull"
+            float physxCollision:contactOffset = 0.0003
+            float physxCollision:restOffset = 0
+            point3f[] points = [(0.022, -0.03, 0.106), (0.00885195, -0.022771638, 0.106), (-0.022, -0.03, 0.106), (0.022, -0.03, 0.11), (0.00885195, -0.022771638, 0.11), (-0.022, -0.03, 0.11)]
+            uniform token subdivisionScheme = "none"
+        }
+
+        def Mesh "deck16" (
+            prepend apiSchemas = ["PhysicsMeshCollisionAPI", "MaterialBindingAPI", "PhysicsCollisionAPI", "PhysxCollisionAPI"]
+        )
+        {
+            int[] faceVertexCounts = [3, 3, 4, 4, 4]
+            int[] faceVertexIndices = [2, 1, 0, 3, 4, 5, 0, 1, 4, 3, 1, 2, 5, 4, 2, 0, 3, 5]
+            rel material:binding = </Asset/Looks/cap>
+            rel material:binding:physics = </Asset/Looks/cap>
+            uniform token physics:approximation = "convexHull"
+            float physxCollision:contactOffset = 0.0003
+            float physxCollision:restOffset = 0
+            point3f[] points = [(-0.022, -0.03, 0.106), (0.00885195, -0.022771638, 0.106), (-0.00885195, -0.022771638, 0.106), (-0.022, -0.03, 0.11), (0.00885195, -0.022771638, 0.11), (-0.00885195, -0.022771638, 0.11)]
+            uniform token subdivisionScheme = "none"
+        }
+
+        def Mesh "deck17" (
+            prepend apiSchemas = ["PhysicsMeshCollisionAPI", "MaterialBindingAPI", "PhysicsCollisionAPI", "PhysxCollisionAPI"]
+        )
+        {
+            int[] faceVertexCounts = [3, 3, 4, 4, 4]
+            int[] faceVertexIndices = [2, 1, 0, 3, 4, 5, 0, 1, 4, 3, 1, 2, 5, 4, 2, 0, 3, 5]
+            rel material:binding = </Asset/Looks/cap>
+            rel material:binding:physics = </Asset/Looks/cap>
+            uniform token physics:approximation = "convexHull"
+            float physxCollision:contactOffset = 0.0003
+            float physxCollision:restOffset = 0
+            point3f[] points = [(-0.022, -0.03, 0.106), (-0.00885195, -0.022771638, 0.106), (-0.01, -0.023, 0.106), (-0.022, -0.03, 0.11), (-0.00885195, -0.022771638, 0.11), (-0.01, -0.023, 0.11)]
+            uniform token subdivisionScheme = "none"
+        }
+
+        def Mesh "deck18" (
+            prepend apiSchemas = ["PhysicsMeshCollisionAPI", "MaterialBindingAPI", "PhysicsCollisionAPI", "PhysxCollisionAPI"]
+        )
+        {
+            int[] faceVertexCounts = [3, 3, 4, 4, 4]
+            int[] faceVertexIndices = [2, 1, 0, 3, 4, 5, 0, 1, 4, 3, 1, 2, 5, 4, 2, 0, 3, 5]
+            rel material:binding = </Asset/Looks/cap>
+            rel material:binding:physics = </Asset/Looks/cap>
+            uniform token physics:approximation = "convexHull"
+            float physxCollision:contactOffset = 0.0003
+            float physxCollision:restOffset = 0
+            point3f[] points = [(-0.022, -0.03, 0.106), (-0.01, -0.023, 0.106), (-0.01114805, -0.022771638, 0.106), (-0.022, -0.03, 0.11), (-0.01, -0.023, 0.11), (-0.01114805, -0.022771638, 0.11)]
+            uniform token subdivisionScheme = "none"
+        }
+
+        def Mesh "deck19" (
+            prepend apiSchemas = ["PhysicsMeshCollisionAPI", "MaterialBindingAPI", "PhysicsCollisionAPI", "PhysxCollisionAPI"]
+        )
+        {
+            int[] faceVertexCounts = [3, 3, 4, 4, 4]
+            int[] faceVertexIndices = [2, 1, 0, 3, 4, 5, 0, 1, 4, 3, 1, 2, 5, 4, 2, 0, 3, 5]
+            rel material:binding = </Asset/Looks/cap>
+            rel material:binding:physics = </Asset/Looks/cap>
+            uniform token physics:approximation = "convexHull"
+            float physxCollision:contactOffset = 0.0003
+            float physxCollision:restOffset = 0
+            point3f[] points = [(-0.022, -0.03, 0.106), (-0.01114805, -0.022771638, 0.106), (-0.012121321, -0.02212132, 0.106), (-0.022, -0.03, 0.11), (-0.01114805, -0.022771638, 0.11), (-0.012121321, -0.02212132, 0.11)]
+            uniform token subdivisionScheme = "none"
+        }
+
+        def Mesh "deck20" (
+            prepend apiSchemas = ["PhysicsMeshCollisionAPI", "MaterialBindingAPI", "PhysicsCollisionAPI", "PhysxCollisionAPI"]
+        )
+        {
+            int[] faceVertexCounts = [3, 3, 4, 4, 4]
+            int[] faceVertexIndices = [2, 1, 0, 3, 4, 5, 0, 1, 4, 3, 1, 2, 5, 4, 2, 0, 3, 5]
+            rel material:binding = </Asset/Looks/cap>
+            rel material:binding:physics = </Asset/Looks/cap>
+            uniform token physics:approximation = "convexHull"
+            float physxCollision:contactOffset = 0.0003
+            float physxCollision:restOffset = 0
+            point3f[] points = [(-0.022, -0.03, 0.106), (-0.012121321, -0.02212132, 0.106), (-0.012771639, -0.02114805, 0.106), (-0.022, -0.03, 0.11), (-0.012121321, -0.02212132, 0.11), (-0.012771639, -0.02114805, 0.11)]
+            uniform token subdivisionScheme = "none"
+        }
+
+        def Mesh "deck21" (
+            prepend apiSchemas = ["PhysicsMeshCollisionAPI", "MaterialBindingAPI", "PhysicsCollisionAPI", "PhysxCollisionAPI"]
+        )
+        {
+            int[] faceVertexCounts = [3, 3, 4, 4, 4]
+            int[] faceVertexIndices = [2, 1, 0, 3, 4, 5, 0, 1, 4, 3, 1, 2, 5, 4, 2, 0, 3, 5]
+            rel material:binding = </Asset/Looks/cap>
+            rel material:binding:physics = </Asset/Looks/cap>
+            uniform token physics:approximation = "convexHull"
+            float physxCollision:contactOffset = 0.0003
+            float physxCollision:restOffset = 0
+            point3f[] points = [(-0.022, -0.03, 0.106), (-0.012771639, -0.02114805, 0.106), (-0.013, -0.02, 0.106), (-0.022, -0.03, 0.11), (-0.012771639, -0.02114805, 0.11), (-0.013, -0.02, 0.11)]
+            uniform token subdivisionScheme = "none"
+        }
+
+        def Mesh "deck22" (
+            prepend apiSchemas = ["PhysicsMeshCollisionAPI", "MaterialBindingAPI", "PhysicsCollisionAPI", "PhysxCollisionAPI"]
+        )
+        {
+            int[] faceVertexCounts = [3, 3, 4, 4, 4]
+            int[] faceVertexIndices = [2, 1, 0, 3, 4, 5, 0, 1, 4, 3, 1, 2, 5, 4, 2, 0, 3, 5]
+            rel material:binding = </Asset/Looks/cap>
+            rel material:binding:physics = </Asset/Looks/cap>
+            uniform token physics:approximation = "convexHull"
+            float physxCollision:contactOffset = 0.0003
+            float physxCollision:restOffset = 0
+            point3f[] points = [(-0.022, -0.03, 0.106), (-0.013, -0.02, 0.106), (-0.012771639, -0.018851949, 0.106), (-0.022, -0.03, 0.11), (-0.013, -0.02, 0.11), (-0.012771639, -0.018851949, 0.11)]
+            uniform token subdivisionScheme = "none"
+        }
+
+        def Mesh "deck23" (
+            prepend apiSchemas = ["PhysicsMeshCollisionAPI", "MaterialBindingAPI", "PhysicsCollisionAPI", "PhysxCollisionAPI"]
+        )
+        {
+            int[] faceVertexCounts = [3, 3, 4, 4, 4]
+            int[] faceVertexIndices = [2, 1, 0, 3, 4, 5, 0, 1, 4, 3, 1, 2, 5, 4, 2, 0, 3, 5]
+            rel material:binding = </Asset/Looks/cap>
+            rel material:binding:physics = </Asset/Looks/cap>
+            uniform token physics:approximation = "convexHull"
+            float physxCollision:contactOffset = 0.0003
+            float physxCollision:restOffset = 0
+            point3f[] points = [(-0.022, -0.03, 0.106), (-0.012771639, -0.018851949, 0.106), (-0.012771639, -0.01014805, 0.106), (-0.022, -0.03, 0.11), (-0.012771639, -0.018851949, 0.11), (-0.012771639, -0.01014805, 0.11)]
+            uniform token subdivisionScheme = "none"
+        }
+
+        def Mesh "deck24" (
+            prepend apiSchemas = ["PhysicsMeshCollisionAPI", "MaterialBindingAPI", "PhysicsCollisionAPI", "PhysxCollisionAPI"]
+        )
+        {
+            int[] faceVertexCounts = [3, 3, 4, 4, 4]
+            int[] faceVertexIndices = [2, 1, 0, 3, 4, 5, 0, 1, 4, 3, 1, 2, 5, 4, 2, 0, 3, 5]
+            rel material:binding = </Asset/Looks/cap>
+            rel material:binding:physics = </Asset/Looks/cap>
+            uniform token physics:approximation = "convexHull"
+            float physxCollision:contactOffset = 0.0003
+            float physxCollision:restOffset = 0
+            point3f[] points = [(-0.022, -0.03, 0.106), (-0.012771639, -0.01014805, 0.106), (-0.013, -0.009, 0.106), (-0.022, -0.03, 0.11), (-0.012771639, -0.01014805, 0.11), (-0.013, -0.009, 0.11)]
+            uniform token subdivisionScheme = "none"
+        }
+
+        def Mesh "deck25" (
+            prepend apiSchemas = ["PhysicsMeshCollisionAPI", "MaterialBindingAPI", "PhysicsCollisionAPI", "PhysxCollisionAPI"]
+        )
+        {
+            int[] faceVertexCounts = [3, 3, 4, 4, 4]
+            int[] faceVertexIndices = [2, 1, 0, 3, 4, 5, 0, 1, 4, 3, 1, 2, 5, 4, 2, 0, 3, 5]
+            rel material:binding = </Asset/Looks/cap>
+            rel material:binding:physics = </Asset/Looks/cap>
+            uniform token physics:approximation = "convexHull"
+            float physxCollision:contactOffset = 0.0003
+            float physxCollision:restOffset = 0
+            point3f[] points = [(-0.022, -0.03, 0.106), (-0.013, -0.009, 0.106), (-0.017, 0.006, 0.106), (-0.022, -0.03, 0.11), (-0.013, -0.009, 0.11), (-0.017, 0.006, 0.11)]
+            uniform token subdivisionScheme = "none"
+        }
+
+        def Mesh "deck26" (
+            prepend apiSchemas = ["PhysicsMeshCollisionAPI", "MaterialBindingAPI", "PhysicsCollisionAPI", "PhysxCollisionAPI"]
+        )
+        {
+            int[] faceVertexCounts = [3, 3, 4, 4, 4]
+            int[] faceVertexIndices = [2, 1, 0, 3, 4, 5, 0, 1, 4, 3, 1, 2, 5, 4, 2, 0, 3, 5]
+            rel material:binding = </Asset/Looks/cap>
+            rel material:binding:physics = </Asset/Looks/cap>
+            uniform token physics:approximation = "convexHull"
+            float physxCollision:contactOffset = 0.0003
+            float physxCollision:restOffset = 0
+            point3f[] points = [(-0.017, 0.006, 0.106), (-0.013, -0.009, 0.106), (-0.012771639, -0.00785195, 0.106), (-0.017, 0.006, 0.11), (-0.013, -0.009, 0.11), (-0.012771639, -0.00785195, 0.11)]
+            uniform token subdivisionScheme = "none"
+        }
+
+        def Mesh "deck27" (
+            prepend apiSchemas = ["PhysicsMeshCollisionAPI", "MaterialBindingAPI", "PhysicsCollisionAPI", "PhysxCollisionAPI"]
+        )
+        {
+            int[] faceVertexCounts = [3, 3, 4, 4, 4]
+            int[] faceVertexIndices = [2, 1, 0, 3, 4, 5, 0, 1, 4, 3, 1, 2, 5, 4, 2, 0, 3, 5]
+            rel material:binding = </Asset/Looks/cap>
+            rel material:binding:physics = </Asset/Looks/cap>
+            uniform token physics:approximation = "convexHull"
+            float physxCollision:contactOffset = 0.0003
+            float physxCollision:restOffset = 0
+            point3f[] points = [(-0.017, 0.006, 0.106), (-0.012771639, -0.00785195, 0.106), (-0.012121321, -0.0068786796, 0.106), (-0.017, 0.006, 0.11), (-0.012771639, -0.00785195, 0.11), (-0.012121321, -0.0068786796, 0.11)]
+            uniform token subdivisionScheme = "none"
+        }
+
+        def Mesh "deck28" (
+            prepend apiSchemas = ["PhysicsMeshCollisionAPI", "MaterialBindingAPI", "PhysicsCollisionAPI", "PhysxCollisionAPI"]
+        )
+        {
+            int[] faceVertexCounts = [3, 3, 4, 4, 4]
+            int[] faceVertexIndices = [2, 1, 0, 3, 4, 5, 0, 1, 4, 3, 1, 2, 5, 4, 2, 0, 3, 5]
+            rel material:binding = </Asset/Looks/cap>
+            rel material:binding:physics = </Asset/Looks/cap>
+            uniform token physics:approximation = "convexHull"
+            float physxCollision:contactOffset = 0.0003
+            float physxCollision:restOffset = 0
+            point3f[] points = [(-0.017, 0.006, 0.106), (-0.012121321, -0.0068786796, 0.106), (-0.01114805, -0.0062283613, 0.106), (-0.017, 0.006, 0.11), (-0.012121321, -0.0068786796, 0.11), (-0.01114805, -0.0062283613, 0.11)]
+            uniform token subdivisionScheme = "none"
+        }
+
+        def Mesh "deck29" (
+            prepend apiSchemas = ["PhysicsMeshCollisionAPI", "MaterialBindingAPI", "PhysicsCollisionAPI", "PhysxCollisionAPI"]
+        )
+        {
+            int[] faceVertexCounts = [3, 3, 4, 4, 4]
+            int[] faceVertexIndices = [2, 1, 0, 3, 4, 5, 0, 1, 4, 3, 1, 2, 5, 4, 2, 0, 3, 5]
+            rel material:binding = </Asset/Looks/cap>
+            rel material:binding:physics = </Asset/Looks/cap>
+            uniform token physics:approximation = "convexHull"
+            float physxCollision:contactOffset = 0.0003
+            float physxCollision:restOffset = 0
+            point3f[] points = [(-0.017, 0.006, 0.106), (-0.01114805, -0.0062283613, 0.106), (-0.01, -0.006, 0.106), (-0.017, 0.006, 0.11), (-0.01114805, -0.0062283613, 0.11), (-0.01, -0.006, 0.11)]
+            uniform token subdivisionScheme = "none"
+        }
+
+        def Mesh "deck30" (
+            prepend apiSchemas = ["PhysicsMeshCollisionAPI", "MaterialBindingAPI", "PhysicsCollisionAPI", "PhysxCollisionAPI"]
+        )
+        {
+            int[] faceVertexCounts = [3, 3, 4, 4, 4]
+            int[] faceVertexIndices = [2, 1, 0, 3, 4, 5, 0, 1, 4, 3, 1, 2, 5, 4, 2, 0, 3, 5]
+            rel material:binding = </Asset/Looks/cap>
+            rel material:binding:physics = </Asset/Looks/cap>
+            uniform token physics:approximation = "convexHull"
+            float physxCollision:contactOffset = 0.0003
+            float physxCollision:restOffset = 0
+            point3f[] points = [(-0.017, 0.006, 0.106), (-0.01, -0.006, 0.106), (-0.00885195, -0.0062283613, 0.106), (-0.017, 0.006, 0.11), (-0.01, -0.006, 0.11), (-0.00885195, -0.0062283613, 0.11)]
+            uniform token subdivisionScheme = "none"
+        }
+
+        def Mesh "deck31" (
+            prepend apiSchemas = ["PhysicsMeshCollisionAPI", "MaterialBindingAPI", "PhysicsCollisionAPI", "PhysxCollisionAPI"]
+        )
+        {
+            int[] faceVertexCounts = [3, 3, 4, 4, 4]
+            int[] faceVertexIndices = [2, 1, 0, 3, 4, 5, 0, 1, 4, 3, 1, 2, 5, 4, 2, 0, 3, 5]
+            rel material:binding = </Asset/Looks/cap>
+            rel material:binding:physics = </Asset/Looks/cap>
+            uniform token physics:approximation = "convexHull"
+            float physxCollision:contactOffset = 0.0003
+            float physxCollision:restOffset = 0
+            point3f[] points = [(-0.017, 0.006, 0.106), (-0.00885195, -0.0062283613, 0.106), (0.00885195, -0.0062283613, 0.106), (-0.017, 0.006, 0.11), (-0.00885195, -0.0062283613, 0.11), (0.00885195, -0.0062283613, 0.11)]
+            uniform token subdivisionScheme = "none"
+        }
+
+        def Mesh "deck32" (
+            prepend apiSchemas = ["PhysicsMeshCollisionAPI", "MaterialBindingAPI", "PhysicsCollisionAPI", "PhysxCollisionAPI"]
+        )
+        {
+            int[] faceVertexCounts = [3, 3, 4, 4, 4]
+            int[] faceVertexIndices = [2, 1, 0, 3, 4, 5, 0, 1, 4, 3, 1, 2, 5, 4, 2, 0, 3, 5]
+            rel material:binding = </Asset/Looks/cap>
+            rel material:binding:physics = </Asset/Looks/cap>
+            uniform token physics:approximation = "convexHull"
+            float physxCollision:contactOffset = 0.0003
+            float physxCollision:restOffset = 0
+            point3f[] points = [(-0.017, 0.006, 0.106), (0.00885195, -0.0062283613, 0.106), (0.017, 0.006, 0.106), (-0.017, 0.006, 0.11), (0.00885195, -0.0062283613, 0.11), (0.017, 0.006, 0.11)]
+            uniform token subdivisionScheme = "none"
+        }
+
+        def Mesh "deck33" (
+            prepend apiSchemas = ["PhysicsMeshCollisionAPI", "MaterialBindingAPI", "PhysicsCollisionAPI", "PhysxCollisionAPI"]
+        )
+        {
+            int[] faceVertexCounts = [3, 3, 4, 4, 4]
+            int[] faceVertexIndices = [2, 1, 0, 3, 4, 5, 0, 1, 4, 3, 1, 2, 5, 4, 2, 0, 3, 5]
+            rel material:binding = </Asset/Looks/cap>
+            rel material:binding:physics = </Asset/Looks/cap>
+            uniform token physics:approximation = "convexHull"
+            float physxCollision:contactOffset = 0.0003
+            float physxCollision:restOffset = 0
+            point3f[] points = [(0.017, 0.006, 0.106), (0.00885195, -0.0062283613, 0.106), (0.01, -0.006, 0.106), (0.017, 0.006, 0.11), (0.00885195, -0.0062283613, 0.11), (0.01, -0.006, 0.11)]
+            uniform token subdivisionScheme = "none"
+        }
+
+        def Mesh "deck34" (
+            prepend apiSchemas = ["PhysicsMeshCollisionAPI", "MaterialBindingAPI", "PhysicsCollisionAPI", "PhysxCollisionAPI"]
+        )
+        {
+            int[] faceVertexCounts = [3, 3, 4, 4, 4]
+            int[] faceVertexIndices = [2, 1, 0, 3, 4, 5, 0, 1, 4, 3, 1, 2, 5, 4, 2, 0, 3, 5]
+            rel material:binding = </Asset/Looks/cap>
+            rel material:binding:physics = </Asset/Looks/cap>
+            uniform token physics:approximation = "convexHull"
+            float physxCollision:contactOffset = 0.0003
+            float physxCollision:restOffset = 0
+            point3f[] points = [(0.017, 0.006, 0.106), (0.01, -0.006, 0.106), (0.01114805, -0.0062283613, 0.106), (0.017, 0.006, 0.11), (0.01, -0.006, 0.11), (0.01114805, -0.0062283613, 0.11)]
+            uniform token subdivisionScheme = "none"
+        }
+
+        def Mesh "deck35" (
+            prepend apiSchemas = ["PhysicsMeshCollisionAPI", "MaterialBindingAPI", "PhysicsCollisionAPI", "PhysxCollisionAPI"]
+        )
+        {
+            int[] faceVertexCounts = [3, 3, 4, 4, 4]
+            int[] faceVertexIndices = [2, 1, 0, 3, 4, 5, 0, 1, 4, 3, 1, 2, 5, 4, 2, 0, 3, 5]
+            rel material:binding = </Asset/Looks/cap>
+            rel material:binding:physics = </Asset/Looks/cap>
+            uniform token physics:approximation = "convexHull"
+            float physxCollision:contactOffset = 0.0003
+            float physxCollision:restOffset = 0
+            point3f[] points = [(0.017, 0.006, 0.106), (0.01114805, -0.0062283613, 0.106), (0.012121321, -0.0068786796, 0.106), (0.017, 0.006, 0.11), (0.01114805, -0.0062283613, 0.11), (0.012121321, -0.0068786796, 0.11)]
+            uniform token subdivisionScheme = "none"
+        }
+
+        def Mesh "deck36" (
+            prepend apiSchemas = ["PhysicsMeshCollisionAPI", "MaterialBindingAPI", "PhysicsCollisionAPI", "PhysxCollisionAPI"]
+        )
+        {
+            int[] faceVertexCounts = [3, 3, 4, 4, 4]
+            int[] faceVertexIndices = [2, 1, 0, 3, 4, 5, 0, 1, 4, 3, 1, 2, 5, 4, 2, 0, 3, 5]
+            rel material:binding = </Asset/Looks/cap>
+            rel material:binding:physics = </Asset/Looks/cap>
+            uniform token physics:approximation = "convexHull"
+            float physxCollision:contactOffset = 0.0003
+            float physxCollision:restOffset = 0
+            point3f[] points = [(0.017, 0.006, 0.106), (0.012121321, -0.0068786796, 0.106), (0.012771639, -0.00785195, 0.106), (0.017, 0.006, 0.11), (0.012121321, -0.0068786796, 0.11), (0.012771639, -0.00785195, 0.11)]
+            uniform token subdivisionScheme = "none"
+        }
+
+        def Mesh "deck37" (
+            prepend apiSchemas = ["PhysicsMeshCollisionAPI", "MaterialBindingAPI", "PhysicsCollisionAPI", "PhysxCollisionAPI"]
+        )
+        {
+            int[] faceVertexCounts = [3, 3, 4, 4, 4]
+            int[] faceVertexIndices = [2, 1, 0, 3, 4, 5, 0, 1, 4, 3, 1, 2, 5, 4, 2, 0, 3, 5]
+            rel material:binding = </Asset/Looks/cap>
+            rel material:binding:physics = </Asset/Looks/cap>
+            uniform token physics:approximation = "convexHull"
+            float physxCollision:contactOffset = 0.0003
+            float physxCollision:restOffset = 0
+            point3f[] points = [(0.017, 0.006, 0.106), (0.012771639, -0.00785195, 0.106), (0.013, -0.009, 0.106), (0.017, 0.006, 0.11), (0.012771639, -0.00785195, 0.11), (0.013, -0.009, 0.11)]
+            uniform token subdivisionScheme = "none"
+        }
+
+        def Mesh "deck38" (
+            prepend apiSchemas = ["PhysicsMeshCollisionAPI", "MaterialBindingAPI", "PhysicsCollisionAPI", "PhysxCollisionAPI"]
+        )
+        {
+            int[] faceVertexCounts = [3, 3, 4, 4, 4]
+            int[] faceVertexIndices = [2, 1, 0, 3, 4, 5, 0, 1, 4, 3, 1, 2, 5, 4, 2, 0, 3, 5]
+            rel material:binding = </Asset/Looks/cap>
+            rel material:binding:physics = </Asset/Looks/cap>
+            uniform token physics:approximation = "convexHull"
+            float physxCollision:contactOffset = 0.0003
+            float physxCollision:restOffset = 0
+            point3f[] points = [(0.012771639, -0.01014805, 0.106), (0.012121321, -0.011121321, 0.106), (0.012121321, -0.01787868, 0.106), (0.012771639, -0.01014805, 0.11), (0.012121321, -0.011121321, 0.11), (0.012121321, -0.01787868, 0.11)]
+            uniform token subdivisionScheme = "none"
+        }
+
+        def Mesh "deck39" (
+            prepend apiSchemas = ["PhysicsMeshCollisionAPI", "MaterialBindingAPI", "PhysicsCollisionAPI", "PhysxCollisionAPI"]
+        )
+        {
+            int[] faceVertexCounts = [3, 3, 4, 4, 4]
+            int[] faceVertexIndices = [2, 1, 0, 3, 4, 5, 0, 1, 4, 3, 1, 2, 5, 4, 2, 0, 3, 5]
+            rel material:binding = </Asset/Looks/cap>
+            rel material:binding:physics = </Asset/Looks/cap>
+            uniform token physics:approximation = "convexHull"
+            float physxCollision:contactOffset = 0.0003
+            float physxCollision:restOffset = 0
+            point3f[] points = [(0.012771639, -0.01014805, 0.106), (0.012121321, -0.01787868, 0.106), (0.012771639, -0.018851949, 0.106), (0.012771639, -0.01014805, 0.11), (0.012121321, -0.01787868, 0.11), (0.012771639, -0.018851949, 0.11)]
+            uniform token subdivisionScheme = "none"
+        }
+
+        def Mesh "deck40" (
+            prepend apiSchemas = ["PhysicsMeshCollisionAPI", "MaterialBindingAPI", "PhysicsCollisionAPI", "PhysxCollisionAPI"]
+        )
+        {
+            int[] faceVertexCounts = [3, 3, 4, 4, 4]
+            int[] faceVertexIndices = [2, 1, 0, 3, 4, 5, 0, 1, 4, 3, 1, 2, 5, 4, 2, 0, 3, 5]
+            rel material:binding = </Asset/Looks/cap>
+            rel material:binding:physics = </Asset/Looks/cap>
+            uniform token physics:approximation = "convexHull"
+            float physxCollision:contactOffset = 0.0003
+            float physxCollision:restOffset = 0
+            point3f[] points = [(0.00885195, -0.022771638, 0.106), (0.00787868, -0.02212132, 0.106), (-0.00787868, -0.02212132, 0.106), (0.00885195, -0.022771638, 0.11), (0.00787868, -0.02212132, 0.11), (-0.00787868, -0.02212132, 0.11)]
+            uniform token subdivisionScheme = "none"
+        }
+
+        def Mesh "deck41" (
+            prepend apiSchemas = ["PhysicsMeshCollisionAPI", "MaterialBindingAPI", "PhysicsCollisionAPI", "PhysxCollisionAPI"]
+        )
+        {
+            int[] faceVertexCounts = [3, 3, 4, 4, 4]
+            int[] faceVertexIndices = [2, 1, 0, 3, 4, 5, 0, 1, 4, 3, 1, 2, 5, 4, 2, 0, 3, 5]
+            rel material:binding = </Asset/Looks/cap>
+            rel material:binding:physics = </Asset/Looks/cap>
+            uniform token physics:approximation = "convexHull"
+            float physxCollision:contactOffset = 0.0003
+            float physxCollision:restOffset = 0
+            point3f[] points = [(0.00885195, -0.022771638, 0.106), (-0.00787868, -0.02212132, 0.106), (-0.00885195, -0.022771638, 0.106), (0.00885195, -0.022771638, 0.11), (-0.00787868, -0.02212132, 0.11), (-0.00885195, -0.022771638, 0.11)]
+            uniform token subdivisionScheme = "none"
+        }
+
+        def Mesh "deck42" (
+            prepend apiSchemas = ["PhysicsMeshCollisionAPI", "MaterialBindingAPI", "PhysicsCollisionAPI", "PhysxCollisionAPI"]
+        )
+        {
+            int[] faceVertexCounts = [3, 3, 4, 4, 4]
+            int[] faceVertexIndices = [2, 1, 0, 3, 4, 5, 0, 1, 4, 3, 1, 2, 5, 4, 2, 0, 3, 5]
+            rel material:binding = </Asset/Looks/cap>
+            rel material:binding:physics = </Asset/Looks/cap>
+            uniform token physics:approximation = "convexHull"
+            float physxCollision:contactOffset = 0.0003
+            float physxCollision:restOffset = 0
+            point3f[] points = [(-0.012771639, -0.018851949, 0.106), (-0.012121321, -0.01787868, 0.106), (-0.012121321, -0.011121321, 0.106), (-0.012771639, -0.018851949, 0.11), (-0.012121321, -0.01787868, 0.11), (-0.012121321, -0.011121321, 0.11)]
+            uniform token subdivisionScheme = "none"
+        }
+
+        def Mesh "deck43" (
+            prepend apiSchemas = ["PhysicsMeshCollisionAPI", "MaterialBindingAPI", "PhysicsCollisionAPI", "PhysxCollisionAPI"]
+        )
+        {
+            int[] faceVertexCounts = [3, 3, 4, 4, 4]
+            int[] faceVertexIndices = [2, 1, 0, 3, 4, 5, 0, 1, 4, 3, 1, 2, 5, 4, 2, 0, 3, 5]
+            rel material:binding = </Asset/Looks/cap>
+            rel material:binding:physics = </Asset/Looks/cap>
+            uniform token physics:approximation = "convexHull"
+            float physxCollision:contactOffset = 0.0003
+            float physxCollision:restOffset = 0
+            point3f[] points = [(-0.012771639, -0.018851949, 0.106), (-0.012121321, -0.011121321, 0.106), (-0.012771639, -0.01014805, 0.106), (-0.012771639, -0.018851949, 0.11), (-0.012121321, -0.011121321, 0.11), (-0.012771639, -0.01014805, 0.11)]
+            uniform token subdivisionScheme = "none"
+        }
+
+        def Mesh "deck44" (
+            prepend apiSchemas = ["PhysicsMeshCollisionAPI", "MaterialBindingAPI", "PhysicsCollisionAPI", "PhysxCollisionAPI"]
+        )
+        {
+            int[] faceVertexCounts = [3, 3, 4, 4, 4]
+            int[] faceVertexIndices = [2, 1, 0, 3, 4, 5, 0, 1, 4, 3, 1, 2, 5, 4, 2, 0, 3, 5]
+            rel material:binding = </Asset/Looks/cap>
+            rel material:binding:physics = </Asset/Looks/cap>
+            uniform token physics:approximation = "convexHull"
+            float physxCollision:contactOffset = 0.0003
+            float physxCollision:restOffset = 0
+            point3f[] points = [(-0.00885195, -0.0062283613, 0.106), (-0.00787868, -0.0068786796, 0.106), (0.00885195, -0.0062283613, 0.106), (-0.00885195, -0.0062283613, 0.11), (-0.00787868, -0.0068786796, 0.11), (0.00885195, -0.0062283613, 0.11)]
+            uniform token subdivisionScheme = "none"
+        }
+
+        def Mesh "deck45" (
+            prepend apiSchemas = ["PhysicsMeshCollisionAPI", "MaterialBindingAPI", "PhysicsCollisionAPI", "PhysxCollisionAPI"]
+        )
+        {
+            int[] faceVertexCounts = [3, 3, 4, 4, 4]
+            int[] faceVertexIndices = [2, 1, 0, 3, 4, 5, 0, 1, 4, 3, 1, 2, 5, 4, 2, 0, 3, 5]
+            rel material:binding = </Asset/Looks/cap>
+            rel material:binding:physics = </Asset/Looks/cap>
+            uniform token physics:approximation = "convexHull"
+            float physxCollision:contactOffset = 0.0003
+            float physxCollision:restOffset = 0
+            point3f[] points = [(0.00885195, -0.0062283613, 0.106), (-0.00787868, -0.0068786796, 0.106), (0.00787868, -0.0068786796, 0.106), (0.00885195, -0.0062283613, 0.11), (-0.00787868, -0.0068786796, 0.11), (0.00787868, -0.0068786796, 0.11)]
+            uniform token subdivisionScheme = "none"
+        }
+
+        def Mesh "deck46" (
+            prepend apiSchemas = ["PhysicsMeshCollisionAPI", "MaterialBindingAPI", "PhysicsCollisionAPI", "PhysxCollisionAPI"]
+        )
+        {
+            int[] faceVertexCounts = [3, 3, 4, 4, 4]
+            int[] faceVertexIndices = [2, 1, 0, 3, 4, 5, 0, 1, 4, 3, 1, 2, 5, 4, 2, 0, 3, 5]
+            rel material:binding = </Asset/Looks/cap>
+            rel material:binding:physics = </Asset/Looks/cap>
+            uniform token physics:approximation = "convexHull"
+            float physxCollision:contactOffset = 0.0003
+            float physxCollision:restOffset = 0
+            point3f[] points = [(0.00787868, -0.0068786796, 0.106), (-0.00787868, -0.0068786796, 0.106), (0.0072283614, -0.00785195, 0.106), (0.00787868, -0.0068786796, 0.11), (-0.00787868, -0.0068786796, 0.11), (0.0072283614, -0.00785195, 0.11)]
+            uniform token subdivisionScheme = "none"
+        }
+
+        def Mesh "deck47" (
+            prepend apiSchemas = ["PhysicsMeshCollisionAPI", "MaterialBindingAPI", "PhysicsCollisionAPI", "PhysxCollisionAPI"]
+        )
+        {
+            int[] faceVertexCounts = [3, 3, 4, 4, 4]
+            int[] faceVertexIndices = [2, 1, 0, 3, 4, 5, 0, 1, 4, 3, 1, 2, 5, 4, 2, 0, 3, 5]
+            rel material:binding = </Asset/Looks/cap>
+            rel material:binding:physics = </Asset/Looks/cap>
+            uniform token physics:approximation = "convexHull"
+            float physxCollision:contactOffset = 0.0003
+            float physxCollision:restOffset = 0
+            point3f[] points = [(0.00885195, -0.011771639, 0.106), (0.00787868, -0.011121321, 0.106), (0.00787868, -0.01787868, 0.106), (0.00885195, -0.011771639, 0.11), (0.00787868, -0.011121321, 0.11), (0.00787868, -0.01787868, 0.11)]
+            uniform token subdivisionScheme = "none"
+        }
+
+        def Mesh "deck48" (
+            prepend apiSchemas = ["PhysicsMeshCollisionAPI", "MaterialBindingAPI", "PhysicsCollisionAPI", "PhysxCollisionAPI"]
+        )
+        {
+            int[] faceVertexCounts = [3, 3, 4, 4, 4]
+            int[] faceVertexIndices = [2, 1, 0, 3, 4, 5, 0, 1, 4, 3, 1, 2, 5, 4, 2, 0, 3, 5]
+            rel material:binding = </Asset/Looks/cap>
+            rel material:binding:physics = </Asset/Looks/cap>
+            uniform token physics:approximation = "convexHull"
+            float physxCollision:contactOffset = 0.0003
+            float physxCollision:restOffset = 0
+            point3f[] points = [(0.00885195, -0.011771639, 0.106), (0.00787868, -0.01787868, 0.106), (0.00885195, -0.017228361, 0.106), (0.00885195, -0.011771639, 0.11), (0.00787868, -0.01787868, 0.11), (0.00885195, -0.017228361, 0.11)]
+            uniform token subdivisionScheme = "none"
+        }
+
+        def Mesh "deck49" (
+            prepend apiSchemas = ["PhysicsMeshCollisionAPI", "MaterialBindingAPI", "PhysicsCollisionAPI", "PhysxCollisionAPI"]
+        )
+        {
+            int[] faceVertexCounts = [3, 3, 4, 4, 4]
+            int[] faceVertexIndices = [2, 1, 0, 3, 4, 5, 0, 1, 4, 3, 1, 2, 5, 4, 2, 0, 3, 5]
+            rel material:binding = </Asset/Looks/cap>
+            rel material:binding:physics = </Asset/Looks/cap>
+            uniform token physics:approximation = "convexHull"
+            float physxCollision:contactOffset = 0.0003
+            float physxCollision:restOffset = 0
+            point3f[] points = [(0.00885195, -0.011771639, 0.106), (0.00885195, -0.017228361, 0.106), (0.01, -0.012, 0.106), (0.00885195, -0.011771639, 0.11), (0.00885195, -0.017228361, 0.11), (0.01, -0.012, 0.11)]
+            uniform token subdivisionScheme = "none"
+        }
+
+        def Mesh "deck50" (
+            prepend apiSchemas = ["PhysicsMeshCollisionAPI", "MaterialBindingAPI", "PhysicsCollisionAPI", "PhysxCollisionAPI"]
+        )
+        {
+            int[] faceVertexCounts = [3, 3, 4, 4, 4]
+            int[] faceVertexIndices = [2, 1, 0, 3, 4, 5, 0, 1, 4, 3, 1, 2, 5, 4, 2, 0, 3, 5]
+            rel material:binding = </Asset/Looks/cap>
+            rel material:binding:physics = </Asset/Looks/cap>
+            uniform token physics:approximation = "convexHull"
+            float physxCollision:contactOffset = 0.0003
+            float physxCollision:restOffset = 0
+            point3f[] points = [(0.01114805, -0.011771639, 0.106), (0.01, -0.012, 0.106), (0.01114805, -0.017228361, 0.106), (0.01114805, -0.011771639, 0.11), (0.01, -0.012, 0.11), (0.01114805, -0.017228361, 0.11)]
+            uniform token subdivisionScheme = "none"
+        }
+
+        def Mesh "deck51" (
+            prepend apiSchemas = ["PhysicsMeshCollisionAPI", "MaterialBindingAPI", "PhysicsCollisionAPI", "PhysxCollisionAPI"]
+        )
+        {
+            int[] faceVertexCounts = [3, 3, 4, 4, 4]
+            int[] faceVertexIndices = [2, 1, 0, 3, 4, 5, 0, 1, 4, 3, 1, 2, 5, 4, 2, 0, 3, 5]
+            rel material:binding = </Asset/Looks/cap>
+            rel material:binding:physics = </Asset/Looks/cap>
+            uniform token physics:approximation = "convexHull"
+            float physxCollision:contactOffset = 0.0003
+            float physxCollision:restOffset = 0
+            point3f[] points = [(0.01114805, -0.011771639, 0.106), (0.01114805, -0.017228361, 0.106), (0.012121321, -0.01787868, 0.106), (0.01114805, -0.011771639, 0.11), (0.01114805, -0.017228361, 0.11), (0.012121321, -0.01787868, 0.11)]
+            uniform token subdivisionScheme = "none"
+        }
+
+        def Mesh "deck52" (
+            prepend apiSchemas = ["PhysicsMeshCollisionAPI", "MaterialBindingAPI", "PhysicsCollisionAPI", "PhysxCollisionAPI"]
+        )
+        {
+            int[] faceVertexCounts = [3, 3, 4, 4, 4]
+            int[] faceVertexIndices = [2, 1, 0, 3, 4, 5, 0, 1, 4, 3, 1, 2, 5, 4, 2, 0, 3, 5]
+            rel material:binding = </Asset/Looks/cap>
+            rel material:binding:physics = </Asset/Looks/cap>
+            uniform token physics:approximation = "convexHull"
+            float physxCollision:contactOffset = 0.0003
+            float physxCollision:restOffset = 0
+            point3f[] points = [(0.01114805, -0.011771639, 0.106), (0.012121321, -0.01787868, 0.106), (0.012121321, -0.011121321, 0.106), (0.01114805, -0.011771639, 0.11), (0.012121321, -0.01787868, 0.11), (0.012121321, -0.011121321, 0.11)]
+            uniform token subdivisionScheme = "none"
+        }
+
+        def Mesh "deck53" (
+            prepend apiSchemas = ["PhysicsMeshCollisionAPI", "MaterialBindingAPI", "PhysicsCollisionAPI", "PhysxCollisionAPI"]
+        )
+        {
+            int[] faceVertexCounts = [3, 3, 4, 4, 4]
+            int[] faceVertexIndices = [2, 1, 0, 3, 4, 5, 0, 1, 4, 3, 1, 2, 5, 4, 2, 0, 3, 5]
+            rel material:binding = </Asset/Looks/cap>
+            rel material:binding:physics = </Asset/Looks/cap>
+            uniform token physics:approximation = "convexHull"
+            float physxCollision:contactOffset = 0.0003
+            float physxCollision:restOffset = 0
+            point3f[] points = [(0.01114805, -0.017228361, 0.106), (0.01, -0.012, 0.106), (0.01, -0.017, 0.106), (0.01114805, -0.017228361, 0.11), (0.01, -0.012, 0.11), (0.01, -0.017, 0.11)]
+            uniform token subdivisionScheme = "none"
+        }
+
+        def Mesh "deck54" (
+            prepend apiSchemas = ["PhysicsMeshCollisionAPI", "MaterialBindingAPI", "PhysicsCollisionAPI", "PhysxCollisionAPI"]
+        )
+        {
+            int[] faceVertexCounts = [3, 3, 4, 4, 4]
+            int[] faceVertexIndices = [2, 1, 0, 3, 4, 5, 0, 1, 4, 3, 1, 2, 5, 4, 2, 0, 3, 5]
+            rel material:binding = </Asset/Looks/cap>
+            rel material:binding:physics = </Asset/Looks/cap>
+            uniform token physics:approximation = "convexHull"
+            float physxCollision:contactOffset = 0.0003
+            float physxCollision:restOffset = 0
+            point3f[] points = [(0.00885195, -0.017228361, 0.106), (0.01, -0.017, 0.106), (0.01, -0.012, 0.106), (0.00885195, -0.017228361, 0.11), (0.01, -0.017, 0.11), (0.01, -0.012, 0.11)]
+            uniform token subdivisionScheme = "none"
+        }
+
+        def Mesh "deck55" (
+            prepend apiSchemas = ["PhysicsMeshCollisionAPI", "MaterialBindingAPI", "PhysicsCollisionAPI", "PhysxCollisionAPI"]
+        )
+        {
+            int[] faceVertexCounts = [3, 3, 4, 4, 4]
+            int[] faceVertexIndices = [2, 1, 0, 3, 4, 5, 0, 1, 4, 3, 1, 2, 5, 4, 2, 0, 3, 5]
+            rel material:binding = </Asset/Looks/cap>
+            rel material:binding:physics = </Asset/Looks/cap>
+            uniform token physics:approximation = "convexHull"
+            float physxCollision:contactOffset = 0.0003
+            float physxCollision:restOffset = 0
+            point3f[] points = [(0.00787868, -0.01787868, 0.106), (0.00787868, -0.011121321, 0.106), (0.0072283614, -0.018851949, 0.106), (0.00787868, -0.01787868, 0.11), (0.00787868, -0.011121321, 0.11), (0.0072283614, -0.018851949, 0.11)]
+            uniform token subdivisionScheme = "none"
+        }
+
+        def Mesh "deck56" (
+            prepend apiSchemas = ["PhysicsMeshCollisionAPI", "MaterialBindingAPI", "PhysicsCollisionAPI", "PhysxCollisionAPI"]
+        )
+        {
+            int[] faceVertexCounts = [3, 3, 4, 4, 4]
+            int[] faceVertexIndices = [2, 1, 0, 3, 4, 5, 0, 1, 4, 3, 1, 2, 5, 4, 2, 0, 3, 5]
+            rel material:binding = </Asset/Looks/cap>
+            rel material:binding:physics = </Asset/Looks/cap>
+            uniform token physics:approximation = "convexHull"
+            float physxCollision:contactOffset = 0.0003
+            float physxCollision:restOffset = 0
+            point3f[] points = [(0.007, -0.02, 0.106), (0.0072283614, -0.018851949, 0.106), (-0.007, -0.02, 0.106), (0.007, -0.02, 0.11), (0.0072283614, -0.018851949, 0.11), (-0.007, -0.02, 0.11)]
+            uniform token subdivisionScheme = "none"
+        }
+
+        def Mesh "deck57" (
+            prepend apiSchemas = ["PhysicsMeshCollisionAPI", "MaterialBindingAPI", "PhysicsCollisionAPI", "PhysxCollisionAPI"]
+        )
+        {
+            int[] faceVertexCounts = [3, 3, 4, 4, 4]
+            int[] faceVertexIndices = [2, 1, 0, 3, 4, 5, 0, 1, 4, 3, 1, 2, 5, 4, 2, 0, 3, 5]
+            rel material:binding = </Asset/Looks/cap>
+            rel material:binding:physics = </Asset/Looks/cap>
+            uniform token physics:approximation = "convexHull"
+            float physxCollision:contactOffset = 0.0003
+            float physxCollision:restOffset = 0
+            point3f[] points = [(0.007, -0.02, 0.106), (-0.007, -0.02, 0.106), (0.0072283614, -0.02114805, 0.106), (0.007, -0.02, 0.11), (-0.007, -0.02, 0.11), (0.0072283614, -0.02114805, 0.11)]
+            uniform token subdivisionScheme = "none"
+        }
+
+        def Mesh "deck58" (
+            prepend apiSchemas = ["PhysicsMeshCollisionAPI", "MaterialBindingAPI", "PhysicsCollisionAPI", "PhysxCollisionAPI"]
+        )
+        {
+            int[] faceVertexCounts = [3, 3, 4, 4, 4]
+            int[] faceVertexIndices = [2, 1, 0, 3, 4, 5, 0, 1, 4, 3, 1, 2, 5, 4, 2, 0, 3, 5]
+            rel material:binding = </Asset/Looks/cap>
+            rel material:binding:physics = </Asset/Looks/cap>
+            uniform token physics:approximation = "convexHull"
+            float physxCollision:contactOffset = 0.0003
+            float physxCollision:restOffset = 0
+            point3f[] points = [(0.00787868, -0.02212132, 0.106), (0.0072283614, -0.02114805, 0.106), (-0.0072283614, -0.02114805, 0.106), (0.00787868, -0.02212132, 0.11), (0.0072283614, -0.02114805, 0.11), (-0.0072283614, -0.02114805, 0.11)]
+            uniform token subdivisionScheme = "none"
+        }
+
+        def Mesh "deck59" (
+            prepend apiSchemas = ["PhysicsMeshCollisionAPI", "MaterialBindingAPI", "PhysicsCollisionAPI", "PhysxCollisionAPI"]
+        )
+        {
+            int[] faceVertexCounts = [3, 3, 4, 4, 4]
+            int[] faceVertexIndices = [2, 1, 0, 3, 4, 5, 0, 1, 4, 3, 1, 2, 5, 4, 2, 0, 3, 5]
+            rel material:binding = </Asset/Looks/cap>
+            rel material:binding:physics = </Asset/Looks/cap>
+            uniform token physics:approximation = "convexHull"
+            float physxCollision:contactOffset = 0.0003
+            float physxCollision:restOffset = 0
+            point3f[] points = [(0.00787868, -0.02212132, 0.106), (-0.0072283614, -0.02114805, 0.106), (-0.00787868, -0.02212132, 0.106), (0.00787868, -0.02212132, 0.11), (-0.0072283614, -0.02114805, 0.11), (-0.00787868, -0.02212132, 0.11)]
+            uniform token subdivisionScheme = "none"
+        }
+
+        def Mesh "deck60" (
+            prepend apiSchemas = ["PhysicsMeshCollisionAPI", "MaterialBindingAPI", "PhysicsCollisionAPI", "PhysxCollisionAPI"]
+        )
+        {
+            int[] faceVertexCounts = [3, 3, 4, 4, 4]
+            int[] faceVertexIndices = [2, 1, 0, 3, 4, 5, 0, 1, 4, 3, 1, 2, 5, 4, 2, 0, 3, 5]
+            rel material:binding = </Asset/Looks/cap>
+            rel material:binding:physics = </Asset/Looks/cap>
+            uniform token physics:approximation = "convexHull"
+            float physxCollision:contactOffset = 0.0003
+            float physxCollision:restOffset = 0
+            point3f[] points = [(-0.0072283614, -0.02114805, 0.106), (0.0072283614, -0.02114805, 0.106), (-0.007, -0.02, 0.106), (-0.0072283614, -0.02114805, 0.11), (0.0072283614, -0.02114805, 0.11), (-0.007, -0.02, 0.11)]
+            uniform token subdivisionScheme = "none"
+        }
+
+        def Mesh "deck61" (
+            prepend apiSchemas = ["PhysicsMeshCollisionAPI", "MaterialBindingAPI", "PhysicsCollisionAPI", "PhysxCollisionAPI"]
+        )
+        {
+            int[] faceVertexCounts = [3, 3, 4, 4, 4]
+            int[] faceVertexIndices = [2, 1, 0, 3, 4, 5, 0, 1, 4, 3, 1, 2, 5, 4, 2, 0, 3, 5]
+            rel material:binding = </Asset/Looks/cap>
+            rel material:binding:physics = </Asset/Looks/cap>
+            uniform token physics:approximation = "convexHull"
+            float physxCollision:contactOffset = 0.0003
+            float physxCollision:restOffset = 0
+            point3f[] points = [(-0.00885195, -0.017228361, 0.106), (-0.00787868, -0.01787868, 0.106), (-0.00885195, -0.011771639, 0.106), (-0.00885195, -0.017228361, 0.11), (-0.00787868, -0.01787868, 0.11), (-0.00885195, -0.011771639, 0.11)]
+            uniform token subdivisionScheme = "none"
+        }
+
+        def Mesh "deck62" (
+            prepend apiSchemas = ["PhysicsMeshCollisionAPI", "MaterialBindingAPI", "PhysicsCollisionAPI", "PhysxCollisionAPI"]
+        )
+        {
+            int[] faceVertexCounts = [3, 3, 4, 4, 4]
+            int[] faceVertexIndices = [2, 1, 0, 3, 4, 5, 0, 1, 4, 3, 1, 2, 5, 4, 2, 0, 3, 5]
+            rel material:binding = </Asset/Looks/cap>
+            rel material:binding:physics = </Asset/Looks/cap>
+            uniform token physics:approximation = "convexHull"
+            float physxCollision:contactOffset = 0.0003
+            float physxCollision:restOffset = 0
+            point3f[] points = [(-0.00885195, -0.017228361, 0.106), (-0.00885195, -0.011771639, 0.106), (-0.01, -0.012, 0.106), (-0.00885195, -0.017228361, 0.11), (-0.00885195, -0.011771639, 0.11), (-0.01, -0.012, 0.11)]
+            uniform token subdivisionScheme = "none"
+        }
+
+        def Mesh "deck63" (
+            prepend apiSchemas = ["PhysicsMeshCollisionAPI", "MaterialBindingAPI", "PhysicsCollisionAPI", "PhysxCollisionAPI"]
+        )
+        {
+            int[] faceVertexCounts = [3, 3, 4, 4, 4]
+            int[] faceVertexIndices = [2, 1, 0, 3, 4, 5, 0, 1, 4, 3, 1, 2, 5, 4, 2, 0, 3, 5]
+            rel material:binding = </Asset/Looks/cap>
+            rel material:binding:physics = </Asset/Looks/cap>
+            uniform token physics:approximation = "convexHull"
+            float physxCollision:contactOffset = 0.0003
+            float physxCollision:restOffset = 0
+            point3f[] points = [(-0.00885195, -0.017228361, 0.106), (-0.01, -0.012, 0.106), (-0.01, -0.017, 0.106), (-0.00885195, -0.017228361, 0.11), (-0.01, -0.012, 0.11), (-0.01, -0.017, 0.11)]
+            uniform token subdivisionScheme = "none"
+        }
+
+        def Mesh "deck64" (
+            prepend apiSchemas = ["PhysicsMeshCollisionAPI", "MaterialBindingAPI", "PhysicsCollisionAPI", "PhysxCollisionAPI"]
+        )
+        {
+            int[] faceVertexCounts = [3, 3, 4, 4, 4]
+            int[] faceVertexIndices = [2, 1, 0, 3, 4, 5, 0, 1, 4, 3, 1, 2, 5, 4, 2, 0, 3, 5]
+            rel material:binding = </Asset/Looks/cap>
+            rel material:binding:physics = </Asset/Looks/cap>
+            uniform token physics:approximation = "convexHull"
+            float physxCollision:contactOffset = 0.0003
+            float physxCollision:restOffset = 0
+            point3f[] points = [(-0.01114805, -0.017228361, 0.106), (-0.01, -0.017, 0.106), (-0.01, -0.012, 0.106), (-0.01114805, -0.017228361, 0.11), (-0.01, -0.017, 0.11), (-0.01, -0.012, 0.11)]
+            uniform token subdivisionScheme = "none"
+        }
+
+        def Mesh "deck65" (
+            prepend apiSchemas = ["PhysicsMeshCollisionAPI", "MaterialBindingAPI", "PhysicsCollisionAPI", "PhysxCollisionAPI"]
+        )
+        {
+            int[] faceVertexCounts = [3, 3, 4, 4, 4]
+            int[] faceVertexIndices = [2, 1, 0, 3, 4, 5, 0, 1, 4, 3, 1, 2, 5, 4, 2, 0, 3, 5]
+            rel material:binding = </Asset/Looks/cap>
+            rel material:binding:physics = </Asset/Looks/cap>
+            uniform token physics:approximation = "convexHull"
+            float physxCollision:contactOffset = 0.0003
+            float physxCollision:restOffset = 0
+            point3f[] points = [(-0.01114805, -0.017228361, 0.106), (-0.01, -0.012, 0.106), (-0.01114805, -0.011771639, 0.106), (-0.01114805, -0.017228361, 0.11), (-0.01, -0.012, 0.11), (-0.01114805, -0.011771639, 0.11)]
+            uniform token subdivisionScheme = "none"
+        }
+
+        def Mesh "deck66" (
+            prepend apiSchemas = ["PhysicsMeshCollisionAPI", "MaterialBindingAPI", "PhysicsCollisionAPI", "PhysxCollisionAPI"]
+        )
+        {
+            int[] faceVertexCounts = [3, 3, 4, 4, 4]
+            int[] faceVertexIndices = [2, 1, 0, 3, 4, 5, 0, 1, 4, 3, 1, 2, 5, 4, 2, 0, 3, 5]
+            rel material:binding = </Asset/Looks/cap>
+            rel material:binding:physics = </Asset/Looks/cap>
+            uniform token physics:approximation = "convexHull"
+            float physxCollision:contactOffset = 0.0003
+            float physxCollision:restOffset = 0
+            point3f[] points = [(-0.01114805, -0.017228361, 0.106), (-0.01114805, -0.011771639, 0.106), (-0.012121321, -0.01787868, 0.106), (-0.01114805, -0.017228361, 0.11), (-0.01114805, -0.011771639, 0.11), (-0.012121321, -0.01787868, 0.11)]
+            uniform token subdivisionScheme = "none"
+        }
+
+        def Mesh "deck67" (
+            prepend apiSchemas = ["PhysicsMeshCollisionAPI", "MaterialBindingAPI", "PhysicsCollisionAPI", "PhysxCollisionAPI"]
+        )
+        {
+            int[] faceVertexCounts = [3, 3, 4, 4, 4]
+            int[] faceVertexIndices = [2, 1, 0, 3, 4, 5, 0, 1, 4, 3, 1, 2, 5, 4, 2, 0, 3, 5]
+            rel material:binding = </Asset/Looks/cap>
+            rel material:binding:physics = </Asset/Looks/cap>
+            uniform token physics:approximation = "convexHull"
+            float physxCollision:contactOffset = 0.0003
+            float physxCollision:restOffset = 0
+            point3f[] points = [(-0.012121321, -0.01787868, 0.106), (-0.01114805, -0.011771639, 0.106), (-0.012121321, -0.011121321, 0.106), (-0.012121321, -0.01787868, 0.11), (-0.01114805, -0.011771639, 0.11), (-0.012121321, -0.011121321, 0.11)]
+            uniform token subdivisionScheme = "none"
+        }
+
+        def Mesh "deck68" (
+            prepend apiSchemas = ["PhysicsMeshCollisionAPI", "MaterialBindingAPI", "PhysicsCollisionAPI", "PhysxCollisionAPI"]
+        )
+        {
+            int[] faceVertexCounts = [3, 3, 4, 4, 4]
+            int[] faceVertexIndices = [2, 1, 0, 3, 4, 5, 0, 1, 4, 3, 1, 2, 5, 4, 2, 0, 3, 5]
+            rel material:binding = </Asset/Looks/cap>
+            rel material:binding:physics = </Asset/Looks/cap>
+            uniform token physics:approximation = "convexHull"
+            float physxCollision:contactOffset = 0.0003
+            float physxCollision:restOffset = 0
+            point3f[] points = [(-0.0072283614, -0.01014805, 0.106), (-0.00787868, -0.011121321, 0.106), (-0.00787868, -0.01787868, 0.106), (-0.0072283614, -0.01014805, 0.11), (-0.00787868, -0.011121321, 0.11), (-0.00787868, -0.01787868, 0.11)]
+            uniform token subdivisionScheme = "none"
+        }
+
+        def Mesh "deck69" (
+            prepend apiSchemas = ["PhysicsMeshCollisionAPI", "MaterialBindingAPI", "PhysicsCollisionAPI", "PhysxCollisionAPI"]
+        )
+        {
+            int[] faceVertexCounts = [3, 3, 4, 4, 4]
+            int[] faceVertexIndices = [2, 1, 0, 3, 4, 5, 0, 1, 4, 3, 1, 2, 5, 4, 2, 0, 3, 5]
+            rel material:binding = </Asset/Looks/cap>
+            rel material:binding:physics = </Asset/Looks/cap>
+            uniform token physics:approximation = "convexHull"
+            float physxCollision:contactOffset = 0.0003
+            float physxCollision:restOffset = 0
+            point3f[] points = [(-0.0072283614, -0.01014805, 0.106), (-0.00787868, -0.01787868, 0.106), (-0.0072283614, -0.018851949, 0.106), (-0.0072283614, -0.01014805, 0.11), (-0.00787868, -0.01787868, 0.11), (-0.0072283614, -0.018851949, 0.11)]
+            uniform token subdivisionScheme = "none"
+        }
+
+        def Mesh "deck70" (
+            prepend apiSchemas = ["PhysicsMeshCollisionAPI", "MaterialBindingAPI", "PhysicsCollisionAPI", "PhysxCollisionAPI"]
+        )
+        {
+            int[] faceVertexCounts = [3, 3, 4, 4, 4]
+            int[] faceVertexIndices = [2, 1, 0, 3, 4, 5, 0, 1, 4, 3, 1, 2, 5, 4, 2, 0, 3, 5]
+            rel material:binding = </Asset/Looks/cap>
+            rel material:binding:physics = </Asset/Looks/cap>
+            uniform token physics:approximation = "convexHull"
+            float physxCollision:contactOffset = 0.0003
+            float physxCollision:restOffset = 0
+            point3f[] points = [(-0.0072283614, -0.01014805, 0.106), (-0.0072283614, -0.018851949, 0.106), (0.0072283614, -0.01014805, 0.106), (-0.0072283614, -0.01014805, 0.11), (-0.0072283614, -0.018851949, 0.11), (0.0072283614, -0.01014805, 0.11)]
+            uniform token subdivisionScheme = "none"
+        }
+
+        def Mesh "deck71" (
+            prepend apiSchemas = ["PhysicsMeshCollisionAPI", "MaterialBindingAPI", "PhysicsCollisionAPI", "PhysxCollisionAPI"]
+        )
+        {
+            int[] faceVertexCounts = [3, 3, 4, 4, 4]
+            int[] faceVertexIndices = [2, 1, 0, 3, 4, 5, 0, 1, 4, 3, 1, 2, 5, 4, 2, 0, 3, 5]
+            rel material:binding = </Asset/Looks/cap>
+            rel material:binding:physics = </Asset/Looks/cap>
+            uniform token physics:approximation = "convexHull"
+            float physxCollision:contactOffset = 0.0003
+            float physxCollision:restOffset = 0
+            point3f[] points = [(-0.0072283614, -0.01014805, 0.106), (0.0072283614, -0.01014805, 0.106), (-0.007, -0.009, 0.106), (-0.0072283614, -0.01014805, 0.11), (0.0072283614, -0.01014805, 0.11), (-0.007, -0.009, 0.11)]
+            uniform token subdivisionScheme = "none"
+        }
+
+        def Mesh "deck72" (
+            prepend apiSchemas = ["PhysicsMeshCollisionAPI", "MaterialBindingAPI", "PhysicsCollisionAPI", "PhysxCollisionAPI"]
+        )
+        {
+            int[] faceVertexCounts = [3, 3, 4, 4, 4]
+            int[] faceVertexIndices = [2, 1, 0, 3, 4, 5, 0, 1, 4, 3, 1, 2, 5, 4, 2, 0, 3, 5]
+            rel material:binding = </Asset/Looks/cap>
+            rel material:binding:physics = </Asset/Looks/cap>
+            uniform token physics:approximation = "convexHull"
+            float physxCollision:contactOffset = 0.0003
+            float physxCollision:restOffset = 0
+            point3f[] points = [(-0.007, -0.009, 0.106), (0.0072283614, -0.01014805, 0.106), (0.007, -0.009, 0.106), (-0.007, -0.009, 0.11), (0.0072283614, -0.01014805, 0.11), (0.007, -0.009, 0.11)]
+            uniform token subdivisionScheme = "none"
+        }
+
+        def Mesh "deck73" (
+            prepend apiSchemas = ["PhysicsMeshCollisionAPI", "MaterialBindingAPI", "PhysicsCollisionAPI", "PhysxCollisionAPI"]
+        )
+        {
+            int[] faceVertexCounts = [3, 3, 4, 4, 4]
+            int[] faceVertexIndices = [2, 1, 0, 3, 4, 5, 0, 1, 4, 3, 1, 2, 5, 4, 2, 0, 3, 5]
+            rel material:binding = </Asset/Looks/cap>
+            rel material:binding:physics = </Asset/Looks/cap>
+            uniform token physics:approximation = "convexHull"
+            float physxCollision:contactOffset = 0.0003
+            float physxCollision:restOffset = 0
+            point3f[] points = [(-0.007, -0.009, 0.106), (0.007, -0.009, 0.106), (0.0072283614, -0.00785195, 0.106), (-0.007, -0.009, 0.11), (0.007, -0.009, 0.11), (0.0072283614, -0.00785195, 0.11)]
+            uniform token subdivisionScheme = "none"
+        }
+
+        def Mesh "deck74" (
+            prepend apiSchemas = ["PhysicsMeshCollisionAPI", "MaterialBindingAPI", "PhysicsCollisionAPI", "PhysxCollisionAPI"]
+        )
+        {
+            int[] faceVertexCounts = [3, 3, 4, 4, 4]
+            int[] faceVertexIndices = [2, 1, 0, 3, 4, 5, 0, 1, 4, 3, 1, 2, 5, 4, 2, 0, 3, 5]
+            rel material:binding = </Asset/Looks/cap>
+            rel material:binding:physics = </Asset/Looks/cap>
+            uniform token physics:approximation = "convexHull"
+            float physxCollision:contactOffset = 0.0003
+            float physxCollision:restOffset = 0
+            point3f[] points = [(-0.007, -0.009, 0.106), (0.0072283614, -0.00785195, 0.106), (-0.0072283614, -0.00785195, 0.106), (-0.007, -0.009, 0.11), (0.0072283614, -0.00785195, 0.11), (-0.0072283614, -0.00785195, 0.11)]
+            uniform token subdivisionScheme = "none"
+        }
+
+        def Mesh "deck75" (
+            prepend apiSchemas = ["PhysicsMeshCollisionAPI", "MaterialBindingAPI", "PhysicsCollisionAPI", "PhysxCollisionAPI"]
+        )
+        {
+            int[] faceVertexCounts = [3, 3, 4, 4, 4]
+            int[] faceVertexIndices = [2, 1, 0, 3, 4, 5, 0, 1, 4, 3, 1, 2, 5, 4, 2, 0, 3, 5]
+            rel material:binding = </Asset/Looks/cap>
+            rel material:binding:physics = </Asset/Looks/cap>
+            uniform token physics:approximation = "convexHull"
+            float physxCollision:contactOffset = 0.0003
+            float physxCollision:restOffset = 0
+            point3f[] points = [(-0.00787868, -0.0068786796, 0.106), (-0.0072283614, -0.00785195, 0.106), (0.0072283614, -0.00785195, 0.106), (-0.00787868, -0.0068786796, 0.11), (-0.0072283614, -0.00785195, 0.11), (0.0072283614, -0.00785195, 0.11)]
+            uniform token subdivisionScheme = "none"
+        }
+
+        def Mesh "deck76" (
+            prepend apiSchemas = ["PhysicsMeshCollisionAPI", "MaterialBindingAPI", "PhysicsCollisionAPI", "PhysxCollisionAPI"]
+        )
+        {
+            int[] faceVertexCounts = [3, 3, 4, 4, 4]
+            int[] faceVertexIndices = [2, 1, 0, 3, 4, 5, 0, 1, 4, 3, 1, 2, 5, 4, 2, 0, 3, 5]
+            rel material:binding = </Asset/Looks/cap>
+            rel material:binding:physics = </Asset/Looks/cap>
+            uniform token physics:approximation = "convexHull"
+            float physxCollision:contactOffset = 0.0003
+            float physxCollision:restOffset = 0
+            point3f[] points = [(0.00787868, -0.011121321, 0.106), (0.0072283614, -0.01014805, 0.106), (0.0072283614, -0.018851949, 0.106), (0.00787868, -0.011121321, 0.11), (0.0072283614, -0.01014805, 0.11), (0.0072283614, -0.018851949, 0.11)]
+            uniform token subdivisionScheme = "none"
+        }
+
+        def Mesh "deck77" (
+            prepend apiSchemas = ["PhysicsMeshCollisionAPI", "MaterialBindingAPI", "PhysicsCollisionAPI", "PhysxCollisionAPI"]
+        )
+        {
+            int[] faceVertexCounts = [3, 3, 4, 4, 4]
+            int[] faceVertexIndices = [2, 1, 0, 3, 4, 5, 0, 1, 4, 3, 1, 2, 5, 4, 2, 0, 3, 5]
+            rel material:binding = </Asset/Looks/cap>
+            rel material:binding:physics = </Asset/Looks/cap>
+            uniform token physics:approximation = "convexHull"
+            float physxCollision:contactOffset = 0.0003
+            float physxCollision:restOffset = 0
+            point3f[] points = [(0.0072283614, -0.018851949, 0.106), (0.0072283614, -0.01014805, 0.106), (-0.0072283614, -0.018851949, 0.106), (0.0072283614, -0.018851949, 0.11), (0.0072283614, -0.01014805, 0.11), (-0.0072283614, -0.018851949, 0.11)]
+            uniform token subdivisionScheme = "none"
+        }
+
+        def Mesh "deck78" (
+            prepend apiSchemas = ["PhysicsMeshCollisionAPI", "MaterialBindingAPI", "PhysicsCollisionAPI", "PhysxCollisionAPI"]
+        )
+        {
+            int[] faceVertexCounts = [3, 3, 4, 4, 4]
+            int[] faceVertexIndices = [2, 1, 0, 3, 4, 5, 0, 1, 4, 3, 1, 2, 5, 4, 2, 0, 3, 5]
+            rel material:binding = </Asset/Looks/cap>
+            rel material:binding:physics = </Asset/Looks/cap>
+            uniform token physics:approximation = "convexHull"
+            float physxCollision:contactOffset = 0.0003
+            float physxCollision:restOffset = 0
+            point3f[] points = [(0.0072283614, -0.018851949, 0.106), (-0.0072283614, -0.018851949, 0.106), (-0.007, -0.02, 0.106), (0.0072283614, -0.018851949, 0.11), (-0.0072283614, -0.018851949, 0.11), (-0.007, -0.02, 0.11)]
+            uniform token subdivisionScheme = "none"
+        }
+
+        def Mesh "deck79" (
+            prepend apiSchemas = ["PhysicsMeshCollisionAPI", "MaterialBindingAPI", "PhysicsCollisionAPI", "PhysxCollisionAPI"]
+        )
+        {
+            int[] faceVertexCounts = [3, 3, 4, 4, 4]
+            int[] faceVertexIndices = [2, 1, 0, 3, 4, 5, 0, 1, 4, 3, 1, 2, 5, 4, 2, 0, 3, 5]
+            rel material:binding = </Asset/Looks/cap>
+            rel material:binding:physics = </Asset/Looks/cap>
+            uniform token physics:approximation = "convexHull"
+            float physxCollision:contactOffset = 0.0003
+            float physxCollision:restOffset = 0
+            point3f[] points = [(-0.00787868, -0.01787868, 0.106), (-0.00787868, -0.011121321, 0.106), (-0.00885195, -0.011771639, 0.106), (-0.00787868, -0.01787868, 0.11), (-0.00787868, -0.011121321, 0.11), (-0.00885195, -0.011771639, 0.11)]
+            uniform token subdivisionScheme = "none"
+        }
+
+        def Cube "hinge_bar" (
+            prepend apiSchemas = ["MaterialBindingAPI", "PhysicsCollisionAPI", "PhysxCollisionAPI"]
+        )
+        {
+            rel material:binding = </Asset/Looks/cap>
+            rel material:binding:physics = </Asset/Looks/cap>
+            float physxCollision:contactOffset = 0.0003
+            float physxCollision:restOffset = 0
+            double size = 1
+            float3 xformOp:scale = (0.044, 0.005, 0.004)
+            double3 xformOp:translate = (0, 0, 0.112)
+            uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+        }
+    }
+
+    def Xform "pour_lid" (
+        prepend apiSchemas = ["PhysicsRigidBodyAPI", "PhysicsMassAPI", "PhysxContactReportAPI"]
+    )
+    {
+        float physics:mass = 0.004
+        float physxContactReport:threshold = 0
+        double3 xformOp:translate = (0, 0.0025, 0.112)
+        uniform token[] xformOpOrder = ["xformOp:translate"]
+
+        def Cube "cover" (
+            prepend apiSchemas = ["MaterialBindingAPI", "PhysicsCollisionAPI", "PhysxCollisionAPI"]
+        )
+        {
+            rel material:binding = </Asset/Looks/cap>
+            rel material:binding:physics = </Asset/Looks/cap>
+            float physxCollision:contactOffset = 0.0003
+            float physxCollision:restOffset = 0
+            double size = 1
+            float3 xformOp:scale = (0.046, 0.028, 0.003)
+            double3 xformOp:translate = (0, 0.0145, 0)
+            uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+        }
+
+        def Cube "tab" (
+            prepend apiSchemas = ["MaterialBindingAPI", "PhysicsCollisionAPI", "PhysxCollisionAPI"]
+        )
+        {
+            rel material:binding = </Asset/Looks/cap>
+            rel material:binding:physics = </Asset/Looks/cap>
+            float physxCollision:contactOffset = 0.0003
+            float physxCollision:restOffset = 0
+            double size = 1
+            float3 xformOp:scale = (0.018, 0.014, 0.004)
+            double3 xformOp:translate = (0, 0.035, 0)
+            uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+        }
+
+        def Cube "seal" (
+            prepend apiSchemas = ["MaterialBindingAPI", "PhysicsCollisionAPI", "PhysxCollisionAPI"]
+        )
+        {
+            rel material:binding = </Asset/Looks/cap>
+            rel material:binding:physics = </Asset/Looks/cap>
+            float physxCollision:contactOffset = 0.0003
+            float physxCollision:restOffset = 0
+            double size = 1
+            float3 xformOp:scale = (0.033, 0.018, 0.006)
+            double3 xformOp:translate = (0, 0.013, -0.0035)
+            uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+        }
+
+        def Cube "rib0" (
+            prepend apiSchemas = ["MaterialBindingAPI"]
+        )
+        {
+            rel material:binding = </Asset/Looks/cap>
+            rel material:binding:physics = </Asset/Looks/cap>
+            double size = 1
+            float3 xformOp:scale = (0.013, 0.0008, 0.0007)
+            double3 xformOp:translate = (0, 0.031, 0.0022)
+            uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+        }
+
+        def Cube "rib1" (
+            prepend apiSchemas = ["MaterialBindingAPI"]
+        )
+        {
+            rel material:binding = </Asset/Looks/cap>
+            rel material:binding:physics = </Asset/Looks/cap>
+            double size = 1
+            float3 xformOp:scale = (0.013, 0.0008, 0.0007)
+            double3 xformOp:translate = (0, 0.0335, 0.0022)
+            uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+        }
+
+        def Cube "rib2" (
+            prepend apiSchemas = ["MaterialBindingAPI"]
+        )
+        {
+            rel material:binding = </Asset/Looks/cap>
+            rel material:binding:physics = </Asset/Looks/cap>
+            double size = 1
+            float3 xformOp:scale = (0.013, 0.0008, 0.0007)
+            double3 xformOp:translate = (0, 0.036, 0.0022)
+            uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+        }
+    }
+
+    def PhysicsRevoluteJoint "pour_hinge" (
+        prepend apiSchemas = ["PhysxJointAxisAPI:angular"]
+    )
+    {
+        uniform token physics:axis = "X"
+        rel physics:body0 = </Asset/body>
+        rel physics:body1 = </Asset/pour_lid>
+        bool physics:collisionEnabled = 0
+        point3f physics:localPos0 = (0, 0.0025, 0.112)
+        float physics:lowerLimit = 0
+        float physics:upperLimit = 120
+        float physxJointAxis:angular:dynamicFrictionEffort = 0.06
+        float physxJointAxis:angular:staticFrictionEffort = 0.08
+        float physxJointAxis:angular:viscousFrictionCoefficient = 0.00002
+    }
+
+    def Xform "sprinkle_lid" (
+        prepend apiSchemas = ["PhysicsRigidBodyAPI", "PhysicsMassAPI", "PhysxContactReportAPI"]
+    )
+    {
+        float physics:mass = 0.004
+        float physxContactReport:threshold = 0
+        double3 xformOp:translate = (0, -0.0025, 0.112)
+        uniform token[] xformOpOrder = ["xformOp:translate"]
+
+        def Cube "cover" (
+            prepend apiSchemas = ["MaterialBindingAPI", "PhysicsCollisionAPI", "PhysxCollisionAPI"]
+        )
+        {
+            rel material:binding = </Asset/Looks/cap>
+            rel material:binding:physics = </Asset/Looks/cap>
+            float physxCollision:contactOffset = 0.0003
+            float physxCollision:restOffset = 0
+            double size = 1
+            float3 xformOp:scale = (0.046, 0.028, 0.003)
+            double3 xformOp:translate = (0, -0.0145, 0)
+            uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+        }
+
+        def Cube "tab" (
+            prepend apiSchemas = ["MaterialBindingAPI", "PhysicsCollisionAPI", "PhysxCollisionAPI"]
+        )
+        {
+            rel material:binding = </Asset/Looks/cap>
+            rel material:binding:physics = </Asset/Looks/cap>
+            float physxCollision:contactOffset = 0.0003
+            float physxCollision:restOffset = 0
+            double size = 1
+            float3 xformOp:scale = (0.018, 0.014, 0.004)
+            double3 xformOp:translate = (0, -0.035, 0)
+            uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+        }
+
+        def Cylinder "seal0" (
+            prepend apiSchemas = ["MaterialBindingAPI", "PhysicsCollisionAPI", "PhysxCollisionAPI"]
+        )
+        {
+            double height = 0.006
+            rel material:binding = </Asset/Looks/cap>
+            rel material:binding:physics = </Asset/Looks/cap>
+            float physxCollision:contactOffset = 0.0003
+            float physxCollision:restOffset = 0
+            double radius = 0.0025
+            double3 xformOp:translate = (-0.01, -0.006499999999999999, -0.0035)
+            uniform token[] xformOpOrder = ["xformOp:translate"]
+        }
+
+        def Cylinder "seal1" (
+            prepend apiSchemas = ["MaterialBindingAPI", "PhysicsCollisionAPI", "PhysxCollisionAPI"]
+        )
+        {
+            double height = 0.006
+            rel material:binding = </Asset/Looks/cap>
+            rel material:binding:physics = </Asset/Looks/cap>
+            float physxCollision:contactOffset = 0.0003
+            float physxCollision:restOffset = 0
+            double radius = 0.0025
+            double3 xformOp:translate = (-0.01, -0.0175, -0.0035)
+            uniform token[] xformOpOrder = ["xformOp:translate"]
+        }
+
+        def Cylinder "seal2" (
+            prepend apiSchemas = ["MaterialBindingAPI", "PhysicsCollisionAPI", "PhysxCollisionAPI"]
+        )
+        {
+            double height = 0.006
+            rel material:binding = </Asset/Looks/cap>
+            rel material:binding:physics = </Asset/Looks/cap>
+            float physxCollision:contactOffset = 0.0003
+            float physxCollision:restOffset = 0
+            double radius = 0.0025
+            double3 xformOp:translate = (0.01, -0.006499999999999999, -0.0035)
+            uniform token[] xformOpOrder = ["xformOp:translate"]
+        }
+
+        def Cylinder "seal3" (
+            prepend apiSchemas = ["MaterialBindingAPI", "PhysicsCollisionAPI", "PhysxCollisionAPI"]
+        )
+        {
+            double height = 0.006
+            rel material:binding = </Asset/Looks/cap>
+            rel material:binding:physics = </Asset/Looks/cap>
+            float physxCollision:contactOffset = 0.0003
+            float physxCollision:restOffset = 0
+            double radius = 0.0025
+            double3 xformOp:translate = (0.01, -0.0175, -0.0035)
+            uniform token[] xformOpOrder = ["xformOp:translate"]
+        }
+
+        def Cube "rib0" (
+            prepend apiSchemas = ["MaterialBindingAPI"]
+        )
+        {
+            rel material:binding = </Asset/Looks/cap>
+            rel material:binding:physics = </Asset/Looks/cap>
+            double size = 1
+            float3 xformOp:scale = (0.013, 0.0008, 0.0007)
+            double3 xformOp:translate = (0, -0.031, 0.0022)
+            uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+        }
+
+        def Cube "rib1" (
+            prepend apiSchemas = ["MaterialBindingAPI"]
+        )
+        {
+            rel material:binding = </Asset/Looks/cap>
+            rel material:binding:physics = </Asset/Looks/cap>
+            double size = 1
+            float3 xformOp:scale = (0.013, 0.0008, 0.0007)
+            double3 xformOp:translate = (0, -0.0335, 0.0022)
+            uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+        }
+
+        def Cube "rib2" (
+            prepend apiSchemas = ["MaterialBindingAPI"]
+        )
+        {
+            rel material:binding = </Asset/Looks/cap>
+            rel material:binding:physics = </Asset/Looks/cap>
+            double size = 1
+            float3 xformOp:scale = (0.013, 0.0008, 0.0007)
+            double3 xformOp:translate = (0, -0.036, 0.0022)
+            uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+        }
+    }
+
+    def PhysicsRevoluteJoint "sprinkle_hinge" (
+        prepend apiSchemas = ["PhysxJointAxisAPI:angular"]
+    )
+    {
+        uniform token physics:axis = "X"
+        rel physics:body0 = </Asset/body>
+        rel physics:body1 = </Asset/sprinkle_lid>
+        bool physics:collisionEnabled = 0
+        point3f physics:localPos0 = (0, -0.0025, 0.112)
+        float physics:lowerLimit = -120
+        float physics:upperLimit = 0
+        float physxJointAxis:angular:dynamicFrictionEffort = 0.06
+        float physxJointAxis:angular:staticFrictionEffort = 0.08
+        float physxJointAxis:angular:viscousFrictionCoefficient = 0.00002
+    }
+}
+
