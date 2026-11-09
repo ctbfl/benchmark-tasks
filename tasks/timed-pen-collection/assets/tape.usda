@@ -1,0 +1,115 @@
+#usda 1.0
+(
+    defaultPrim = "Asset"
+    metersPerUnit = 1
+    upAxis = "Z"
+)
+
+def Xform "Asset"
+{
+    def "materials"
+    {
+        def Material "red_paper"
+        {
+            token outputs:surface.connect = </Asset/materials/red_paper/shader.outputs:surface>
+
+            def Shader "shader"
+            {
+                uniform token info:id = "UsdPreviewSurface"
+                color3f inputs:diffuseColor = (0.64, 0.018, 0.012)
+                float inputs:metallic = 0
+                float inputs:roughness = 0.92
+                token outputs:surface
+            }
+        }
+    }
+
+    def Cube "pens_0" (
+        prepend apiSchemas = ["MaterialBindingAPI"]
+    )
+    {
+        rel material:binding = </Asset/materials/red_paper>
+        double size = 1
+        float3 xformOp:scale = (0.402, 0.012, 0.00025)
+        double3 xformOp:translate = (0.415, -0.221, 0.0002)
+        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+    }
+
+    def Cube "pens_1" (
+        prepend apiSchemas = ["MaterialBindingAPI"]
+    )
+    {
+        rel material:binding = </Asset/materials/red_paper>
+        double size = 1
+        float3 xformOp:scale = (0.402, 0.012, 0.00025)
+        double3 xformOp:translate = (0.415, 0.221, 0.0002)
+        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+    }
+
+    def Cube "pens_2" (
+        prepend apiSchemas = ["MaterialBindingAPI"]
+    )
+    {
+        rel material:binding = </Asset/materials/red_paper>
+        double size = 1
+        float3 xformOp:scale = (0.012, 0.43, 0.00025)
+        double3 xformOp:translate = (0.21399999999999997, 0, 0.0002)
+        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+    }
+
+    def Cube "pens_3" (
+        prepend apiSchemas = ["MaterialBindingAPI"]
+    )
+    {
+        rel material:binding = </Asset/materials/red_paper>
+        double size = 1
+        float3 xformOp:scale = (0.012, 0.43, 0.00025)
+        double3 xformOp:translate = (0.616, 0, 0.0002)
+        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+    }
+
+    def Cube "cup_0" (
+        prepend apiSchemas = ["MaterialBindingAPI"]
+    )
+    {
+        rel material:binding = </Asset/materials/red_paper>
+        double size = 1
+        float3 xformOp:scale = (0.116, 0.012, 0.00025)
+        double3 xformOp:translate = (0.46, -0.383, 0.0002)
+        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+    }
+
+    def Cube "cup_1" (
+        prepend apiSchemas = ["MaterialBindingAPI"]
+    )
+    {
+        rel material:binding = </Asset/materials/red_paper>
+        double size = 1
+        float3 xformOp:scale = (0.116, 0.012, 0.00025)
+        double3 xformOp:translate = (0.46, -0.267, 0.0002)
+        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+    }
+
+    def Cube "cup_2" (
+        prepend apiSchemas = ["MaterialBindingAPI"]
+    )
+    {
+        rel material:binding = </Asset/materials/red_paper>
+        double size = 1
+        float3 xformOp:scale = (0.012, 0.104, 0.00025)
+        double3 xformOp:translate = (0.402, -0.325, 0.0002)
+        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+    }
+
+    def Cube "cup_3" (
+        prepend apiSchemas = ["MaterialBindingAPI"]
+    )
+    {
+        rel material:binding = </Asset/materials/red_paper>
+        double size = 1
+        float3 xformOp:scale = (0.012, 0.104, 0.00025)
+        double3 xformOp:translate = (0.518, -0.325, 0.0002)
+        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+    }
+}
+

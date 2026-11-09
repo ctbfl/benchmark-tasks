@@ -1,0 +1,14 @@
+{
+  "title": "Timed pen collection",
+  "category": "Societal relevance",
+  "keywords": ["bimanual", "fine manipulation", "desk organization", "physical timer"],
+  "instruction": "Press the large red clock button to start timing. Pick up all five scattered pens from the central red rectangle and release them into the white holder on the right. Once all five are inside, press the clock button again to stop timing.",
+  "context": "Timed desk organization combines operating a physical control with collecting narrow everyday objects. Coordinating two hands can reduce collection time while keeping the work area orderly, as in office assistance and household cleanup.",
+  "setup": "Five 150 mm black pens lie at seeded random poses inside a 390 x 430 mm red tape rectangle. A white 104 mm tall hollow holder stands in a red square on the right. A free 180 x 70 mm weighted clock sits on the left, with a spring-return top button and MM:SS:CC display. The standard dual-YAM workstation retains its three calibrated cameras.",
+  "scoring": "Binary: 1.0 for starting the timer before collection, releasing all five pens inside the holder, then stopping the timer within the limit. The final pens must remain contained, supported by the holder or other contained pens, and ungrasped. Otherwise 0.0; no partial credit.",
+  "run_limit": "2,400 control steps at 20 Hz: 120 simulation seconds, including final settling. API waits do not advance physics.",
+  "fidelity": "CPU PhysX at 240 Hz with native YAM actuators and a shared 14-value position/gripper interface. Free rigid pens and holder, convex wall segments preserving the cavity, and a passive spring button. Masses, friction and spring properties are approximations. Timing follows simulation time.",
+  "scores": "Dream-1 beta: 0.0/1.0 in 120 s; independently replayed open-loop demo: 1.0/1.0 in 89.4 s, clock 01:21:51.",
+  "reset_notes": "Seed 0 reproduces the five separated pen poses, all within the central rectangle. Reset restores the holder and clock, zeroes the display, releases the button, and returns both arms to READY. Setup settling precedes the timed episode.",
+  "media": ""
+}

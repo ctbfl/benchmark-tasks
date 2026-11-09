@@ -1,0 +1,203 @@
+#usda 1.0
+(
+    defaultPrim = "Asset"
+    metersPerUnit = 1
+    upAxis = "Z"
+)
+
+def Xform "Asset"
+{
+    def "materials"
+    {
+        def Material "black"
+        {
+            token outputs:surface.connect = </Asset/materials/black/shader.outputs:surface>
+
+            def Shader "shader"
+            {
+                uniform token info:id = "UsdPreviewSurface"
+                color3f inputs:diffuseColor = (0.018, 0.022, 0.026)
+                float inputs:metallic = 0
+                float inputs:roughness = 0.28
+                token outputs:surface
+            }
+        }
+
+        def Material "smoke"
+        {
+            token outputs:surface.connect = </Asset/materials/smoke/shader.outputs:surface>
+
+            def Shader "shader"
+            {
+                uniform token info:id = "UsdPreviewSurface"
+                color3f inputs:diffuseColor = (0.13, 0.15, 0.16)
+                float inputs:metallic = 0
+                float inputs:roughness = 0.24
+                token outputs:surface
+            }
+        }
+
+        def Material "metal"
+        {
+            token outputs:surface.connect = </Asset/materials/metal/shader.outputs:surface>
+
+            def Shader "shader"
+            {
+                uniform token info:id = "UsdPreviewSurface"
+                color3f inputs:diffuseColor = (0.55, 0.59, 0.62)
+                float inputs:metallic = 0.8
+                float inputs:roughness = 0.22
+                token outputs:surface
+            }
+        }
+    }
+
+    def Xform "body" (
+        prepend apiSchemas = ["PhysicsRigidBodyAPI", "PhysicsMassAPI", "MaterialBindingAPI"]
+    )
+    {
+        rel material:binding:physics = </Asset/body/surface>
+        float physics:mass = 0.012
+
+        def Material "surface" (
+            prepend apiSchemas = ["PhysicsMaterialAPI"]
+        )
+        {
+            float physics:dynamicFriction = 0.51
+            float physics:restitution = 0
+            float physics:staticFriction = 0.6
+        }
+
+        def Cylinder "barrel" (
+            prepend apiSchemas = ["MaterialBindingAPI", "PhysicsCollisionAPI", "PhysxCollisionAPI"]
+        )
+        {
+            double height = 0.094
+            rel material:binding = </Asset/materials/black>
+            custom float physxCollision:contactOffset = 0.001
+            custom float physxCollision:restOffset = 0
+            double radius = 0.0047
+            double3 xformOp:translate = (0, 0, -0.005)
+            uniform token[] xformOpOrder = ["xformOp:translate"]
+        }
+
+        def Cylinder "grip" (
+            prepend apiSchemas = ["MaterialBindingAPI", "PhysicsCollisionAPI", "PhysxCollisionAPI"]
+        )
+        {
+            double height = 0.021
+            rel material:binding = </Asset/materials/smoke>
+            custom float physxCollision:contactOffset = 0.001
+            custom float physxCollision:restOffset = 0
+            double radius = 0.0044
+            double3 xformOp:translate = (0, 0, -0.0605)
+            uniform token[] xformOpOrder = ["xformOp:translate"]
+        }
+
+        def Cylinder "tip" (
+            prepend apiSchemas = ["MaterialBindingAPI", "PhysicsCollisionAPI", "PhysxCollisionAPI"]
+        )
+        {
+            double height = 0.004
+            rel material:binding = </Asset/materials/metal>
+            custom float physxCollision:contactOffset = 0.001
+            custom float physxCollision:restOffset = 0
+            double radius = 0.00065
+            double3 xformOp:translate = (0, 0, -0.073)
+            uniform token[] xformOpOrder = ["xformOp:translate"]
+        }
+
+        def Cylinder "cap" (
+            prepend apiSchemas = ["MaterialBindingAPI", "PhysicsCollisionAPI", "PhysxCollisionAPI"]
+        )
+        {
+            double height = 0.035
+            rel material:binding = </Asset/materials/black>
+            custom float physxCollision:contactOffset = 0.001
+            custom float physxCollision:restOffset = 0
+            double radius = 0.0052
+            double3 xformOp:translate = (0, 0, 0.0575)
+            uniform token[] xformOpOrder = ["xformOp:translate"]
+        }
+
+        def Cylinder "cap_band" (
+            prepend apiSchemas = ["MaterialBindingAPI"]
+        )
+        {
+            double height = 0.0015
+            rel material:binding = </Asset/materials/smoke>
+            double radius = 0.0053
+            double3 xformOp:translate = (0, 0, 0.041)
+            uniform token[] xformOpOrder = ["xformOp:translate"]
+        }
+
+        def Cube "clip" (
+            prepend apiSchemas = ["MaterialBindingAPI", "PhysicsCollisionAPI", "PhysxCollisionAPI"]
+        )
+        {
+            rel material:binding = </Asset/materials/metal>
+            custom float physxCollision:contactOffset = 0.001
+            custom float physxCollision:restOffset = 0
+            double size = 1
+            float3 xformOp:scale = (0.0012, 0.0021, 0.029)
+            double3 xformOp:translate = (0.0056, 0, 0.055)
+            uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+        }
+
+        def Cylinder "grip_ring_0" (
+            prepend apiSchemas = ["MaterialBindingAPI"]
+        )
+        {
+            double height = 0.0005
+            rel material:binding = </Asset/materials/black>
+            double radius = 0.0046
+            double3 xformOp:translate = (0, 0, -0.068)
+            uniform token[] xformOpOrder = ["xformOp:translate"]
+        }
+
+        def Cylinder "grip_ring_1" (
+            prepend apiSchemas = ["MaterialBindingAPI"]
+        )
+        {
+            double height = 0.0005
+            rel material:binding = </Asset/materials/black>
+            double radius = 0.0046
+            double3 xformOp:translate = (0, 0, -0.06630000000000001)
+            uniform token[] xformOpOrder = ["xformOp:translate"]
+        }
+
+        def Cylinder "grip_ring_2" (
+            prepend apiSchemas = ["MaterialBindingAPI"]
+        )
+        {
+            double height = 0.0005
+            rel material:binding = </Asset/materials/black>
+            double radius = 0.0046
+            double3 xformOp:translate = (0, 0, -0.0646)
+            uniform token[] xformOpOrder = ["xformOp:translate"]
+        }
+
+        def Cylinder "grip_ring_3" (
+            prepend apiSchemas = ["MaterialBindingAPI"]
+        )
+        {
+            double height = 0.0005
+            rel material:binding = </Asset/materials/black>
+            double radius = 0.0046
+            double3 xformOp:translate = (0, 0, -0.06290000000000001)
+            uniform token[] xformOpOrder = ["xformOp:translate"]
+        }
+
+        def Cylinder "grip_ring_4" (
+            prepend apiSchemas = ["MaterialBindingAPI"]
+        )
+        {
+            double height = 0.0005
+            rel material:binding = </Asset/materials/black>
+            double radius = 0.0046
+            double3 xformOp:translate = (0, 0, -0.061200000000000004)
+            uniform token[] xformOpOrder = ["xformOp:translate"]
+        }
+    }
+}
+
