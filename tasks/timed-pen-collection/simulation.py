@@ -52,6 +52,7 @@ class Simulation:
         self.phase = "initial"
         self.records, self.commands, self.frames = [], [], []
         self.schema = {}
+        self.cup_robot_peak_force = 0.
         self._record()
         write_json(self.out / "schema.json", self.schema)
 
@@ -91,6 +92,9 @@ class Simulation:
                 add(name + "_q", array(obj.data.joint_pos))
                 add(name + "_dq", array(obj.data.joint_vel))
                 add(name + "_links", array(obj.data.body_link_pose_w))
+        force = float(np.linalg.norm(self.runtime.cup_robot_contacts.get_contact_force_matrix(self.dt), axis=-1).sum())
+        add("cup_robot_force_N", [force])
+        self.cup_robot_peak_force = max(self.cup_robot_peak_force, force)
         row = np.concatenate(parts)
         assert np.isfinite(row).all(), "Non-finite measured state"
         self.records.append(row)
@@ -133,6 +137,7 @@ class Simulation:
                             actions=np.asarray(self.commands))
         write_json(self.out / "frame_states.json", self.frames)
         write_json(self.out / "result.json", {"status": status, "error": error,
+            "cup_robot_peak_force_N": self.cup_robot_peak_force,
             "control_steps": self.steps, "physics_ticks": self.ticks, "config": CONFIG,
             "joint_names": {name: obj.joint_names for name, obj in self.objects.items()
                             if hasattr(obj, "joint_names")}, **self.runtime.state()})

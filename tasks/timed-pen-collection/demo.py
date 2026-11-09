@@ -26,6 +26,7 @@ def main():
             if index % 100 == 99:
                 print("DEMO", sim.runtime.state(), flush=True)
         assert sim.runtime.result["score"] == 1, sim.runtime.state()
+        assert sim.cup_robot_peak_force == 0., ("Robot hit the cup", sim.cup_robot_peak_force)
         print("DEMO COMPLETE", sim.runtime.state(), flush=True)
     except Exception:
         error = traceback.format_exc()

@@ -8,7 +8,7 @@
   "scoring": "Binary: 1.0 for starting the timer before collection, releasing all five pens inside the holder, then stopping the timer within the limit. The final pens must remain contained, supported by the holder or other contained pens, and ungrasped. Otherwise 0.0; no partial credit.",
   "run_limit": "2,400 control steps at 20 Hz: 120 simulation seconds, including final settling. API waits do not advance physics.",
   "fidelity": "CPU PhysX at 240 Hz with native YAM actuators and a shared 14-value position/gripper interface. Free rigid pens and holder, convex wall segments preserving the cavity, and a passive spring button. Masses, friction and spring properties are approximations. Timing follows simulation time.",
-  "scores": "Dream-1 beta: 0.0/1.0 in 120 s; independently replayed open-loop demo: 1.0/1.0 in 89.4 s, clock 01:21:51.",
+  "scores": "Dream-1 beta: 0.0/1.0 in 120 s; independently replayed open-loop demo: 1.0/1.0 in 102.9 s, clock 01:33:92.",
   "reset_notes": "Seed 0 reproduces the five separated pen poses, all within the central rectangle. Reset restores the holder and clock, zeroes the display, releases the button, and returns both arms to READY. Setup settling precedes the timed episode.",
   "media": ""
 }

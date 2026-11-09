@@ -88,6 +88,7 @@ class TaskRuntime:
         robot_paths = [ROOT + "/" + side + paths[body] for side in ("LeftArm", "RightArm")
                        for body in self.base.scene["left_robot"].body_names]
         self.contacts = [self.physics.create_rigid_contact_view(ROOT+f"/pen_{i}/body", robot_paths) for i in range(5)]
+        self.cup_robot_contacts = self.physics.create_rigid_contact_view(ROOT+"/cup/body", robot_paths)
         supports = [ROOT+"/cup/body", *[ROOT+f"/pen_{i}/body" for i in range(5)]]
         self.support_contacts = [self.physics.create_rigid_contact_view(ROOT+f"/pen_{i}/body", supports) for i in range(5)]
         self.initial_positions = [self.pose(f"pen_{i}")[:3].copy() for i in range(5)]

@@ -52,12 +52,15 @@ python score.py runs/dream-eval-<timestamp>
 
 ### Demo policy
 
-The demo replays 1,788 fixed commands from `demo_actions.npy`, without simulator
+The demo replays 2,058 fixed commands from `demo_actions.npy`, without simulator
 state feedback to the policy. The left arm starts timing while the right arm
 approaches the first pen. After four right-hand collections, the left arm moves
 the far pen into shared reach. The right arm releases the final pen while the
 left arm stops timing. An independent replay from the submitted files scored
-**1.0/1.0 in 89.4 seconds**, ending with the clock at **01:21:51**.
+**1.0/1.0 in 102.9 seconds**, ending with the clock at **01:33:92**.
+The arm turns each pen upright outside the holder, approaches above the rim,
+lowers vertically and withdraws upward before moving sideways. Replay validation
+also checks for robot-to-holder contact at 240 Hz.
 
 ```bash
 python demo.py
