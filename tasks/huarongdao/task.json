@@ -14,5 +14,5 @@
   "reset_notes": "Fixed initial layout, seed 0, no random jitter. Reload the scene and settle for 2 seconds before starting the task clock.",
   "fidelity": "Isaac Sim 6.1 CPU PhysX TGS at 240 Hz. Fixed rigid tray; eight free rigid tiles with compound convex collision meshes and Coulomb friction. Native YAM actuators and 14-D joint-position/gripper actions for both policies. No tile drives or grasp attachments; plastic compliance is not modeled.",
   "scores": "Dream-1 run: 0.0/1.0; open-loop demo: 1.0/1.0",
-  "media": ""
+  "media": "M-TX2TDT"
 }
