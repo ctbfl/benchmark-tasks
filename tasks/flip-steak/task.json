@@ -16,5 +16,5 @@
   "reset_notes": "Restore the fixed initial poses and robot ready state. Reset the timer to 00:00 and both steak surfaces to raw. Seed 0; no layout randomization.",
   "fidelity": "CPU PhysX at 240 Hz with native YAM joint-position/gripper control at 20 Hz. Free rigid objects interact through collision and friction; no grasp attachments. The steak keeps one geometry and body while its bottom material changes from raw to seared after 50 s of full contact. No heat transfer, deformation, smoke or internal doneness is simulated. Heater and timer controls are visual only.",
   "scores": "Dream-1: 0.0/1.0 in 120 s; open-loop demo: 1.0/1.0 in 80.2 s.",
-  "media": ""
+  "media": "M-W8TGGU"
 }
