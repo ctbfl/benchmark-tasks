@@ -1,0 +1,20 @@
+{
+  "title": "Whac-a-mole buttons",
+  "category": "Impact on AI timelines",
+  "keywords": [
+    "reaction time",
+    "visual cue",
+    "button pressing",
+    "bimanual",
+    "closed-loop control"
+  ],
+  "instruction": "Play whac-a-mole on the device in front of you. Every 5 seconds one of its four round buttons lights up for 1 second. Press the lit button down while it is lit; each valid press is counted on the score display. Get at least 5 successful presses within 120 seconds.",
+  "context": "The whac-a-mole game that children often play: buttons light up at random and must be hit before they go dark. It tests fast visual reaction and accurate pressing under a time limit. The same skill lets a robot watch indicator panels and respond within a second to alarms, prompts or machine signals, as in operator training and human-machine interface checks.",
+  "setup": "A 220 x 260 x 40 mm whac-a-mole device sits on the table in front of the dual-YAM robot, 0.30 m ahead of the arm bases. It has four 48 mm round red buttons in a 2 x 2 grid and a two-digit score display on its far edge. Every 5 s from t = 5 s, one button lights yellow for 1 s; the button sequence comes from scene seed 0. Three calibrated robot cameras observe the fixed layout.",
+  "scoring": "A valid press is a new 4 mm downward travel of the lit button while it is lit; each light allows one hit and turns off when hit. Score 1.0 if at least 5 valid presses occur within 120 seconds, otherwise 0.0. Pressing unlit buttons does not count and is not penalized.",
+  "run_limit": "2,400 control steps at 20 Hz (120 simulation seconds); network waits pause physics.",
+  "reset_notes": "Fixed layout, scene seed 0 and a fixed light sequence. Settle the device for 2 seconds; the game clock and score start at zero when the trial begins.",
+  "fidelity": "240 Hz CPU PhysX with native YAM actuators. The device is a free rigid body; each button is a passive prismatic joint with an 8 mm stroke and a 400 N/m spring, and presses are detected from joint travel. Lamps and display digits switch emissive meshes. Geometry is procedural; masses, friction and springs are approximate.",
+  "scores": "Dream-1 beta: 0.0/1.0 in 120 s (no button pressed); demo (Top Camera brightness policy): 1.0/1.0, fifth hit at 25.31 s.",
+  "media": "M-FJFDNU"
+}
