@@ -1,0 +1,88 @@
+{
+  "model": "dreamlabs/dream-1-beta",
+  "simulation": {
+    "backend": "physx",
+    "device": "cpu",
+    "num_envs": 1,
+    "physics_hz": 240,
+    "control_hz": 20,
+    "gravity_m_s2": [
+      0.0,
+      0.0,
+      -9.81
+    ],
+    "solver_type": 1,
+    "use_fabric": false,
+    "enable_ccd": false
+  },
+  "episode": {
+    "seed": 0,
+    "max_control_steps": 2400,
+    "object_jitter_m": 0.0,
+    "advance_physics_during_api_wait": false
+  },
+  "station": {
+    "scene": "station",
+    "top_camera": "calibrated"
+  },
+  "observation": {
+    "camera_names": [
+      "left_cam",
+      "top_cam",
+      "right_cam"
+    ],
+    "render_size_wh": [
+      640,
+      360
+    ],
+    "model_input_size_wh": [
+      320,
+      176
+    ],
+    "jpeg_quality": 85,
+    "state_key": "joint_pos"
+  },
+  "action": {
+    "size": 14,
+    "layout": [
+      "left_joint1_to_joint6",
+      "left_gripper",
+      "right_joint1_to_joint6",
+      "right_gripper"
+    ],
+    "arm_target": "absolute_joint_position_rad",
+    "gripper_closed": 0.0,
+    "gripper_open": 1.0,
+    "clip_to_robot_limits": true
+  },
+  "robot_reference": {
+    "shoulder": {
+      "effort": 27.0,
+      "velocity": 5.5,
+      "stiffness": 80.0,
+      "damping": 5.0,
+      "friction": 0.3
+    },
+    "wrist": {
+      "effort": 7.0,
+      "velocity": 20.0,
+      "stiffness": 10.0,
+      "damping": 1.5,
+      "friction": 0.06
+    },
+    "gripper": {
+      "effort": 50.0,
+      "velocity": 0.1461187214611872,
+      "stiffness": 5000.0,
+      "damping": 100.0
+    },
+    "solver_position_iterations": 16,
+    "solver_velocity_iterations": 4,
+    "enabled_self_collisions": false
+  },
+  "renderer": {
+    "mode": "RealTimePathTracing",
+    "ambient_light_intensity": 0.0,
+    "antialiasing_op": 2
+  }
+}

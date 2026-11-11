@@ -1,0 +1,457 @@
+#usda 1.0
+(
+    defaultPrim = "Asset"
+    metersPerUnit = 1
+    upAxis = "Z"
+)
+
+def Xform "Asset"
+{
+    def "materials"
+    {
+        def Material "plastic"
+        {
+            token outputs:surface.connect = </Asset/materials/plastic/shader.outputs:surface>
+
+            def Shader "shader"
+            {
+                uniform token info:id = "UsdPreviewSurface"
+                color3f inputs:diffuseColor = (0.2, 0.42, 0.62)
+                float inputs:metallic = 0
+                float inputs:roughness = 0.35
+                token outputs:surface
+            }
+        }
+
+        def Material "rim"
+        {
+            token outputs:surface.connect = </Asset/materials/rim/shader.outputs:surface>
+
+            def Shader "shader"
+            {
+                uniform token info:id = "UsdPreviewSurface"
+                color3f inputs:diffuseColor = (0.86, 0.88, 0.9)
+                float inputs:metallic = 0
+                float inputs:roughness = 0.4
+                token outputs:surface
+            }
+        }
+    }
+
+    def Xform "body" (
+        prepend apiSchemas = ["PhysicsRigidBodyAPI", "PhysicsMassAPI", "PhysxRigidBodyAPI", "MaterialBindingAPI"]
+    )
+    {
+        rel material:binding:physics = </Asset/body/surface>
+        float physics:mass = 0.12
+        custom bool physxRigidBody:enableCCD = 1
+
+        def Material "surface" (
+            prepend apiSchemas = ["PhysicsMaterialAPI"]
+        )
+        {
+            float physics:dynamicFriction = 0.34
+            float physics:restitution = 0
+            float physics:staticFriction = 0.4
+        }
+
+        def Mesh "floor" (
+            prepend apiSchemas = ["MaterialBindingAPI", "PhysicsCollisionAPI", "PhysicsMeshCollisionAPI", "PhysxCollisionAPI"]
+        )
+        {
+            int[] faceVertexCounts = [24, 24, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4]
+            int[] faceVertexIndices = [23, 22, 21, 20, 19, 18, 17, 16, 15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1, 0, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 0, 1, 25, 24, 1, 2, 26, 25, 2, 3, 27, 26, 3, 4, 28, 27, 4, 5, 29, 28, 5, 6, 30, 29, 6, 7, 31, 30, 7, 8, 32, 31, 8, 9, 33, 32, 9, 10, 34, 33, 10, 11, 35, 34, 11, 12, 36, 35, 12, 13, 37, 36, 13, 14, 38, 37, 14, 15, 39, 38, 15, 16, 40, 39, 16, 17, 41, 40, 17, 18, 42, 41, 18, 19, 43, 42, 19, 20, 44, 43, 20, 21, 45, 44, 21, 22, 46, 45, 22, 23, 47, 46, 23, 0, 24, 47]
+            rel material:binding = </Asset/materials/plastic>
+            uniform token physics:approximation = "convexHull"
+            custom float physxCollision:contactOffset = 0.001
+            custom float physxCollision:restOffset = 0
+            point3f[] points = [(0.034, 0, 0), (0.032841478, 0.008799847, 0), (0.029444864, 0.017, 0), (0.02404163, 0.02404163, 0), (0.017, 0.029444864, 0), (0.008799847, 0.032841478, 0), (2.0818997e-18, 0.034, 0), (-0.008799847, 0.032841478, 0), (-0.017, 0.029444864, 0), (-0.02404163, 0.02404163, 0), (-0.029444864, 0.017, 0), (-0.032841478, 0.008799847, 0), (-0.034, 4.1637993e-18, 0), (-0.032841478, -0.008799847, 0), (-0.029444864, -0.017, 0), (-0.02404163, -0.02404163, 0), (-0.017, -0.029444864, 0), (-0.008799847, -0.032841478, 0), (-6.2456988e-18, -0.034, 0), (0.008799847, -0.032841478, 0), (0.017, -0.029444864, 0), (0.02404163, -0.02404163, 0), (0.029444864, -0.017, 0), (0.032841478, -0.008799847, 0), (0.034, 0, 0.004), (0.032841478, 0.008799847, 0.004), (0.029444864, 0.017, 0.004), (0.02404163, 0.02404163, 0.004), (0.017, 0.029444864, 0.004), (0.008799847, 0.032841478, 0.004), (2.0818997e-18, 0.034, 0.004), (-0.008799847, 0.032841478, 0.004), (-0.017, 0.029444864, 0.004), (-0.02404163, 0.02404163, 0.004), (-0.029444864, 0.017, 0.004), (-0.032841478, 0.008799847, 0.004), (-0.034, 4.1637993e-18, 0.004), (-0.032841478, -0.008799847, 0.004), (-0.029444864, -0.017, 0.004), (-0.02404163, -0.02404163, 0.004), (-0.017, -0.029444864, 0.004), (-0.008799847, -0.032841478, 0.004), (-6.2456988e-18, -0.034, 0.004), (0.008799847, -0.032841478, 0.004), (0.017, -0.029444864, 0.004), (0.02404163, -0.02404163, 0.004), (0.029444864, -0.017, 0.004), (0.032841478, -0.008799847, 0.004)]
+            uniform token subdivisionScheme = "none"
+        }
+
+        def Mesh "wall_00" (
+            prepend apiSchemas = ["MaterialBindingAPI", "PhysicsCollisionAPI", "PhysicsMeshCollisionAPI", "PhysxCollisionAPI"]
+        )
+        {
+            int[] faceVertexCounts = [4, 4, 4, 4, 4, 4]
+            int[] faceVertexIndices = [3, 2, 1, 0, 4, 5, 6, 7, 0, 1, 5, 4, 1, 2, 6, 5, 2, 3, 7, 6, 3, 0, 4, 7]
+            rel material:binding = </Asset/materials/plastic>
+            uniform token physics:approximation = "convexHull"
+            custom float physxCollision:contactOffset = 0.001
+            custom float physxCollision:restOffset = 0
+            point3f[] points = [(0.03364815, -0.004878749, 0.004), (0.03364815, 0.004878749, 0.004), (0.029689541, 0.0043047788, 0.004), (0.029689541, -0.0043047788, 0.004), (0.03364815, -0.004878749, 0.09), (0.03364815, 0.004878749, 0.09), (0.029689541, 0.0043047788, 0.09), (0.029689541, -0.0043047788, 0.09)]
+            uniform token purpose = "guide"
+            uniform token subdivisionScheme = "none"
+        }
+
+        def Mesh "wall_01" (
+            prepend apiSchemas = ["MaterialBindingAPI", "PhysicsCollisionAPI", "PhysicsMeshCollisionAPI", "PhysxCollisionAPI"]
+        )
+        {
+            int[] faceVertexCounts = [4, 4, 4, 4, 4, 4]
+            int[] faceVertexIndices = [3, 2, 1, 0, 4, 5, 6, 7, 0, 1, 5, 4, 1, 2, 6, 5, 2, 3, 7, 6, 3, 0, 4, 7]
+            rel material:binding = </Asset/materials/plastic>
+            uniform token physics:approximation = "convexHull"
+            custom float physxCollision:contactOffset = 0.001
+            custom float physxCollision:restOffset = 0
+            point3f[] points = [(0.03376433, 0.0039962716, 0.004), (0.0312389, 0.0134212915, 0.004), (0.027563736, 0.011842316, 0.004), (0.029792054, 0.0035261218, 0.004), (0.03376433, 0.0039962716, 0.09), (0.0312389, 0.0134212915, 0.09), (0.027563736, 0.011842316, 0.09), (0.029792054, 0.0035261218, 0.09)]
+            uniform token purpose = "guide"
+            uniform token subdivisionScheme = "none"
+        }
+
+        def Mesh "wall_02" (
+            prepend apiSchemas = ["MaterialBindingAPI", "PhysicsCollisionAPI", "PhysicsMeshCollisionAPI", "PhysxCollisionAPI"]
+        )
+        {
+            int[] faceVertexCounts = [4, 4, 4, 4, 4, 4]
+            int[] faceVertexIndices = [3, 2, 1, 0, 4, 5, 6, 7, 0, 1, 5, 4, 1, 2, 6, 5, 2, 3, 7, 6, 3, 0, 4, 7]
+            rel material:binding = </Asset/materials/plastic>
+            uniform token physics:approximation = "convexHull"
+            custom float physxCollision:contactOffset = 0.001
+            custom float physxCollision:restOffset = 0
+            point3f[] points = [(0.031579524, 0.012598953, 0.004), (0.026700776, 0.021049194, 0.004), (0.023559509, 0.018572818, 0.004), (0.027864287, 0.0111167235, 0.004), (0.031579524, 0.012598953, 0.09), (0.026700776, 0.021049194, 0.09), (0.023559509, 0.018572818, 0.09), (0.027864287, 0.0111167235, 0.09)]
+            uniform token purpose = "guide"
+            uniform token subdivisionScheme = "none"
+        }
+
+        def Mesh "wall_03" (
+            prepend apiSchemas = ["MaterialBindingAPI", "PhysicsCollisionAPI", "PhysicsMeshCollisionAPI", "PhysxCollisionAPI"]
+        )
+        {
+            int[] faceVertexCounts = [4, 4, 4, 4, 4, 4]
+            int[] faceVertexIndices = [3, 2, 1, 0, 4, 5, 6, 7, 0, 1, 5, 4, 1, 2, 6, 5, 2, 3, 7, 6, 3, 0, 4, 7]
+            rel material:binding = </Asset/materials/plastic>
+            uniform token physics:approximation = "convexHull"
+            custom float physxCollision:contactOffset = 0.001
+            custom float physxCollision:restOffset = 0
+            point3f[] points = [(0.027242629, 0.020343037, 0.004), (0.020343037, 0.027242629, 0.004), (0.017949738, 0.024037614, 0.004), (0.024037614, 0.017949738, 0.004), (0.027242629, 0.020343037, 0.09), (0.020343037, 0.027242629, 0.09), (0.017949738, 0.024037614, 0.09), (0.024037614, 0.017949738, 0.09)]
+            uniform token purpose = "guide"
+            uniform token subdivisionScheme = "none"
+        }
+
+        def Mesh "wall_04" (
+            prepend apiSchemas = ["MaterialBindingAPI", "PhysicsCollisionAPI", "PhysicsMeshCollisionAPI", "PhysxCollisionAPI"]
+        )
+        {
+            int[] faceVertexCounts = [4, 4, 4, 4, 4, 4]
+            int[] faceVertexIndices = [3, 2, 1, 0, 4, 5, 6, 7, 0, 1, 5, 4, 1, 2, 6, 5, 2, 3, 7, 6, 3, 0, 4, 7]
+            rel material:binding = </Asset/materials/plastic>
+            uniform token physics:approximation = "convexHull"
+            custom float physxCollision:contactOffset = 0.001
+            custom float physxCollision:restOffset = 0
+            point3f[] points = [(0.021049194, 0.026700776, 0.004), (0.012598953, 0.031579524, 0.004), (0.0111167235, 0.027864287, 0.004), (0.018572818, 0.023559509, 0.004), (0.021049194, 0.026700776, 0.09), (0.012598953, 0.031579524, 0.09), (0.0111167235, 0.027864287, 0.09), (0.018572818, 0.023559509, 0.09)]
+            uniform token purpose = "guide"
+            uniform token subdivisionScheme = "none"
+        }
+
+        def Mesh "wall_05" (
+            prepend apiSchemas = ["MaterialBindingAPI", "PhysicsCollisionAPI", "PhysicsMeshCollisionAPI", "PhysxCollisionAPI"]
+        )
+        {
+            int[] faceVertexCounts = [4, 4, 4, 4, 4, 4]
+            int[] faceVertexIndices = [3, 2, 1, 0, 4, 5, 6, 7, 0, 1, 5, 4, 1, 2, 6, 5, 2, 3, 7, 6, 3, 0, 4, 7]
+            rel material:binding = </Asset/materials/plastic>
+            uniform token physics:approximation = "convexHull"
+            custom float physxCollision:contactOffset = 0.001
+            custom float physxCollision:restOffset = 0
+            point3f[] points = [(0.0134212915, 0.0312389, 0.004), (0.0039962716, 0.03376433, 0.004), (0.0035261218, 0.029792054, 0.004), (0.011842316, 0.027563736, 0.004), (0.0134212915, 0.0312389, 0.09), (0.0039962716, 0.03376433, 0.09), (0.0035261218, 0.029792054, 0.09), (0.011842316, 0.027563736, 0.09)]
+            uniform token purpose = "guide"
+            uniform token subdivisionScheme = "none"
+        }
+
+        def Mesh "wall_06" (
+            prepend apiSchemas = ["MaterialBindingAPI", "PhysicsCollisionAPI", "PhysicsMeshCollisionAPI", "PhysxCollisionAPI"]
+        )
+        {
+            int[] faceVertexCounts = [4, 4, 4, 4, 4, 4]
+            int[] faceVertexIndices = [3, 2, 1, 0, 4, 5, 6, 7, 0, 1, 5, 4, 1, 2, 6, 5, 2, 3, 7, 6, 3, 0, 4, 7]
+            rel material:binding = </Asset/materials/plastic>
+            uniform token physics:approximation = "convexHull"
+            custom float physxCollision:contactOffset = 0.001
+            custom float physxCollision:restOffset = 0
+            point3f[] points = [(0.004878749, 0.03364815, 0.004), (-0.004878749, 0.03364815, 0.004), (-0.0043047788, 0.029689541, 0.004), (0.0043047788, 0.029689541, 0.004), (0.004878749, 0.03364815, 0.09), (-0.004878749, 0.03364815, 0.09), (-0.0043047788, 0.029689541, 0.09), (0.0043047788, 0.029689541, 0.09)]
+            uniform token purpose = "guide"
+            uniform token subdivisionScheme = "none"
+        }
+
+        def Mesh "wall_07" (
+            prepend apiSchemas = ["MaterialBindingAPI", "PhysicsCollisionAPI", "PhysicsMeshCollisionAPI", "PhysxCollisionAPI"]
+        )
+        {
+            int[] faceVertexCounts = [4, 4, 4, 4, 4, 4]
+            int[] faceVertexIndices = [3, 2, 1, 0, 4, 5, 6, 7, 0, 1, 5, 4, 1, 2, 6, 5, 2, 3, 7, 6, 3, 0, 4, 7]
+            rel material:binding = </Asset/materials/plastic>
+            uniform token physics:approximation = "convexHull"
+            custom float physxCollision:contactOffset = 0.001
+            custom float physxCollision:restOffset = 0
+            point3f[] points = [(-0.0039962716, 0.03376433, 0.004), (-0.0134212915, 0.0312389, 0.004), (-0.011842316, 0.027563736, 0.004), (-0.0035261218, 0.029792054, 0.004), (-0.0039962716, 0.03376433, 0.09), (-0.0134212915, 0.0312389, 0.09), (-0.011842316, 0.027563736, 0.09), (-0.0035261218, 0.029792054, 0.09)]
+            uniform token purpose = "guide"
+            uniform token subdivisionScheme = "none"
+        }
+
+        def Mesh "wall_08" (
+            prepend apiSchemas = ["MaterialBindingAPI", "PhysicsCollisionAPI", "PhysicsMeshCollisionAPI", "PhysxCollisionAPI"]
+        )
+        {
+            int[] faceVertexCounts = [4, 4, 4, 4, 4, 4]
+            int[] faceVertexIndices = [3, 2, 1, 0, 4, 5, 6, 7, 0, 1, 5, 4, 1, 2, 6, 5, 2, 3, 7, 6, 3, 0, 4, 7]
+            rel material:binding = </Asset/materials/plastic>
+            uniform token physics:approximation = "convexHull"
+            custom float physxCollision:contactOffset = 0.001
+            custom float physxCollision:restOffset = 0
+            point3f[] points = [(-0.012598953, 0.031579524, 0.004), (-0.021049194, 0.026700776, 0.004), (-0.018572818, 0.023559509, 0.004), (-0.0111167235, 0.027864287, 0.004), (-0.012598953, 0.031579524, 0.09), (-0.021049194, 0.026700776, 0.09), (-0.018572818, 0.023559509, 0.09), (-0.0111167235, 0.027864287, 0.09)]
+            uniform token purpose = "guide"
+            uniform token subdivisionScheme = "none"
+        }
+
+        def Mesh "wall_09" (
+            prepend apiSchemas = ["MaterialBindingAPI", "PhysicsCollisionAPI", "PhysicsMeshCollisionAPI", "PhysxCollisionAPI"]
+        )
+        {
+            int[] faceVertexCounts = [4, 4, 4, 4, 4, 4]
+            int[] faceVertexIndices = [3, 2, 1, 0, 4, 5, 6, 7, 0, 1, 5, 4, 1, 2, 6, 5, 2, 3, 7, 6, 3, 0, 4, 7]
+            rel material:binding = </Asset/materials/plastic>
+            uniform token physics:approximation = "convexHull"
+            custom float physxCollision:contactOffset = 0.001
+            custom float physxCollision:restOffset = 0
+            point3f[] points = [(-0.020343037, 0.027242629, 0.004), (-0.027242629, 0.020343037, 0.004), (-0.024037614, 0.017949738, 0.004), (-0.017949738, 0.024037614, 0.004), (-0.020343037, 0.027242629, 0.09), (-0.027242629, 0.020343037, 0.09), (-0.024037614, 0.017949738, 0.09), (-0.017949738, 0.024037614, 0.09)]
+            uniform token purpose = "guide"
+            uniform token subdivisionScheme = "none"
+        }
+
+        def Mesh "wall_10" (
+            prepend apiSchemas = ["MaterialBindingAPI", "PhysicsCollisionAPI", "PhysicsMeshCollisionAPI", "PhysxCollisionAPI"]
+        )
+        {
+            int[] faceVertexCounts = [4, 4, 4, 4, 4, 4]
+            int[] faceVertexIndices = [3, 2, 1, 0, 4, 5, 6, 7, 0, 1, 5, 4, 1, 2, 6, 5, 2, 3, 7, 6, 3, 0, 4, 7]
+            rel material:binding = </Asset/materials/plastic>
+            uniform token physics:approximation = "convexHull"
+            custom float physxCollision:contactOffset = 0.001
+            custom float physxCollision:restOffset = 0
+            point3f[] points = [(-0.026700776, 0.021049194, 0.004), (-0.031579524, 0.012598953, 0.004), (-0.027864287, 0.0111167235, 0.004), (-0.023559509, 0.018572818, 0.004), (-0.026700776, 0.021049194, 0.09), (-0.031579524, 0.012598953, 0.09), (-0.027864287, 0.0111167235, 0.09), (-0.023559509, 0.018572818, 0.09)]
+            uniform token purpose = "guide"
+            uniform token subdivisionScheme = "none"
+        }
+
+        def Mesh "wall_11" (
+            prepend apiSchemas = ["MaterialBindingAPI", "PhysicsCollisionAPI", "PhysicsMeshCollisionAPI", "PhysxCollisionAPI"]
+        )
+        {
+            int[] faceVertexCounts = [4, 4, 4, 4, 4, 4]
+            int[] faceVertexIndices = [3, 2, 1, 0, 4, 5, 6, 7, 0, 1, 5, 4, 1, 2, 6, 5, 2, 3, 7, 6, 3, 0, 4, 7]
+            rel material:binding = </Asset/materials/plastic>
+            uniform token physics:approximation = "convexHull"
+            custom float physxCollision:contactOffset = 0.001
+            custom float physxCollision:restOffset = 0
+            point3f[] points = [(-0.0312389, 0.0134212915, 0.004), (-0.03376433, 0.0039962716, 0.004), (-0.029792054, 0.0035261218, 0.004), (-0.027563736, 0.011842316, 0.004), (-0.0312389, 0.0134212915, 0.09), (-0.03376433, 0.0039962716, 0.09), (-0.029792054, 0.0035261218, 0.09), (-0.027563736, 0.011842316, 0.09)]
+            uniform token purpose = "guide"
+            uniform token subdivisionScheme = "none"
+        }
+
+        def Mesh "wall_12" (
+            prepend apiSchemas = ["MaterialBindingAPI", "PhysicsCollisionAPI", "PhysicsMeshCollisionAPI", "PhysxCollisionAPI"]
+        )
+        {
+            int[] faceVertexCounts = [4, 4, 4, 4, 4, 4]
+            int[] faceVertexIndices = [3, 2, 1, 0, 4, 5, 6, 7, 0, 1, 5, 4, 1, 2, 6, 5, 2, 3, 7, 6, 3, 0, 4, 7]
+            rel material:binding = </Asset/materials/plastic>
+            uniform token physics:approximation = "convexHull"
+            custom float physxCollision:contactOffset = 0.001
+            custom float physxCollision:restOffset = 0
+            point3f[] points = [(-0.03364815, 0.004878749, 0.004), (-0.03364815, -0.004878749, 0.004), (-0.029689541, -0.0043047788, 0.004), (-0.029689541, 0.0043047788, 0.004), (-0.03364815, 0.004878749, 0.09), (-0.03364815, -0.004878749, 0.09), (-0.029689541, -0.0043047788, 0.09), (-0.029689541, 0.0043047788, 0.09)]
+            uniform token purpose = "guide"
+            uniform token subdivisionScheme = "none"
+        }
+
+        def Mesh "wall_13" (
+            prepend apiSchemas = ["MaterialBindingAPI", "PhysicsCollisionAPI", "PhysicsMeshCollisionAPI", "PhysxCollisionAPI"]
+        )
+        {
+            int[] faceVertexCounts = [4, 4, 4, 4, 4, 4]
+            int[] faceVertexIndices = [3, 2, 1, 0, 4, 5, 6, 7, 0, 1, 5, 4, 1, 2, 6, 5, 2, 3, 7, 6, 3, 0, 4, 7]
+            rel material:binding = </Asset/materials/plastic>
+            uniform token physics:approximation = "convexHull"
+            custom float physxCollision:contactOffset = 0.001
+            custom float physxCollision:restOffset = 0
+            point3f[] points = [(-0.03376433, -0.0039962716, 0.004), (-0.0312389, -0.0134212915, 0.004), (-0.027563736, -0.011842316, 0.004), (-0.029792054, -0.0035261218, 0.004), (-0.03376433, -0.0039962716, 0.09), (-0.0312389, -0.0134212915, 0.09), (-0.027563736, -0.011842316, 0.09), (-0.029792054, -0.0035261218, 0.09)]
+            uniform token purpose = "guide"
+            uniform token subdivisionScheme = "none"
+        }
+
+        def Mesh "wall_14" (
+            prepend apiSchemas = ["MaterialBindingAPI", "PhysicsCollisionAPI", "PhysicsMeshCollisionAPI", "PhysxCollisionAPI"]
+        )
+        {
+            int[] faceVertexCounts = [4, 4, 4, 4, 4, 4]
+            int[] faceVertexIndices = [3, 2, 1, 0, 4, 5, 6, 7, 0, 1, 5, 4, 1, 2, 6, 5, 2, 3, 7, 6, 3, 0, 4, 7]
+            rel material:binding = </Asset/materials/plastic>
+            uniform token physics:approximation = "convexHull"
+            custom float physxCollision:contactOffset = 0.001
+            custom float physxCollision:restOffset = 0
+            point3f[] points = [(-0.031579524, -0.012598953, 0.004), (-0.026700776, -0.021049194, 0.004), (-0.023559509, -0.018572818, 0.004), (-0.027864287, -0.0111167235, 0.004), (-0.031579524, -0.012598953, 0.09), (-0.026700776, -0.021049194, 0.09), (-0.023559509, -0.018572818, 0.09), (-0.027864287, -0.0111167235, 0.09)]
+            uniform token purpose = "guide"
+            uniform token subdivisionScheme = "none"
+        }
+
+        def Mesh "wall_15" (
+            prepend apiSchemas = ["MaterialBindingAPI", "PhysicsCollisionAPI", "PhysicsMeshCollisionAPI", "PhysxCollisionAPI"]
+        )
+        {
+            int[] faceVertexCounts = [4, 4, 4, 4, 4, 4]
+            int[] faceVertexIndices = [3, 2, 1, 0, 4, 5, 6, 7, 0, 1, 5, 4, 1, 2, 6, 5, 2, 3, 7, 6, 3, 0, 4, 7]
+            rel material:binding = </Asset/materials/plastic>
+            uniform token physics:approximation = "convexHull"
+            custom float physxCollision:contactOffset = 0.001
+            custom float physxCollision:restOffset = 0
+            point3f[] points = [(-0.027242629, -0.020343037, 0.004), (-0.020343037, -0.027242629, 0.004), (-0.017949738, -0.024037614, 0.004), (-0.024037614, -0.017949738, 0.004), (-0.027242629, -0.020343037, 0.09), (-0.020343037, -0.027242629, 0.09), (-0.017949738, -0.024037614, 0.09), (-0.024037614, -0.017949738, 0.09)]
+            uniform token purpose = "guide"
+            uniform token subdivisionScheme = "none"
+        }
+
+        def Mesh "wall_16" (
+            prepend apiSchemas = ["MaterialBindingAPI", "PhysicsCollisionAPI", "PhysicsMeshCollisionAPI", "PhysxCollisionAPI"]
+        )
+        {
+            int[] faceVertexCounts = [4, 4, 4, 4, 4, 4]
+            int[] faceVertexIndices = [3, 2, 1, 0, 4, 5, 6, 7, 0, 1, 5, 4, 1, 2, 6, 5, 2, 3, 7, 6, 3, 0, 4, 7]
+            rel material:binding = </Asset/materials/plastic>
+            uniform token physics:approximation = "convexHull"
+            custom float physxCollision:contactOffset = 0.001
+            custom float physxCollision:restOffset = 0
+            point3f[] points = [(-0.021049194, -0.026700776, 0.004), (-0.012598953, -0.031579524, 0.004), (-0.0111167235, -0.027864287, 0.004), (-0.018572818, -0.023559509, 0.004), (-0.021049194, -0.026700776, 0.09), (-0.012598953, -0.031579524, 0.09), (-0.0111167235, -0.027864287, 0.09), (-0.018572818, -0.023559509, 0.09)]
+            uniform token purpose = "guide"
+            uniform token subdivisionScheme = "none"
+        }
+
+        def Mesh "wall_17" (
+            prepend apiSchemas = ["MaterialBindingAPI", "PhysicsCollisionAPI", "PhysicsMeshCollisionAPI", "PhysxCollisionAPI"]
+        )
+        {
+            int[] faceVertexCounts = [4, 4, 4, 4, 4, 4]
+            int[] faceVertexIndices = [3, 2, 1, 0, 4, 5, 6, 7, 0, 1, 5, 4, 1, 2, 6, 5, 2, 3, 7, 6, 3, 0, 4, 7]
+            rel material:binding = </Asset/materials/plastic>
+            uniform token physics:approximation = "convexHull"
+            custom float physxCollision:contactOffset = 0.001
+            custom float physxCollision:restOffset = 0
+            point3f[] points = [(-0.0134212915, -0.0312389, 0.004), (-0.0039962716, -0.03376433, 0.004), (-0.0035261218, -0.029792054, 0.004), (-0.011842316, -0.027563736, 0.004), (-0.0134212915, -0.0312389, 0.09), (-0.0039962716, -0.03376433, 0.09), (-0.0035261218, -0.029792054, 0.09), (-0.011842316, -0.027563736, 0.09)]
+            uniform token purpose = "guide"
+            uniform token subdivisionScheme = "none"
+        }
+
+        def Mesh "wall_18" (
+            prepend apiSchemas = ["MaterialBindingAPI", "PhysicsCollisionAPI", "PhysicsMeshCollisionAPI", "PhysxCollisionAPI"]
+        )
+        {
+            int[] faceVertexCounts = [4, 4, 4, 4, 4, 4]
+            int[] faceVertexIndices = [3, 2, 1, 0, 4, 5, 6, 7, 0, 1, 5, 4, 1, 2, 6, 5, 2, 3, 7, 6, 3, 0, 4, 7]
+            rel material:binding = </Asset/materials/plastic>
+            uniform token physics:approximation = "convexHull"
+            custom float physxCollision:contactOffset = 0.001
+            custom float physxCollision:restOffset = 0
+            point3f[] points = [(-0.004878749, -0.03364815, 0.004), (0.004878749, -0.03364815, 0.004), (0.0043047788, -0.029689541, 0.004), (-0.0043047788, -0.029689541, 0.004), (-0.004878749, -0.03364815, 0.09), (0.004878749, -0.03364815, 0.09), (0.0043047788, -0.029689541, 0.09), (-0.0043047788, -0.029689541, 0.09)]
+            uniform token purpose = "guide"
+            uniform token subdivisionScheme = "none"
+        }
+
+        def Mesh "wall_19" (
+            prepend apiSchemas = ["MaterialBindingAPI", "PhysicsCollisionAPI", "PhysicsMeshCollisionAPI", "PhysxCollisionAPI"]
+        )
+        {
+            int[] faceVertexCounts = [4, 4, 4, 4, 4, 4]
+            int[] faceVertexIndices = [3, 2, 1, 0, 4, 5, 6, 7, 0, 1, 5, 4, 1, 2, 6, 5, 2, 3, 7, 6, 3, 0, 4, 7]
+            rel material:binding = </Asset/materials/plastic>
+            uniform token physics:approximation = "convexHull"
+            custom float physxCollision:contactOffset = 0.001
+            custom float physxCollision:restOffset = 0
+            point3f[] points = [(0.0039962716, -0.03376433, 0.004), (0.0134212915, -0.0312389, 0.004), (0.011842316, -0.027563736, 0.004), (0.0035261218, -0.029792054, 0.004), (0.0039962716, -0.03376433, 0.09), (0.0134212915, -0.0312389, 0.09), (0.011842316, -0.027563736, 0.09), (0.0035261218, -0.029792054, 0.09)]
+            uniform token purpose = "guide"
+            uniform token subdivisionScheme = "none"
+        }
+
+        def Mesh "wall_20" (
+            prepend apiSchemas = ["MaterialBindingAPI", "PhysicsCollisionAPI", "PhysicsMeshCollisionAPI", "PhysxCollisionAPI"]
+        )
+        {
+            int[] faceVertexCounts = [4, 4, 4, 4, 4, 4]
+            int[] faceVertexIndices = [3, 2, 1, 0, 4, 5, 6, 7, 0, 1, 5, 4, 1, 2, 6, 5, 2, 3, 7, 6, 3, 0, 4, 7]
+            rel material:binding = </Asset/materials/plastic>
+            uniform token physics:approximation = "convexHull"
+            custom float physxCollision:contactOffset = 0.001
+            custom float physxCollision:restOffset = 0
+            point3f[] points = [(0.012598953, -0.031579524, 0.004), (0.021049194, -0.026700776, 0.004), (0.018572818, -0.023559509, 0.004), (0.0111167235, -0.027864287, 0.004), (0.012598953, -0.031579524, 0.09), (0.021049194, -0.026700776, 0.09), (0.018572818, -0.023559509, 0.09), (0.0111167235, -0.027864287, 0.09)]
+            uniform token purpose = "guide"
+            uniform token subdivisionScheme = "none"
+        }
+
+        def Mesh "wall_21" (
+            prepend apiSchemas = ["MaterialBindingAPI", "PhysicsCollisionAPI", "PhysicsMeshCollisionAPI", "PhysxCollisionAPI"]
+        )
+        {
+            int[] faceVertexCounts = [4, 4, 4, 4, 4, 4]
+            int[] faceVertexIndices = [3, 2, 1, 0, 4, 5, 6, 7, 0, 1, 5, 4, 1, 2, 6, 5, 2, 3, 7, 6, 3, 0, 4, 7]
+            rel material:binding = </Asset/materials/plastic>
+            uniform token physics:approximation = "convexHull"
+            custom float physxCollision:contactOffset = 0.001
+            custom float physxCollision:restOffset = 0
+            point3f[] points = [(0.020343037, -0.027242629, 0.004), (0.027242629, -0.020343037, 0.004), (0.024037614, -0.017949738, 0.004), (0.017949738, -0.024037614, 0.004), (0.020343037, -0.027242629, 0.09), (0.027242629, -0.020343037, 0.09), (0.024037614, -0.017949738, 0.09), (0.017949738, -0.024037614, 0.09)]
+            uniform token purpose = "guide"
+            uniform token subdivisionScheme = "none"
+        }
+
+        def Mesh "wall_22" (
+            prepend apiSchemas = ["MaterialBindingAPI", "PhysicsCollisionAPI", "PhysicsMeshCollisionAPI", "PhysxCollisionAPI"]
+        )
+        {
+            int[] faceVertexCounts = [4, 4, 4, 4, 4, 4]
+            int[] faceVertexIndices = [3, 2, 1, 0, 4, 5, 6, 7, 0, 1, 5, 4, 1, 2, 6, 5, 2, 3, 7, 6, 3, 0, 4, 7]
+            rel material:binding = </Asset/materials/plastic>
+            uniform token physics:approximation = "convexHull"
+            custom float physxCollision:contactOffset = 0.001
+            custom float physxCollision:restOffset = 0
+            point3f[] points = [(0.026700776, -0.021049194, 0.004), (0.031579524, -0.012598953, 0.004), (0.027864287, -0.0111167235, 0.004), (0.023559509, -0.018572818, 0.004), (0.026700776, -0.021049194, 0.09), (0.031579524, -0.012598953, 0.09), (0.027864287, -0.0111167235, 0.09), (0.023559509, -0.018572818, 0.09)]
+            uniform token purpose = "guide"
+            uniform token subdivisionScheme = "none"
+        }
+
+        def Mesh "wall_23" (
+            prepend apiSchemas = ["MaterialBindingAPI", "PhysicsCollisionAPI", "PhysicsMeshCollisionAPI", "PhysxCollisionAPI"]
+        )
+        {
+            int[] faceVertexCounts = [4, 4, 4, 4, 4, 4]
+            int[] faceVertexIndices = [3, 2, 1, 0, 4, 5, 6, 7, 0, 1, 5, 4, 1, 2, 6, 5, 2, 3, 7, 6, 3, 0, 4, 7]
+            rel material:binding = </Asset/materials/plastic>
+            uniform token physics:approximation = "convexHull"
+            custom float physxCollision:contactOffset = 0.001
+            custom float physxCollision:restOffset = 0
+            point3f[] points = [(0.0312389, -0.0134212915, 0.004), (0.03376433, -0.0039962716, 0.004), (0.029792054, -0.0035261218, 0.004), (0.027563736, -0.011842316, 0.004), (0.0312389, -0.0134212915, 0.09), (0.03376433, -0.0039962716, 0.09), (0.029792054, -0.0035261218, 0.09), (0.027563736, -0.011842316, 0.09)]
+            uniform token purpose = "guide"
+            uniform token subdivisionScheme = "none"
+        }
+
+        def Mesh "shell" (
+            prepend apiSchemas = ["MaterialBindingAPI"]
+        )
+        {
+            int[] faceVertexCounts = [4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4]
+            int[] faceVertexIndices = [0, 1, 49, 48, 97, 96, 144, 145, 48, 49, 145, 144, 1, 0, 96, 97, 1, 2, 50, 49, 98, 97, 145, 146, 49, 50, 146, 145, 2, 1, 97, 98, 2, 3, 51, 50, 99, 98, 146, 147, 50, 51, 147, 146, 3, 2, 98, 99, 3, 4, 52, 51, 100, 99, 147, 148, 51, 52, 148, 147, 4, 3, 99, 100, 4, 5, 53, 52, 101, 100, 148, 149, 52, 53, 149, 148, 5, 4, 100, 101, 5, 6, 54, 53, 102, 101, 149, 150, 53, 54, 150, 149, 6, 5, 101, 102, 6, 7, 55, 54, 103, 102, 150, 151, 54, 55, 151, 150, 7, 6, 102, 103, 7, 8, 56, 55, 104, 103, 151, 152, 55, 56, 152, 151, 8, 7, 103, 104, 8, 9, 57, 56, 105, 104, 152, 153, 56, 57, 153, 152, 9, 8, 104, 105, 9, 10, 58, 57, 106, 105, 153, 154, 57, 58, 154, 153, 10, 9, 105, 106, 10, 11, 59, 58, 107, 106, 154, 155, 58, 59, 155, 154, 11, 10, 106, 107, 11, 12, 60, 59, 108, 107, 155, 156, 59, 60, 156, 155, 12, 11, 107, 108, 12, 13, 61, 60, 109, 108, 156, 157, 60, 61, 157, 156, 13, 12, 108, 109, 13, 14, 62, 61, 110, 109, 157, 158, 61, 62, 158, 157, 14, 13, 109, 110, 14, 15, 63, 62, 111, 110, 158, 159, 62, 63, 159, 158, 15, 14, 110, 111, 15, 16, 64, 63, 112, 111, 159, 160, 63, 64, 160, 159, 16, 15, 111, 112, 16, 17, 65, 64, 113, 112, 160, 161, 64, 65, 161, 160, 17, 16, 112, 113, 17, 18, 66, 65, 114, 113, 161, 162, 65, 66, 162, 161, 18, 17, 113, 114, 18, 19, 67, 66, 115, 114, 162, 163, 66, 67, 163, 162, 19, 18, 114, 115, 19, 20, 68, 67, 116, 115, 163, 164, 67, 68, 164, 163, 20, 19, 115, 116, 20, 21, 69, 68, 117, 116, 164, 165, 68, 69, 165, 164, 21, 20, 116, 117, 21, 22, 70, 69, 118, 117, 165, 166, 69, 70, 166, 165, 22, 21, 117, 118, 22, 23, 71, 70, 119, 118, 166, 167, 70, 71, 167, 166, 23, 22, 118, 119, 23, 24, 72, 71, 120, 119, 167, 168, 71, 72, 168, 167, 24, 23, 119, 120, 24, 25, 73, 72, 121, 120, 168, 169, 72, 73, 169, 168, 25, 24, 120, 121, 25, 26, 74, 73, 122, 121, 169, 170, 73, 74, 170, 169, 26, 25, 121, 122, 26, 27, 75, 74, 123, 122, 170, 171, 74, 75, 171, 170, 27, 26, 122, 123, 27, 28, 76, 75, 124, 123, 171, 172, 75, 76, 172, 171, 28, 27, 123, 124, 28, 29, 77, 76, 125, 124, 172, 173, 76, 77, 173, 172, 29, 28, 124, 125, 29, 30, 78, 77, 126, 125, 173, 174, 77, 78, 174, 173, 30, 29, 125, 126, 30, 31, 79, 78, 127, 126, 174, 175, 78, 79, 175, 174, 31, 30, 126, 127, 31, 32, 80, 79, 128, 127, 175, 176, 79, 80, 176, 175, 32, 31, 127, 128, 32, 33, 81, 80, 129, 128, 176, 177, 80, 81, 177, 176, 33, 32, 128, 129, 33, 34, 82, 81, 130, 129, 177, 178, 81, 82, 178, 177, 34, 33, 129, 130, 34, 35, 83, 82, 131, 130, 178, 179, 82, 83, 179, 178, 35, 34, 130, 131, 35, 36, 84, 83, 132, 131, 179, 180, 83, 84, 180, 179, 36, 35, 131, 132, 36, 37, 85, 84, 133, 132, 180, 181, 84, 85, 181, 180, 37, 36, 132, 133, 37, 38, 86, 85, 134, 133, 181, 182, 85, 86, 182, 181, 38, 37, 133, 134, 38, 39, 87, 86, 135, 134, 182, 183, 86, 87, 183, 182, 39, 38, 134, 135, 39, 40, 88, 87, 136, 135, 183, 184, 87, 88, 184, 183, 40, 39, 135, 136, 40, 41, 89, 88, 137, 136, 184, 185, 88, 89, 185, 184, 41, 40, 136, 137, 41, 42, 90, 89, 138, 137, 185, 186, 89, 90, 186, 185, 42, 41, 137, 138, 42, 43, 91, 90, 139, 138, 186, 187, 90, 91, 187, 186, 43, 42, 138, 139, 43, 44, 92, 91, 140, 139, 187, 188, 91, 92, 188, 187, 44, 43, 139, 140, 44, 45, 93, 92, 141, 140, 188, 189, 92, 93, 189, 188, 45, 44, 140, 141, 45, 46, 94, 93, 142, 141, 189, 190, 93, 94, 190, 189, 46, 45, 141, 142, 46, 47, 95, 94, 143, 142, 190, 191, 94, 95, 191, 190, 47, 46, 142, 143, 47, 0, 48, 95, 96, 143, 191, 144, 95, 48, 144, 191, 0, 47, 143, 96]
+            rel material:binding = </Asset/materials/plastic>
+            point3f[] points = [(0.034, 0, 0.004), (0.033709124, 0.0044378904, 0.004), (0.032841478, 0.008799847, 0.004), (0.031411905, 0.013011237, 0.004), (0.029444864, 0.017, 0.004), (0.026974013, 0.020697888, 0.004), (0.02404163, 0.02404163, 0.004), (0.020697888, 0.026974013, 0.004), (0.017, 0.029444864, 0.004), (0.013011237, 0.031411905, 0.004), (0.008799847, 0.032841478, 0.004), (0.0044378904, 0.033709124, 0.004), (2.0818997e-18, 0.034, 0.004), (-0.0044378904, 0.033709124, 0.004), (-0.008799847, 0.032841478, 0.004), (-0.013011237, 0.031411905, 0.004), (-0.017, 0.029444864, 0.004), (-0.020697888, 0.026974013, 0.004), (-0.02404163, 0.02404163, 0.004), (-0.026974013, 0.020697888, 0.004), (-0.029444864, 0.017, 0.004), (-0.031411905, 0.013011237, 0.004), (-0.032841478, 0.008799847, 0.004), (-0.033709124, 0.0044378904, 0.004), (-0.034, 4.1637993e-18, 0.004), (-0.033709124, -0.0044378904, 0.004), (-0.032841478, -0.008799847, 0.004), (-0.031411905, -0.013011237, 0.004), (-0.029444864, -0.017, 0.004), (-0.026974013, -0.020697888, 0.004), (-0.02404163, -0.02404163, 0.004), (-0.020697888, -0.026974013, 0.004), (-0.017, -0.029444864, 0.004), (-0.013011237, -0.031411905, 0.004), (-0.008799847, -0.032841478, 0.004), (-0.0044378904, -0.033709124, 0.004), (-6.2456988e-18, -0.034, 0.004), (0.0044378904, -0.033709124, 0.004), (0.008799847, -0.032841478, 0.004), (0.013011237, -0.031411905, 0.004), (0.017, -0.029444864, 0.004), (0.020697888, -0.026974013, 0.004), (0.02404163, -0.02404163, 0.004), (0.026974013, -0.020697888, 0.004), (0.029444864, -0.017, 0.004), (0.031411905, -0.013011237, 0.004), (0.032841478, -0.008799847, 0.004), (0.033709124, -0.0044378904, 0.004), (0.034, 0, 0.084), (0.033709124, 0.0044378904, 0.084), (0.032841478, 0.008799847, 0.084), (0.031411905, 0.013011237, 0.084), (0.029444864, 0.017, 0.084), (0.026974013, 0.020697888, 0.084), (0.02404163, 0.02404163, 0.084), (0.020697888, 0.026974013, 0.084), (0.017, 0.029444864, 0.084), (0.013011237, 0.031411905, 0.084), (0.008799847, 0.032841478, 0.084), (0.0044378904, 0.033709124, 0.084), (2.0818997e-18, 0.034, 0.084), (-0.0044378904, 0.033709124, 0.084), (-0.008799847, 0.032841478, 0.084), (-0.013011237, 0.031411905, 0.084), (-0.017, 0.029444864, 0.084), (-0.020697888, 0.026974013, 0.084), (-0.02404163, 0.02404163, 0.084), (-0.026974013, 0.020697888, 0.084), (-0.029444864, 0.017, 0.084), (-0.031411905, 0.013011237, 0.084), (-0.032841478, 0.008799847, 0.084), (-0.033709124, 0.0044378904, 0.084), (-0.034, 4.1637993e-18, 0.084), (-0.033709124, -0.0044378904, 0.084), (-0.032841478, -0.008799847, 0.084), (-0.031411905, -0.013011237, 0.084), (-0.029444864, -0.017, 0.084), (-0.026974013, -0.020697888, 0.084), (-0.02404163, -0.02404163, 0.084), (-0.020697888, -0.026974013, 0.084), (-0.017, -0.029444864, 0.084), (-0.013011237, -0.031411905, 0.084), (-0.008799847, -0.032841478, 0.084), (-0.0044378904, -0.033709124, 0.084), (-6.2456988e-18, -0.034, 0.084), (0.0044378904, -0.033709124, 0.084), (0.008799847, -0.032841478, 0.084), (0.013011237, -0.031411905, 0.084), (0.017, -0.029444864, 0.084), (0.020697888, -0.026974013, 0.084), (0.02404163, -0.02404163, 0.084), (0.026974013, -0.020697888, 0.084), (0.029444864, -0.017, 0.084), (0.031411905, -0.013011237, 0.084), (0.032841478, -0.008799847, 0.084), (0.033709124, -0.0044378904, 0.084), (0.03, 0, 0.004), (0.029743345, 0.003915786, 0.004), (0.028977774, 0.0077645713, 0.004), (0.027716385, 0.011480503, 0.004), (0.025980761, 0.015, 0.004), (0.0238006, 0.018262843, 0.004), (0.021213204, 0.021213204, 0.004), (0.018262843, 0.0238006, 0.004), (0.015, 0.025980761, 0.004), (0.011480503, 0.027716385, 0.004), (0.0077645713, 0.028977774, 0.004), (0.003915786, 0.029743345, 0.004), (1.8369702e-18, 0.03, 0.004), (-0.003915786, 0.029743345, 0.004), (-0.0077645713, 0.028977774, 0.004), (-0.011480503, 0.027716385, 0.004), (-0.015, 0.025980761, 0.004), (-0.018262843, 0.0238006, 0.004), (-0.021213204, 0.021213204, 0.004), (-0.0238006, 0.018262843, 0.004), (-0.025980761, 0.015, 0.004), (-0.027716385, 0.011480503, 0.004), (-0.028977774, 0.0077645713, 0.004), (-0.029743345, 0.003915786, 0.004), (-0.03, 3.6739405e-18, 0.004), (-0.029743345, -0.003915786, 0.004), (-0.028977774, -0.0077645713, 0.004), (-0.027716385, -0.011480503, 0.004), (-0.025980761, -0.015, 0.004), (-0.0238006, -0.018262843, 0.004), (-0.021213204, -0.021213204, 0.004), (-0.018262843, -0.0238006, 0.004), (-0.015, -0.025980761, 0.004), (-0.011480503, -0.027716385, 0.004), (-0.0077645713, -0.028977774, 0.004), (-0.003915786, -0.029743345, 0.004), (-5.5109105e-18, -0.03, 0.004), (0.003915786, -0.029743345, 0.004), (0.0077645713, -0.028977774, 0.004), (0.011480503, -0.027716385, 0.004), (0.015, -0.025980761, 0.004), (0.018262843, -0.0238006, 0.004), (0.021213204, -0.021213204, 0.004), (0.0238006, -0.018262843, 0.004), (0.025980761, -0.015, 0.004), (0.027716385, -0.011480503, 0.004), (0.028977774, -0.0077645713, 0.004), (0.029743345, -0.003915786, 0.004), (0.03, 0, 0.084), (0.029743345, 0.003915786, 0.084), (0.028977774, 0.0077645713, 0.084), (0.027716385, 0.011480503, 0.084), (0.025980761, 0.015, 0.084), (0.0238006, 0.018262843, 0.084), (0.021213204, 0.021213204, 0.084), (0.018262843, 0.0238006, 0.084), (0.015, 0.025980761, 0.084), (0.011480503, 0.027716385, 0.084), (0.0077645713, 0.028977774, 0.084), (0.003915786, 0.029743345, 0.084), (1.8369702e-18, 0.03, 0.084), (-0.003915786, 0.029743345, 0.084), (-0.0077645713, 0.028977774, 0.084), (-0.011480503, 0.027716385, 0.084), (-0.015, 0.025980761, 0.084), (-0.018262843, 0.0238006, 0.084), (-0.021213204, 0.021213204, 0.084), (-0.0238006, 0.018262843, 0.084), (-0.025980761, 0.015, 0.084), (-0.027716385, 0.011480503, 0.084), (-0.028977774, 0.0077645713, 0.084), (-0.029743345, 0.003915786, 0.084), (-0.03, 3.6739405e-18, 0.084), (-0.029743345, -0.003915786, 0.084), (-0.028977774, -0.0077645713, 0.084), (-0.027716385, -0.011480503, 0.084), (-0.025980761, -0.015, 0.084), (-0.0238006, -0.018262843, 0.084), (-0.021213204, -0.021213204, 0.084), (-0.018262843, -0.0238006, 0.084), (-0.015, -0.025980761, 0.084), (-0.011480503, -0.027716385, 0.084), (-0.0077645713, -0.028977774, 0.084), (-0.003915786, -0.029743345, 0.084), (-5.5109105e-18, -0.03, 0.084), (0.003915786, -0.029743345, 0.084), (0.0077645713, -0.028977774, 0.084), (0.011480503, -0.027716385, 0.084), (0.015, -0.025980761, 0.084), (0.018262843, -0.0238006, 0.084), (0.021213204, -0.021213204, 0.084), (0.0238006, -0.018262843, 0.084), (0.025980761, -0.015, 0.084), (0.027716385, -0.011480503, 0.084), (0.028977774, -0.0077645713, 0.084), (0.029743345, -0.003915786, 0.084)]
+            uniform token purpose = "render"
+            uniform token subdivisionScheme = "none"
+        }
+
+        def Mesh "lip" (
+            prepend apiSchemas = ["MaterialBindingAPI"]
+        )
+        {
+            int[] faceVertexCounts = [4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4]
+            int[] faceVertexIndices = [0, 1, 49, 48, 97, 96, 144, 145, 48, 49, 145, 144, 1, 0, 96, 97, 1, 2, 50, 49, 98, 97, 145, 146, 49, 50, 146, 145, 2, 1, 97, 98, 2, 3, 51, 50, 99, 98, 146, 147, 50, 51, 147, 146, 3, 2, 98, 99, 3, 4, 52, 51, 100, 99, 147, 148, 51, 52, 148, 147, 4, 3, 99, 100, 4, 5, 53, 52, 101, 100, 148, 149, 52, 53, 149, 148, 5, 4, 100, 101, 5, 6, 54, 53, 102, 101, 149, 150, 53, 54, 150, 149, 6, 5, 101, 102, 6, 7, 55, 54, 103, 102, 150, 151, 54, 55, 151, 150, 7, 6, 102, 103, 7, 8, 56, 55, 104, 103, 151, 152, 55, 56, 152, 151, 8, 7, 103, 104, 8, 9, 57, 56, 105, 104, 152, 153, 56, 57, 153, 152, 9, 8, 104, 105, 9, 10, 58, 57, 106, 105, 153, 154, 57, 58, 154, 153, 10, 9, 105, 106, 10, 11, 59, 58, 107, 106, 154, 155, 58, 59, 155, 154, 11, 10, 106, 107, 11, 12, 60, 59, 108, 107, 155, 156, 59, 60, 156, 155, 12, 11, 107, 108, 12, 13, 61, 60, 109, 108, 156, 157, 60, 61, 157, 156, 13, 12, 108, 109, 13, 14, 62, 61, 110, 109, 157, 158, 61, 62, 158, 157, 14, 13, 109, 110, 14, 15, 63, 62, 111, 110, 158, 159, 62, 63, 159, 158, 15, 14, 110, 111, 15, 16, 64, 63, 112, 111, 159, 160, 63, 64, 160, 159, 16, 15, 111, 112, 16, 17, 65, 64, 113, 112, 160, 161, 64, 65, 161, 160, 17, 16, 112, 113, 17, 18, 66, 65, 114, 113, 161, 162, 65, 66, 162, 161, 18, 17, 113, 114, 18, 19, 67, 66, 115, 114, 162, 163, 66, 67, 163, 162, 19, 18, 114, 115, 19, 20, 68, 67, 116, 115, 163, 164, 67, 68, 164, 163, 20, 19, 115, 116, 20, 21, 69, 68, 117, 116, 164, 165, 68, 69, 165, 164, 21, 20, 116, 117, 21, 22, 70, 69, 118, 117, 165, 166, 69, 70, 166, 165, 22, 21, 117, 118, 22, 23, 71, 70, 119, 118, 166, 167, 70, 71, 167, 166, 23, 22, 118, 119, 23, 24, 72, 71, 120, 119, 167, 168, 71, 72, 168, 167, 24, 23, 119, 120, 24, 25, 73, 72, 121, 120, 168, 169, 72, 73, 169, 168, 25, 24, 120, 121, 25, 26, 74, 73, 122, 121, 169, 170, 73, 74, 170, 169, 26, 25, 121, 122, 26, 27, 75, 74, 123, 122, 170, 171, 74, 75, 171, 170, 27, 26, 122, 123, 27, 28, 76, 75, 124, 123, 171, 172, 75, 76, 172, 171, 28, 27, 123, 124, 28, 29, 77, 76, 125, 124, 172, 173, 76, 77, 173, 172, 29, 28, 124, 125, 29, 30, 78, 77, 126, 125, 173, 174, 77, 78, 174, 173, 30, 29, 125, 126, 30, 31, 79, 78, 127, 126, 174, 175, 78, 79, 175, 174, 31, 30, 126, 127, 31, 32, 80, 79, 128, 127, 175, 176, 79, 80, 176, 175, 32, 31, 127, 128, 32, 33, 81, 80, 129, 128, 176, 177, 80, 81, 177, 176, 33, 32, 128, 129, 33, 34, 82, 81, 130, 129, 177, 178, 81, 82, 178, 177, 34, 33, 129, 130, 34, 35, 83, 82, 131, 130, 178, 179, 82, 83, 179, 178, 35, 34, 130, 131, 35, 36, 84, 83, 132, 131, 179, 180, 83, 84, 180, 179, 36, 35, 131, 132, 36, 37, 85, 84, 133, 132, 180, 181, 84, 85, 181, 180, 37, 36, 132, 133, 37, 38, 86, 85, 134, 133, 181, 182, 85, 86, 182, 181, 38, 37, 133, 134, 38, 39, 87, 86, 135, 134, 182, 183, 86, 87, 183, 182, 39, 38, 134, 135, 39, 40, 88, 87, 136, 135, 183, 184, 87, 88, 184, 183, 40, 39, 135, 136, 40, 41, 89, 88, 137, 136, 184, 185, 88, 89, 185, 184, 41, 40, 136, 137, 41, 42, 90, 89, 138, 137, 185, 186, 89, 90, 186, 185, 42, 41, 137, 138, 42, 43, 91, 90, 139, 138, 186, 187, 90, 91, 187, 186, 43, 42, 138, 139, 43, 44, 92, 91, 140, 139, 187, 188, 91, 92, 188, 187, 44, 43, 139, 140, 44, 45, 93, 92, 141, 140, 188, 189, 92, 93, 189, 188, 45, 44, 140, 141, 45, 46, 94, 93, 142, 141, 189, 190, 93, 94, 190, 189, 46, 45, 141, 142, 46, 47, 95, 94, 143, 142, 190, 191, 94, 95, 191, 190, 47, 46, 142, 143, 47, 0, 48, 95, 96, 143, 191, 144, 95, 48, 144, 191, 0, 47, 143, 96]
+            rel material:binding = </Asset/materials/rim>
+            point3f[] points = [(0.0346, 0, 0.084), (0.034303993, 0.004516206, 0.084), (0.033421032, 0.008955139, 0.084), (0.03196623, 0.013240847, 0.084), (0.029964479, 0.0173, 0.084), (0.027450025, 0.021063145, 0.084), (0.024465894, 0.024465894, 0.084), (0.021063145, 0.027450025, 0.084), (0.0173, 0.029964479, 0.084), (0.013240847, 0.03196623, 0.084), (0.008955139, 0.033421032, 0.084), (0.004516206, 0.034303993, 0.084), (2.1186389e-18, 0.0346, 0.084), (-0.004516206, 0.034303993, 0.084), (-0.008955139, 0.033421032, 0.084), (-0.013240847, 0.03196623, 0.084), (-0.0173, 0.029964479, 0.084), (-0.021063145, 0.027450025, 0.084), (-0.024465894, 0.024465894, 0.084), (-0.027450025, 0.021063145, 0.084), (-0.029964479, 0.0173, 0.084), (-0.03196623, 0.013240847, 0.084), (-0.033421032, 0.008955139, 0.084), (-0.034303993, 0.004516206, 0.084), (-0.0346, 4.2372778e-18, 0.084), (-0.034303993, -0.004516206, 0.084), (-0.033421032, -0.008955139, 0.084), (-0.03196623, -0.013240847, 0.084), (-0.029964479, -0.0173, 0.084), (-0.027450025, -0.021063145, 0.084), (-0.024465894, -0.024465894, 0.084), (-0.021063145, -0.027450025, 0.084), (-0.0173, -0.029964479, 0.084), (-0.013240847, -0.03196623, 0.084), (-0.008955139, -0.033421032, 0.084), (-0.004516206, -0.034303993, 0.084), (-6.355917e-18, -0.0346, 0.084), (0.004516206, -0.034303993, 0.084), (0.008955139, -0.033421032, 0.084), (0.013240847, -0.03196623, 0.084), (0.0173, -0.029964479, 0.084), (0.021063145, -0.027450025, 0.084), (0.024465894, -0.024465894, 0.084), (0.027450025, -0.021063145, 0.084), (0.029964479, -0.0173, 0.084), (0.03196623, -0.013240847, 0.084), (0.033421032, -0.008955139, 0.084), (0.034303993, -0.004516206, 0.084), (0.0346, 0, 0.09), (0.034303993, 0.004516206, 0.09), (0.033421032, 0.008955139, 0.09), (0.03196623, 0.013240847, 0.09), (0.029964479, 0.0173, 0.09), (0.027450025, 0.021063145, 0.09), (0.024465894, 0.024465894, 0.09), (0.021063145, 0.027450025, 0.09), (0.0173, 0.029964479, 0.09), (0.013240847, 0.03196623, 0.09), (0.008955139, 0.033421032, 0.09), (0.004516206, 0.034303993, 0.09), (2.1186389e-18, 0.0346, 0.09), (-0.004516206, 0.034303993, 0.09), (-0.008955139, 0.033421032, 0.09), (-0.013240847, 0.03196623, 0.09), (-0.0173, 0.029964479, 0.09), (-0.021063145, 0.027450025, 0.09), (-0.024465894, 0.024465894, 0.09), (-0.027450025, 0.021063145, 0.09), (-0.029964479, 0.0173, 0.09), (-0.03196623, 0.013240847, 0.09), (-0.033421032, 0.008955139, 0.09), (-0.034303993, 0.004516206, 0.09), (-0.0346, 4.2372778e-18, 0.09), (-0.034303993, -0.004516206, 0.09), (-0.033421032, -0.008955139, 0.09), (-0.03196623, -0.013240847, 0.09), (-0.029964479, -0.0173, 0.09), (-0.027450025, -0.021063145, 0.09), (-0.024465894, -0.024465894, 0.09), (-0.021063145, -0.027450025, 0.09), (-0.0173, -0.029964479, 0.09), (-0.013240847, -0.03196623, 0.09), (-0.008955139, -0.033421032, 0.09), (-0.004516206, -0.034303993, 0.09), (-6.355917e-18, -0.0346, 0.09), (0.004516206, -0.034303993, 0.09), (0.008955139, -0.033421032, 0.09), (0.013240847, -0.03196623, 0.09), (0.0173, -0.029964479, 0.09), (0.021063145, -0.027450025, 0.09), (0.024465894, -0.024465894, 0.09), (0.027450025, -0.021063145, 0.09), (0.029964479, -0.0173, 0.09), (0.03196623, -0.013240847, 0.09), (0.033421032, -0.008955139, 0.09), (0.034303993, -0.004516206, 0.09), (0.03, 0, 0.084), (0.029743345, 0.003915786, 0.084), (0.028977774, 0.0077645713, 0.084), (0.027716385, 0.011480503, 0.084), (0.025980761, 0.015, 0.084), (0.0238006, 0.018262843, 0.084), (0.021213204, 0.021213204, 0.084), (0.018262843, 0.0238006, 0.084), (0.015, 0.025980761, 0.084), (0.011480503, 0.027716385, 0.084), (0.0077645713, 0.028977774, 0.084), (0.003915786, 0.029743345, 0.084), (1.8369702e-18, 0.03, 0.084), (-0.003915786, 0.029743345, 0.084), (-0.0077645713, 0.028977774, 0.084), (-0.011480503, 0.027716385, 0.084), (-0.015, 0.025980761, 0.084), (-0.018262843, 0.0238006, 0.084), (-0.021213204, 0.021213204, 0.084), (-0.0238006, 0.018262843, 0.084), (-0.025980761, 0.015, 0.084), (-0.027716385, 0.011480503, 0.084), (-0.028977774, 0.0077645713, 0.084), (-0.029743345, 0.003915786, 0.084), (-0.03, 3.6739405e-18, 0.084), (-0.029743345, -0.003915786, 0.084), (-0.028977774, -0.0077645713, 0.084), (-0.027716385, -0.011480503, 0.084), (-0.025980761, -0.015, 0.084), (-0.0238006, -0.018262843, 0.084), (-0.021213204, -0.021213204, 0.084), (-0.018262843, -0.0238006, 0.084), (-0.015, -0.025980761, 0.084), (-0.011480503, -0.027716385, 0.084), (-0.0077645713, -0.028977774, 0.084), (-0.003915786, -0.029743345, 0.084), (-5.5109105e-18, -0.03, 0.084), (0.003915786, -0.029743345, 0.084), (0.0077645713, -0.028977774, 0.084), (0.011480503, -0.027716385, 0.084), (0.015, -0.025980761, 0.084), (0.018262843, -0.0238006, 0.084), (0.021213204, -0.021213204, 0.084), (0.0238006, -0.018262843, 0.084), (0.025980761, -0.015, 0.084), (0.027716385, -0.011480503, 0.084), (0.028977774, -0.0077645713, 0.084), (0.029743345, -0.003915786, 0.084), (0.03, 0, 0.09), (0.029743345, 0.003915786, 0.09), (0.028977774, 0.0077645713, 0.09), (0.027716385, 0.011480503, 0.09), (0.025980761, 0.015, 0.09), (0.0238006, 0.018262843, 0.09), (0.021213204, 0.021213204, 0.09), (0.018262843, 0.0238006, 0.09), (0.015, 0.025980761, 0.09), (0.011480503, 0.027716385, 0.09), (0.0077645713, 0.028977774, 0.09), (0.003915786, 0.029743345, 0.09), (1.8369702e-18, 0.03, 0.09), (-0.003915786, 0.029743345, 0.09), (-0.0077645713, 0.028977774, 0.09), (-0.011480503, 0.027716385, 0.09), (-0.015, 0.025980761, 0.09), (-0.018262843, 0.0238006, 0.09), (-0.021213204, 0.021213204, 0.09), (-0.0238006, 0.018262843, 0.09), (-0.025980761, 0.015, 0.09), (-0.027716385, 0.011480503, 0.09), (-0.028977774, 0.0077645713, 0.09), (-0.029743345, 0.003915786, 0.09), (-0.03, 3.6739405e-18, 0.09), (-0.029743345, -0.003915786, 0.09), (-0.028977774, -0.0077645713, 0.09), (-0.027716385, -0.011480503, 0.09), (-0.025980761, -0.015, 0.09), (-0.0238006, -0.018262843, 0.09), (-0.021213204, -0.021213204, 0.09), (-0.018262843, -0.0238006, 0.09), (-0.015, -0.025980761, 0.09), (-0.011480503, -0.027716385, 0.09), (-0.0077645713, -0.028977774, 0.09), (-0.003915786, -0.029743345, 0.09), (-5.5109105e-18, -0.03, 0.09), (0.003915786, -0.029743345, 0.09), (0.0077645713, -0.028977774, 0.09), (0.011480503, -0.027716385, 0.09), (0.015, -0.025980761, 0.09), (0.018262843, -0.0238006, 0.09), (0.021213204, -0.021213204, 0.09), (0.0238006, -0.018262843, 0.09), (0.025980761, -0.015, 0.09), (0.027716385, -0.011480503, 0.09), (0.028977774, -0.0077645713, 0.09), (0.029743345, -0.003915786, 0.09)]
+            uniform token purpose = "render"
+            uniform token subdivisionScheme = "none"
+        }
+    }
+}
+

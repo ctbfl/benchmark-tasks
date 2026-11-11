@@ -1,0 +1,123 @@
+#usda 1.0
+(
+    defaultPrim = "Asset"
+    metersPerUnit = 1
+    upAxis = "Z"
+)
+
+def Xform "Asset"
+{
+    def "materials"
+    {
+        def Material "red_paper"
+        {
+            token outputs:surface.connect = </Asset/materials/red_paper/shader.outputs:surface>
+
+            def Shader "shader"
+            {
+                uniform token info:id = "UsdPreviewSurface"
+                color3f inputs:diffuseColor = (0.64, 0.018, 0.012)
+                float inputs:metallic = 0
+                float inputs:roughness = 0.92
+                token outputs:surface
+            }
+        }
+    }
+
+    def Mesh "penny_0" (
+        prepend apiSchemas = ["MaterialBindingAPI"]
+    )
+    {
+        int[] faceVertexCounts = [4, 4, 4, 4, 4, 4]
+        int[] faceVertexIndices = [3, 2, 1, 0, 4, 5, 6, 7, 0, 1, 5, 4, 1, 2, 6, 5, 2, 3, 7, 6, 3, 0, 4, 7]
+        rel material:binding = </Asset/materials/red_paper>
+        point3f[] points = [(0.288, 0.178, 0.00005), (0.3, 0.178, 0.00005), (0.3, 0.312, 0.00005), (0.288, 0.312, 0.00005), (0.288, 0.178, 0.0003), (0.3, 0.178, 0.0003), (0.3, 0.312, 0.0003), (0.288, 0.312, 0.0003)]
+        uniform token purpose = "render"
+        uniform token subdivisionScheme = "none"
+    }
+
+    def Mesh "penny_1" (
+        prepend apiSchemas = ["MaterialBindingAPI"]
+    )
+    {
+        int[] faceVertexCounts = [4, 4, 4, 4, 4, 4]
+        int[] faceVertexIndices = [3, 2, 1, 0, 4, 5, 6, 7, 0, 1, 5, 4, 1, 2, 6, 5, 2, 3, 7, 6, 3, 0, 4, 7]
+        rel material:binding = </Asset/materials/red_paper>
+        point3f[] points = [(0.46, 0.178, 0.00005), (0.472, 0.178, 0.00005), (0.472, 0.312, 0.00005), (0.46, 0.312, 0.00005), (0.46, 0.178, 0.0003), (0.472, 0.178, 0.0003), (0.472, 0.312, 0.0003), (0.46, 0.312, 0.0003)]
+        uniform token purpose = "render"
+        uniform token subdivisionScheme = "none"
+    }
+
+    def Mesh "penny_2" (
+        prepend apiSchemas = ["MaterialBindingAPI"]
+    )
+    {
+        int[] faceVertexCounts = [4, 4, 4, 4, 4, 4]
+        int[] faceVertexIndices = [3, 2, 1, 0, 4, 5, 6, 7, 0, 1, 5, 4, 1, 2, 6, 5, 2, 3, 7, 6, 3, 0, 4, 7]
+        rel material:binding = </Asset/materials/red_paper>
+        point3f[] points = [(0.3, 0.178, 0.00005), (0.46, 0.178, 0.00005), (0.46, 0.19, 0.00005), (0.3, 0.19, 0.00005), (0.3, 0.178, 0.0003), (0.46, 0.178, 0.0003), (0.46, 0.19, 0.0003), (0.3, 0.19, 0.0003)]
+        uniform token purpose = "render"
+        uniform token subdivisionScheme = "none"
+    }
+
+    def Mesh "penny_3" (
+        prepend apiSchemas = ["MaterialBindingAPI"]
+    )
+    {
+        int[] faceVertexCounts = [4, 4, 4, 4, 4, 4]
+        int[] faceVertexIndices = [3, 2, 1, 0, 4, 5, 6, 7, 0, 1, 5, 4, 1, 2, 6, 5, 2, 3, 7, 6, 3, 0, 4, 7]
+        rel material:binding = </Asset/materials/red_paper>
+        point3f[] points = [(0.3, 0.3, 0.00005), (0.46, 0.3, 0.00005), (0.46, 0.312, 0.00005), (0.3, 0.312, 0.00005), (0.3, 0.3, 0.0003), (0.46, 0.3, 0.0003), (0.46, 0.312, 0.0003), (0.3, 0.312, 0.0003)]
+        uniform token purpose = "render"
+        uniform token subdivisionScheme = "none"
+    }
+
+    def Mesh "quarter_0" (
+        prepend apiSchemas = ["MaterialBindingAPI"]
+    )
+    {
+        int[] faceVertexCounts = [4, 4, 4, 4, 4, 4]
+        int[] faceVertexIndices = [3, 2, 1, 0, 4, 5, 6, 7, 0, 1, 5, 4, 1, 2, 6, 5, 2, 3, 7, 6, 3, 0, 4, 7]
+        rel material:binding = </Asset/materials/red_paper>
+        point3f[] points = [(0.288, -0.312, 0.00005), (0.3, -0.312, 0.00005), (0.3, -0.178, 0.00005), (0.288, -0.178, 0.00005), (0.288, -0.312, 0.0003), (0.3, -0.312, 0.0003), (0.3, -0.178, 0.0003), (0.288, -0.178, 0.0003)]
+        uniform token purpose = "render"
+        uniform token subdivisionScheme = "none"
+    }
+
+    def Mesh "quarter_1" (
+        prepend apiSchemas = ["MaterialBindingAPI"]
+    )
+    {
+        int[] faceVertexCounts = [4, 4, 4, 4, 4, 4]
+        int[] faceVertexIndices = [3, 2, 1, 0, 4, 5, 6, 7, 0, 1, 5, 4, 1, 2, 6, 5, 2, 3, 7, 6, 3, 0, 4, 7]
+        rel material:binding = </Asset/materials/red_paper>
+        point3f[] points = [(0.46, -0.312, 0.00005), (0.472, -0.312, 0.00005), (0.472, -0.178, 0.00005), (0.46, -0.178, 0.00005), (0.46, -0.312, 0.0003), (0.472, -0.312, 0.0003), (0.472, -0.178, 0.0003), (0.46, -0.178, 0.0003)]
+        uniform token purpose = "render"
+        uniform token subdivisionScheme = "none"
+    }
+
+    def Mesh "quarter_2" (
+        prepend apiSchemas = ["MaterialBindingAPI"]
+    )
+    {
+        int[] faceVertexCounts = [4, 4, 4, 4, 4, 4]
+        int[] faceVertexIndices = [3, 2, 1, 0, 4, 5, 6, 7, 0, 1, 5, 4, 1, 2, 6, 5, 2, 3, 7, 6, 3, 0, 4, 7]
+        rel material:binding = </Asset/materials/red_paper>
+        point3f[] points = [(0.3, -0.312, 0.00005), (0.46, -0.312, 0.00005), (0.46, -0.3, 0.00005), (0.3, -0.3, 0.00005), (0.3, -0.312, 0.0003), (0.46, -0.312, 0.0003), (0.46, -0.3, 0.0003), (0.3, -0.3, 0.0003)]
+        uniform token purpose = "render"
+        uniform token subdivisionScheme = "none"
+    }
+
+    def Mesh "quarter_3" (
+        prepend apiSchemas = ["MaterialBindingAPI"]
+    )
+    {
+        int[] faceVertexCounts = [4, 4, 4, 4, 4, 4]
+        int[] faceVertexIndices = [3, 2, 1, 0, 4, 5, 6, 7, 0, 1, 5, 4, 1, 2, 6, 5, 2, 3, 7, 6, 3, 0, 4, 7]
+        rel material:binding = </Asset/materials/red_paper>
+        point3f[] points = [(0.3, -0.19, 0.00005), (0.46, -0.19, 0.00005), (0.46, -0.178, 0.00005), (0.3, -0.178, 0.00005), (0.3, -0.19, 0.0003), (0.46, -0.19, 0.0003), (0.46, -0.178, 0.0003), (0.3, -0.178, 0.0003)]
+        uniform token purpose = "render"
+        uniform token subdivisionScheme = "none"
+    }
+}
+
