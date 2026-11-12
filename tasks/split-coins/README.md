@@ -4,14 +4,20 @@ Pick up an open jar holding five quarters and five pennies, pour the coins onto 
 middle of the table and put the jar back. Then sort the coins by pushing them along
 the table: pennies into the left red tape frame, quarters into the right one. The task
 uses dual YAM arms and three calibrated robot cameras.
+This represents sorting spare change accumulated in a household jar before counting
+or using it.
 
 ## Scoring
 
-Score the final state: **1.0** when all five pennies lie wholly inside the left frame
-and all five quarters lie wholly inside the right frame within 120 seconds; otherwise
-**0.0**. There is no partial credit. A coin counts when its whole horizontal footprint,
-including any tilt, is inside the tape's inner edge. `task_runtime.py` measures the
-coin poses; `score.py` checks saved trials without model calls.
+Score the final state within 120 seconds: **0.1 per penny** wholly inside the left
+frame and **0.1 per quarter** wholly inside the right frame. The score is the number
+correctly sorted divided by ten; all ten earn **1.0**. Wrong-frame, out-of-frame and
+still-in-jar coins earn no credit. Coins may touch or overlap. A coin counts when its
+horizontal footprint, including any tilt, is inside the tape's inner edge; touching
+that edge is allowed. `task_runtime.py` measures the
+coin poses; `score.py` checks saved trials without model calls. The scorer excludes
+coins whose centres remain inside the jar's cavity, measured in the jar's own
+coordinate system so the exclusion follows the jar when it moves or tilts.
 
 ## Environment
 
@@ -25,7 +31,10 @@ At this Arena revision, `ARENA_NUCLEUS_DIR` must point to the production
 `ISAACLAB_NUCLEUS_DIR`; `arena-assets.patch` supplies that resource-URL correction
 for a fresh installation (`git -C <ARENA_DIR> apply <TASK_DIR>/arena-assets.patch`).
 The task USDs are self-contained; robot assets and camera calibration come from
-yam-arena. See `ASSETS.md` for dimensions and licenses.
+yam-arena. [LICENSE](LICENSE) contains the asset declarations and pinned sources:
+original coin, jar and tape models are CC BY 4.0; YAM robot assets and upstream
+calibration are MIT. It also identifies the runtime-generated workstation geometry.
+Task code retains MIT. See [ASSETS.md](ASSETS.md) for dimensions and simulation details.
 
 ## Evaluation
 
@@ -41,7 +50,8 @@ Dream-1 beta receives three calibrated 640×360 camera images, resized to
 320×176 JPEG, and 14 measured joint/gripper positions. API waits pause physics.
 The client reads `~/.dreamlabs/credentials`. The full prompt is
 `dream_eval.INSTRUCTION`. One recorded trial scored **0.0/1.0 in 120 simulation
-seconds** (272 seconds wall time on RTX 5090).
+seconds** (272 seconds wall time on RTX 5090). Recomputing the archived final state
+with per-coin credit also gives **0.0**; no new model inference was run.
 
 ```bash
 python dream_eval.py --check
@@ -58,7 +68,8 @@ starting position. One fingertip then stirs the pile in an outward spiral to sep
 stacked coins. Coins are pushed one at a time between the open gripper pads, pennies
 by the left arm and quarters by the right; a coin on the wrong side is first pushed
 across a gap to its own side. An independent replay from the submitted files scored
-**1.0/1.0 in 98.15 seconds**.
+**1.0/1.0 in 98.15 seconds**, also confirmed by rescoring its archived final state
+with per-coin credit.
 
 The command script was recorded from a scripted planner (`expert.py`) that finds the
 coins with computer vision on the top camera's RGB image (`coin_vision.py`), rendered at
@@ -68,8 +79,8 @@ and individual fully visible coins are located as peaks of a top-down distance t
 The planner then chooses pushes whose paths and fingertip landing spots are clear of the
 other detected coins, and stirs the pile when no coin can be moved. Besides the camera
 image it reads only the robot's own joint and gripper state; it never reads coin or jar
-poses from the simulator. The jar grasp uses the jar's fixed starting position. Running
-`expert.py` regenerates exactly the 1,963 commands in `demo_actions.npy`.
+poses from the simulator. The jar grasp uses the jar's fixed starting position. A
+validation run of `expert.py` reproduced all 1,963 commands in `demo_actions.npy`.
 
 ```bash
 python demo.py

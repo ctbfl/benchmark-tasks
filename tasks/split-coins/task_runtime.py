@@ -1,8 +1,8 @@
-"""Native stepping with per-control-step coin measurements and the binary sorting score."""
+"""Native stepping with per-control-step coin measurements and per-coin sorting credit."""
 import numpy as np
 from scipy.spatial.transform import Rotation
 
-from build_assets import COINS, FRAMES
+from build_assets import COINS, FRAMES, JAR_FLOOR, JAR_HEIGHT, JAR_INNER
 from scene import CONFIG, COIN_NAMES
 
 
@@ -20,11 +20,19 @@ def inside_frame(pose, kind):
     return bool(abs(pose[0]-cx) + reach_x <= sx/2 and abs(pose[1]-cy) + reach_y <= sy/2)
 
 
+def inside_jar(pose, jar_pose):
+    """Whether the coin centre lies in the jar cavity, including when the jar tilts."""
+    local = Rotation.from_quat(jar_pose[3:]).inv().apply(np.asarray(pose[:3]) - jar_pose[:3])
+    return bool(np.linalg.norm(local[:2]) <= JAR_INNER and JAR_FLOOR <= local[2] <= JAR_HEIGHT)
+
+
 def evaluate(poses):
-    """poses: {coin name: [x, y, z, qx, qy, qz, qw]} in world coordinates."""
-    inside = {name: inside_frame(np.asarray(poses[name]), kind_of(name)) for name in COIN_NAMES}
+    """poses: jar and coin names mapped to [x, y, z, qx, qy, qz, qw] in world coordinates."""
+    jar_pose = np.asarray(poses["jar"])
+    inside = {name: inside_frame(np.asarray(poses[name]), kind_of(name))
+              and not inside_jar(poses[name], jar_pose) for name in COIN_NAMES}
     sorted_count = {kind: sum(inside[n] for n in COIN_NAMES if kind_of(n) == kind) for kind in COINS}
-    return {"score": float(all(inside.values())), "inside": inside,
+    return {"score": sum(inside.values()) / len(COIN_NAMES), "inside": inside,
             "pennies_in_left_frame": sorted_count["penny"], "quarters_in_right_frame": sorted_count["quarter"]}
 
 

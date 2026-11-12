@@ -39,7 +39,7 @@ PARK = {0: np.array([.30, .21, TABLE + .11]), 1: np.array([.30, -.21, TABLE + .1
 POUR = {"x0": .35, "x1": .33, "y": .02, "z": .09, "a0": 88., "a1": 118., "seconds": 6.}
 SPREAD = {"r0": .004, "r1": .055, "turns": 2.5, "phase": 0., "height": .001, "seconds": 3., "side": None}
 ROI_SAFE = (.21, .37)          # extraction pushes stay in the middle of the table
-# Twelve slots per frame (ten used), 30 mm apart and at least 13 mm inside the tape. Rows fill
+# Twelve candidate slots per frame for five coins, 30 mm apart and at least 13 mm inside the tape. Rows fill
 # from the far side of the frame inward, so later pushes never cross coins already placed.
 SLOTS = {kind: [np.array([x, sign*y]) for y in (.275, .245, .215) for x in (.335, .365, .395, .425)]
          for kind, sign in (("penny", 1), ("quarter", -1))}

@@ -140,7 +140,7 @@ class FinalScore:
     def __call__(self, record, target):
         from inspect_robots.scorer import Score
         info = record.steps[-1].result.info
-        return Score(value=info["score"], explanation="All five pennies wholly inside the left frame and all five quarters wholly inside the right frame.",
+        return Score(value=info["score"], explanation="0.1 per penny wholly inside the left frame or quarter wholly inside the right frame; all ten earn 1.0.",
                      metadata=info)
 
 

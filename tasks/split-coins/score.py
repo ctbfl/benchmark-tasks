@@ -1,4 +1,4 @@
-"""Recompute the binary sorting score from an archived run's final measured coin poses."""
+"""Recompute per-coin sorting credit from an archived run's final measured coin poses."""
 import json
 from pathlib import Path
 import sys
@@ -10,7 +10,7 @@ from task_runtime import evaluate
 def score(samples):
     limit = CONFIG["episode"]["max_control_steps"] / CONFIG["simulation"]["control_hz"]
     final = samples[-1]
-    return float(evaluate(final["poses"])["score"] == 1. and final["time_s"] <= limit + 1e-9)
+    return evaluate(final["poses"])["score"] if final["time_s"] <= limit + 1e-9 else 0.0
 
 
 if __name__ == "__main__":

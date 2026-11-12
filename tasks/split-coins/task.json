@@ -1,6 +1,6 @@
 {
   "title": "Pour and sort mixed coins",
-  "category": "Impact on jobs",
+  "category": "Societal relatability",
   "keywords": [
     "bimanual",
     "pouring",
@@ -8,12 +8,12 @@
     "coin sorting"
   ],
   "instruction": "Pick up the open blue jar on the far side of the table, slowly pour all the coins onto the middle of the table, and put the jar back where it was. Then sort the coins by pushing them along the table: push all five copper pennies completely inside the left red tape frame and all five silver quarters completely inside the right red tape frame.",
-  "context": "Cashiers, bank tellers, laundromat and vending staff routinely empty mixed change from a container and separate it by denomination before counting. Doing this by sliding thin coins on a counter, instead of picking each one up, needs controlled pouring, recognition of individual coins in a pile and gentle pushing, which would let a robot take over a repetitive cash-handling chore.",
+  "context": "People often collect spare change in a jar at home, then empty it and sort the coins by denomination before counting or using them. This familiar household task requires controlled pouring, separating coins from a pile and gently pushing thin objects into groups.",
   "setup": "An open blue plastic jar (68 mm outer diameter, 90 mm tall, 120 g, no lid) stands on the far middle of a wooden table, holding five US quarters (24.26 mm, 1.75 mm thick, 5.67 g, silver) and five US pennies (19.05 mm, 1.52 mm thick, 2.5 g, copper) resting in a loose pile. Two 160 x 110 mm frames of 12 mm red paper tape lie flat on the near middle of the table, left for pennies and right for quarters; the space between them is empty. Dual YAM workstation with three calibrated cameras.",
-  "scoring": "Binary, judged on the final state: 1.0 if all five pennies lie wholly inside the inner edge of the left tape frame and all five quarters lie wholly inside the inner edge of the right tape frame, measured from above as each coin's full horizontal outline; otherwise 0.0. Coins may touch or overlap inside a frame. There is no partial credit.",
+  "scoring": "Final-state score: 0.1 per penny wholly inside the left tape frame and 0.1 per quarter wholly inside the right frame, for 1.0 when all ten are correct. Judge each coin's horizontal outline against the tape's inner edge from above; touching that edge is allowed. Wrong-frame, out-of-frame or still-in-jar coins earn no credit. Coins may touch or overlap inside a frame. Score is the number correctly sorted divided by ten.",
   "run_limit": "2,400 control steps at 20 Hz: 120 simulation seconds. API waits do not advance physics.",
   "fidelity": "CPU PhysX at 240 Hz with native YAM actuators and a shared 14-value position/gripper interface. Coins are free rigid convex 32-sided prisms with US Mint sizes and masses; the jar is a free rigid body with convex wall segments preserving its cavity. Friction values are approximations, the tape is visual only, and coins use the native PhysX sleep threshold.",
-  "scores": "Dream-1 beta: 0.0/1.0 in 120 s; independently replayed open-loop demo: 1.0/1.0 in 98.15 s.",
+  "scores": "Archived Dream-1 beta: 0.0/1.0 at 120 s; independently replayed open-loop demo: 1.0/1.0 at 98.15 s. Both rescored with per-coin credit; no new model run.",
   "reset_notes": "Seed 0 reproduces the fixed layout. Reset places the ten coins in the jar at fixed layered poses and lets them settle for two seconds before the episode, returns the jar to its mark and both arms to READY. Nothing is consumed.",
   "media": "M-43EFBQ"
 }
