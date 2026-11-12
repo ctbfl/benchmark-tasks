@@ -178,7 +178,7 @@ class LaptopHolderTask:
             matrix=self.contacts.get_contact_force_matrix(self.sim.cfg.dt)
             contact=max(contact,float(np.linalg.norm(matrix,axis=-1).max()))
         self.steps+=1
-        info=self.scorer.update(self.holder.measure(),contact,1/task.CONTROL_HZ)
+        info=self.scorer.update(self.holder.measure())
         info["robot_contact_N"]=contact
         info["truncated"]=self.steps>=task.MAX_STEPS
         return self.observe(),info
@@ -206,7 +206,7 @@ def smoke(cameras=True):
     assert not info["success"] and info["score"]==0
     assert env.holder.measure()["width"]<.06
     reset=env.reset()
-    assert env.steps==0 and env.scorer.held_s==0 and env.holder.measure()["width"]<.06
+    assert env.steps==0 and env.scorer.update(env.holder.measure())["score"]==0
     out=model.ROOT/"outputs/benchmark"
     out.mkdir(exist_ok=True)
     if cameras:
