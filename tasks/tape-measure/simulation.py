@@ -97,6 +97,7 @@ class Simulation:
             parts.extend([array(asset.data.root_link_pose_w), array(asset.data.root_link_vel_w),
                           array(asset.data.joint_pos), array(asset.data.joint_vel)])
         parts.extend([array(self.wood.data.root_link_pose_w), array(self.wood.data.root_link_vel_w)])
+        parts.extend([self.instruments.tape_points.ravel(), [self.instruments.hook_force]])
         result = np.concatenate(parts)
         assert np.isfinite(result).all(), "Non-finite physical state"
         return result
@@ -106,6 +107,9 @@ class Simulation:
         from isaaclab.sim.utils import get_current_stage_id
         from model import KEY_STIFFNESS, KEYS, TAPE_STIFFNESS, WOOD_SIZE
         from yam_arena import station
+        from pxr import Gf, UsdGeom
+        from scipy.spatial.transform import Rotation
+        from scene import BAR_LENGTH_MM
         assert self.tape.num_joints == 1 and self.calculator.num_joints == len(KEYS)
         assert not self.tape.is_fixed_base and not self.calculator.is_fixed_base
         physics = tensors.create_simulation_view("numpy", stage_id=get_current_stage_id())
@@ -120,9 +124,15 @@ class Simulation:
         assert positions["calculator"][1] > positions["tape"][1]
         assert positions["wood"][0] > max(positions["calculator"][0], positions["tape"][0])
         assert abs(positions["wood"][2]-station.TABLE_TOP-WOOD_SIZE[2]/2) < .002
+        geom = UsdGeom.Mesh.Get(self.stage, "/World/envs/env_0/wood/bar/body")
+        transform = UsdGeom.XformCache().GetLocalToWorldTransform(geom.GetPrim())
+        points = np.array([transform.Transform(Gf.Vec3d(*map(float, p))) for p in geom.GetPointsAttr().Get()])
+        dimensions = np.ptp(Rotation.from_quat(positions["wood"][3:]).inv().apply(points), axis=0)
+        assert np.allclose(dimensions, [BAR_LENGTH_MM/1000, *WOOD_SIZE[1:]], atol=1e-5), dimensions
         assert not self.instruments.events
         report = {"assets": positions, "tape_joints": self.tape.joint_names,
                   "calculator_joints": self.calculator.joint_names, "config": CONFIG,
+                  "wood_dimensions_m": dimensions.tolist(),
                   "initial_score": self.instruments.result(self.time), "checks_passed": True}
         (self.out/"check.json").write_text(json.dumps(report, indent=2)+"\n")
         print("CHECK PASSED", json.dumps(positions), flush=True)
@@ -135,7 +145,8 @@ class Simulation:
                     "tape_q": self.tape.num_joints, "tape_qd": self.tape.num_joints,
                     "calculator_pose": 7, "calculator_velocity": 6,
                     "calculator_q": self.calculator.num_joints, "calculator_qd": self.calculator.num_joints,
-                    "wood_pose": 7, "wood_velocity": 6}}
+                    "wood_pose": 7, "wood_velocity": 6,
+                    "tape_zero": 3, "tape_mouth": 3, "hook_force": 1}}
         (self.out/"result.json").write_text(json.dumps(report, indent=2)+"\n")
         np.savez_compressed(self.out/"trajectory.npz", states=np.asarray(self.records),
                             actions=np.asarray(self.commands), phases=np.asarray(self.phases))

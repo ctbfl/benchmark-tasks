@@ -87,7 +87,10 @@ def restore(sim, row, columns, physics):
     # Sleeping rigid bodies may keep an old USD transform during offline replay.
     pose = values["wood_pose"][0].cpu().numpy()
     prim = sim.stage.GetPrimAtPath("/World/envs/env_0/wood/bar")
-    world = Gf.Matrix4d().SetRotate(Gf.Quatd(float(pose[6]), *map(float, pose[3:6])))
+    from model import WOOD_SIZE
+    from scene import BAR_LENGTH_MM
+    world = Gf.Matrix4d().SetScale(Gf.Vec3d(BAR_LENGTH_MM/(1000*WOOD_SIZE[0]), 1., 1.))
+    world *= Gf.Matrix4d().SetRotate(Gf.Quatd(float(pose[6]), *map(float, pose[3:6])))
     world.SetTranslateOnly(Gf.Vec3d(*map(float, pose[:3])))
     parent = UsdGeom.XformCache().GetParentToWorldTransform(prim)
     UsdGeom.Xformable(prim).MakeMatrixXform().Set(world*parent.GetInverse())

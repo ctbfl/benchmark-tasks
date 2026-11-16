@@ -19,7 +19,9 @@ from scene import CONFIG
 CAMERAS = ("left_cam", "top_cam", "right_cam")
 INSTRUCTION = (
     "Use the tape measure on the right to measure the longest edge of the wooden "
-    "bar behind it. Enter the measured length as an integer in millimetres on the "
+    "bar behind it. Seat the hook at one end with the zero aligned, then pull the "
+    "blade beyond the other end, within 10 degrees of the bar's long axis. "
+    "Enter the measured length as an integer in millimetres on the "
     "calculator on the left, then press = to submit and finish. The tape measure "
     "retracts automatically when released; it has no lock. Complete the task "
     "within 120 seconds."
@@ -127,13 +129,13 @@ class TapeEmbodiment(YamArenaEmbodiment):
 
 
 class FinalScore:
-    name = "submitted_length"
+    name = "measured_length"
 
     def __call__(self, record, target):
         from inspect_robots.scorer import Score
         info = record.steps[-1].result.info
-        return Score(value=info["score"], explanation="Correct integer millimetres submitted with = within 120 seconds.",
-                     metadata={key: info[key] for key in ("submitted", "submission_time_s", "length_mm")})
+        return Score(value=info["score"], explanation="0.25 for seating the hook; 0.5 for aligned measurement; 1 for a subsequent correct submission within 120 seconds.",
+                     metadata={key: info[key] for key in ("submitted", "submission_time_s", "length_mm", "hooked_at_s", "measured_at_s")})
 
 
 def check(embodiment, scene):

@@ -8,7 +8,9 @@ import numpy as np
 
 def run(out):
     from simulation import Simulation, archive_source
+    from scene import BAR_LENGTH_MM, CONFIG
     commands = np.load(Path(__file__).parent/"demo_actions.npz")
+    assert int(commands["seed"]) == CONFIG["episode"]["seed"] and int(commands["length_mm"]) == BAR_LENGTH_MM, "Recorded demo requires seed 0 (193 mm)"
     actions, phases = commands["actions"], commands["phases"]
     assert actions.ndim == 2 and actions.shape[1] == 14 and len(phases) == len(actions)
     archive_source(out)

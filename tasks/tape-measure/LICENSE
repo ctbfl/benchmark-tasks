@@ -1,4 +1,16 @@
-MIT License
+Original task assets
+
+The original task models and procedural artwork in assets/ are licensed under
+Creative Commons Attribution 4.0 International (CC BY 4.0):
+https://creativecommons.org/licenses/by/4.0/
+Full license: https://creativecommons.org/licenses/by/4.0/legalcode
+
+Attribution: Tape measure task contributors, "Measure a wooden bar and enter
+its length", tasks/tape-measure in this repository. Retain attribution, link
+to the license, and indicate changes. Third-party font rights remain subject
+to FONT-LICENSE.txt.
+
+Task source code — MIT License
 
 Copyright (c) 2026 Tape measure task contributors
 

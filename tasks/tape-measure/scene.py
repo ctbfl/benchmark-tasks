@@ -4,8 +4,11 @@ import json
 import math
 from pathlib import Path
 
+import numpy as np
+
 ROOT = Path(__file__).resolve().parent
 CONFIG = json.loads((ROOT / "dream-defaults.json").read_text())
+BAR_LENGTH_MM = int(np.random.default_rng(CONFIG["episode"]["seed"]).integers(150, 201))
 TAPE_XY = (.235, -.160)
 CALCULATOR_XY = (.235, .180)
 WOOD_XY = (.415, .0)
@@ -15,6 +18,9 @@ def spawn_asset(prim_path, cfg, translation=None, orientation=None):
     from isaaclab.sim.spawners.from_files import spawn_from_usd
     from pxr import Usd, UsdPhysics
     prim = spawn_from_usd(prim_path, cfg, translation, orientation)
+    if prim_path.endswith("/wood"):
+        mass = UsdPhysics.MassAPI(prim.GetStage().GetPrimAtPath(prim_path+"/bar")).GetMassAttr()
+        mass.Set(mass.Get()*cfg.scale[0])
     for child in Usd.PrimRange(prim):
         if child.HasAPI(UsdPhysics.RigidBodyAPI):
             child.RemoveProperty("physxRigidBody:sleepThreshold")
@@ -59,6 +65,7 @@ def make_env(out, cameras=False):
         ("wood", ObjectType.RIGID, (*WOOD_XY, station.TABLE_TOP+WOOD_SIZE[2]/2+.0005)),
     ):
         props.append(Object(name=name, object_type=kind, usd_path=str(ASSETS/(name+".usda")),
+                            scale=(BAR_LENGTH_MM/(1000*WOOD_SIZE[0]), 1., 1.) if name == "wood" else (1., 1., 1.),
                             spawn_cfg_addon={"func": spawn_asset}, initial_pose=Pose(position, rotation)))
 
     def configure(cfg):

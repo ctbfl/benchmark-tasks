@@ -3,14 +3,50 @@
 Measure the bar's longest edge using the retractable tape, enter the length as
 integer millimetres on the calculator, and press `=`. The calculator starts on
 the robot's left, the upright tape on its right, and the bar behind both.
-See `task.json` for object dimensions, the fixed layout and simulation fidelity.
+The bar length is sampled uniformly from every integer from **150 to 200 mm**
+using `numpy.random.default_rng(episode.seed).integers(150, 201)`. Set the seed
+in `dream-defaults.json`; seed 0 selects 193 mm, seed 1 selects 174 mm and seed 6
+selects 172 mm. Width and height stay 70 mm. The scene scales the bar geometry
+and mass together; no asset rebuild is needed when changing the seed.
 
 ## Scoring
 
-Score 1 if the first `=` press submits the correct integer length within 120
-simulation seconds; otherwise score 0. Tape handling and final placement add
-no scoring conditions. Physical key travel triggers the calculator events.
-`score.py` recomputes the score from a saved submission and its time.
+The score is the highest stage reached before the first `=` press or the
+120-second limit:
+
+| Score | Condition |
+| --- | --- |
+| 0 | No seated, zero-aligned hook; a correct answer alone earns no credit. |
+| 0.25 | The hook contacts the bar and its zero is within 1 mm of either end plane. |
+| 0.5 | At the same instant, the hook remains seated, the exposed blade extends beyond the opposite end plane and points along the bar within 10 degrees. |
+| 1 | After reaching 0.5, the first `=` submits the correct integer millimetres within 120 seconds. |
+
+The angle is three-dimensional and positions are relative to the moving bar.
+Hook contact is a nonzero PhysX hook/bar contact force. There is no minimum
+holding time. Completed stages persist, so the tape may be retracted before
+typing; an incorrect answer retains the measurement credit. Physical key
+travel triggers calculator events. `score.py` recomputes the stages from
+recorded tape endpoints, bar poses and contact forces, then checks the submission.
+
+## Setup and reset
+
+The unlabelled bar represents solid pine, modelled as a rigid homogeneous
+block with density about 617 kg/m3. The calculator has a plastic case and
+physical spring-loaded keys. The tape has a plastic/rubber case, a steel hook
+and a graduated steel blade; blade bending and intermediate contact are omitted.
+
+Spawn positions below are in metres in the standard YAM station world frame.
+Every prop uses quaternion `(x,y,z,w) = (0,0,-sqrt(0.5),sqrt(0.5))`.
+
+| Object | Position (x, y, z) |
+| --- | --- |
+| Tape case | (0.235, -0.160, 0.7820) |
+| Calculator base | (0.235, 0.180, 0.7480) |
+| Bar centre | (0.415, 0, 0.7830) |
+
+The tabletop is at z=0.7475 m. There is no position jitter. Start both arms at
+joint angles `(0,1,1,-0.6,0,0)` radians with open grippers, the tape retracted
+and calculator cleared. Settle for 2 seconds before starting the clock.
 
 ## Environment
 
@@ -24,16 +60,31 @@ At this Arena revision, `ARENA_NUCLEUS_DIR` must point to the production
 `ISAACLAB_NUCLEUS_DIR`; `arena-assets.patch` supplies that resource-URL correction
 for a fresh installation (`git -C <ARENA_DIR> apply <TASK_DIR>/arena-assets.patch`).
 Robot assets and camera calibration come from yam-arena. Task assets are
-self-contained; notices are in `ASSETS.md`.
+self-contained. Asset sources and licenses:
+
+| Asset | Source and license |
+| --- | --- |
+| Task meshes, wood texture, tape scale and key-label images | Original procedural assets in `model.py`; [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/), with attribution and scope in [LICENSE](LICENSE). |
+| DejaVu Sans Bold glyphs in the labels | [DejaVu](https://dejavu-fonts.github.io/); Bitstream Vera license, DejaVu changes public domain; [notice](FONT-LICENSE.txt). Font file not bundled. |
+| YAM robot URDF, meshes and derived collision/USD assets | I2RT Robotics, [v1.3.6 / 120c3c814001](https://github.com/i2rt-robotics/i2rt/tree/120c3c81400171174604e503943f8d1ebc891058), supplied through yam-arena; [MIT](https://github.com/i2rt-robotics/i2rt/blob/120c3c81400171174604e503943f8d1ebc891058/LICENSE). Not bundled. |
+| YAM black/white link meshes | I2RT meshes distributed with dreamlabs 1.0.23; [source and hashes](https://github.com/kairosiann/yam-isaac-lab-arena/blob/bd62771e60320433893bd1d2df0fc79b5ddcd6d1/yam_arena/assets/yam/dream/SOURCE); MIT under the I2RT license above. Not bundled. |
+| Arm and camera calibration | ARISE-Initiative/yamlab, commit `ec0455d2b4ce`, via Dream's standard station and yam-arena; [MIT](https://github.com/ARISE-Initiative/yamlab/blob/ec0455d2b4ce35f21fc126418ea5e74ac567133d/LICENSE). Not bundled. |
+| Standard YAM workstation | Standard benchmark environment; MIT. Supplied externally, not bundled. |
+
+Task source code retains its [MIT license](LICENSE). Isaac Lab-Arena is
+Apache-2.0; Isaac Lab is BSD-3-Clause. Product appearance references and further
+notices are in `ASSETS.md`; no product photographs or downloaded product meshes
+are distributed.
 
 Run commands from this directory after activating the environment. Use a fresh
 output directory for each execution. Both evaluations use `dream-defaults.json`:
-fixed layout, seed 0, CPU PhysX TGS at 240 Hz, native YAM actuators and the same
+fixed poses, seed 0 (193 mm), CPU PhysX TGS at 240 Hz, native YAM actuators and the same
 14-dimensional joint-position/gripper interface at 20 Hz.
 
 ```bash
 python run.py check runs/check
 python run.py adapter-check runs/adapter-check
+python -m unittest test_scoring.py
 ```
 
 Both checks run without model calls. The limit is 2,400 control steps, or 120
@@ -43,7 +94,7 @@ advance physics.
 ## Evaluation
 
 The recorded Dream-1 beta trial scored **0.0/1.0 in 120 simulation seconds**
-(276 seconds wall time on RTX 5090); it made no calculator submission.
+(about 293 seconds wall time on RTX 5090); it did not seat the hook or make a calculator submission.
 Dream receives only three calibrated robot camera views and 14 measured
 joint/gripper positions. Native 640x360 images become 320x176 JPEGs at the model
 interface. The installed client reads `~/.dreamlabs/credentials`.
@@ -53,13 +104,15 @@ python run.py dream runs/dream
 python score.py runs/dream
 ```
 
-The demo scored **1.0/1.0 in 113.5 simulation seconds**, submitting `173` at
-109.883 seconds (about 72 seconds wall time on RTX 5090, excluding app startup).
+The demo scored **1.0/1.0 in 113.5 simulation seconds**, submitting `193` at
+109.883 seconds (about 77 seconds wall time on RTX 5090, excluding app startup).
 It measures the bar, unhooks and releases the tape for passive
-return, places the case on the table, and presses `1`, `7`, `3`, `=`.
+return, places the case on the table, and presses `1`, `9`, `3`, `=`.
 Replay sends 2,270 fixed commands from `demo_actions.npz`; policy execution
-uses no simulator observations. Independent replay reproduced every recorded
-physical state from the development execution.
+uses no simulator observations. This action file is for seed 0 only; replay
+fails immediately with a different seed. Independent replay reproduced all
+27,241 recorded physical states from the development execution. A separate
+answer-only run submitted the correct `193` without measuring and scored 0.
 
 ```bash
 python run.py replay runs/demo

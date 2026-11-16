@@ -1,8 +1,9 @@
-"""Physical key events, visible instrument state and result-only scoring."""
+"""Physical key events, tape measurement progress and calculator scoring."""
 
 import math
 
 import numpy as np
+from scipy.spatial.transform import Rotation
 
 
 class Calculator:
@@ -74,14 +75,34 @@ class Calculator:
                     self.show(math.sqrt(float(self.text)))
 
 
-def score(submitted, seconds, length_mm, limit_seconds):
-    if submitted is None or seconds > limit_seconds or not submitted.isdigit():
-        return 0.
-    return float(int(submitted) == length_mm)
+def measurement(zero, mouth, wood_pose, length_mm, hook_force):
+    """Check the tape against either end of the bar in the bar's own frame."""
+    points = Rotation.from_quat(wood_pose[3:]).inv().apply(np.array([zero, mouth])-wood_pose[:3])
+    end = 1 if points[0, 0] >= 0 else -1
+    error = abs(points[0, 0]-end*length_mm/2000)
+    direction = points[1]-points[0]
+    cosine = -end*direction[0]/np.linalg.norm(direction)
+    overrun = -end*points[1, 0]-length_mm/2000
+    hooked = bool(error <= .001 and hook_force > 0)
+    return dict(hooked=hooked, measured=bool(hooked and overrun > 0 and cosine >= math.cos(math.radians(10))),
+                zero_error_mm=float(error*1000), angle_deg=float(math.degrees(math.acos(np.clip(cosine, -1, 1)))),
+                overrun_mm=float(overrun*1000), hook_force_N=float(hook_force))
+
+
+def score(submitted, seconds, length_mm, limit_seconds, hooked_at, measured_at):
+    cutoff = min(seconds, limit_seconds)
+    progress = .5 if measured_at is not None and measured_at <= cutoff else (
+        .25 if hooked_at is not None and hooked_at <= cutoff else 0.)
+    if (progress == .5 and seconds <= limit_seconds and submitted is not None
+            and submitted.isdigit() and int(submitted) == length_mm):
+        return 1.
+    return progress
 
 
 class Instruments:
     def __init__(self, base, stage):
+        import omni.physics.tensors as tensors
+        from isaaclab.sim.utils import get_current_stage_id
         from pxr import UsdGeom
         from model import KEYS
         self.base, self.stage = base, stage
@@ -91,6 +112,11 @@ class Instruments:
         self.down = np.zeros(len(self.keys), dtype=bool)
         self.events = []
         self.submission_time = None
+        self.hooked_at = self.measured_at = None
+        self.measurement_events = []
+        self.physics = tensors.create_simulation_view("numpy", stage_id=get_current_stage_id())
+        self.contact = self.physics.create_rigid_contact_view("/World/envs/env_0/tape/hook",
+            ["/World/envs/env_0/wood/bar"])
         root = "/World/envs/env_0"
         self.blade = UsdGeom.Mesh.Get(stage, root+"/tape/case/blade")
         self.uv = UsdGeom.PrimvarsAPI(self.blade).GetPrimvar("st")
@@ -100,9 +126,11 @@ class Instruments:
         self.points = [UsdGeom.Imageable(stage.GetPrimAtPath(
             root+f"/calculator/base/display/digit_{digit}_point")) for digit in range(8)]
         self.displayed = None
+        self.update_measurement(0.)
         self.update_visuals()
 
     def update(self, seconds):
+        self.update_measurement(seconds)
         positions = self.base.scene["calculator"].data.joint_pos.torch[0, self.key_ids].cpu().numpy()
         pressed = positions < -.0008
         for index in np.flatnonzero(pressed & ~self.down):
@@ -114,6 +142,27 @@ class Instruments:
                     self.submission_time = seconds
         self.down |= pressed
         self.down[positions > -.00025] = False
+
+    def update_measurement(self, seconds):
+        from model import BLADE_Z, HOOK_HOME, TAPE_MOUTH
+        from scene import BAR_LENGTH_MM, CONFIG
+        tape = self.base.scene["tape"].data
+        pose = tape.root_link_pose_w.torch[0].cpu().numpy()
+        q = float(tape.joint_pos.torch[0, 0])
+        self.tape_points = pose[:3]+Rotation.from_quat(pose[3:]).apply(
+            [[HOOK_HOME-q, 0, BLADE_Z], [TAPE_MOUTH, 0, BLADE_Z]])
+        self.hook_force = float(np.linalg.norm(self.contact.get_contact_force_matrix(
+            1/CONFIG["simulation"]["physics_hz"])))
+        if self.calculator.ended or seconds > CONFIG["episode"]["max_control_steps"]/CONFIG["simulation"]["control_hz"]:
+            return
+        wood = self.base.scene["wood"].data.root_link_pose_w.torch[0].cpu().numpy()
+        state = measurement(*self.tape_points, wood, BAR_LENGTH_MM, self.hook_force)
+        if state["hooked"] and self.hooked_at is None:
+            self.hooked_at = seconds
+            self.measurement_events.append(dict(time_s=seconds, stage="hooked", **state))
+        if state["measured"] and self.measured_at is None:
+            self.measured_at = seconds
+            self.measurement_events.append(dict(time_s=seconds, stage="measured", **state))
 
     def update_visuals(self):
         from pxr import UsdGeom
@@ -139,11 +188,13 @@ class Instruments:
         self.displayed = text
 
     def result(self, seconds):
-        from model import WOOD_SIZE
-        from scene import CONFIG
-        truth = round(max(WOOD_SIZE)*1000)
+        from scene import BAR_LENGTH_MM, CONFIG
+        truth = BAR_LENGTH_MM
         limit = CONFIG["episode"]["max_control_steps"]/CONFIG["simulation"]["control_hz"]
         return {"score": score(self.calculator.submitted,
-                    seconds if self.submission_time is None else self.submission_time, truth, limit),
+                    seconds if self.submission_time is None else self.submission_time, truth, limit,
+                    self.hooked_at, self.measured_at),
                 "length_mm": truth, "submitted": self.calculator.submitted,
+                "hooked_at_s": self.hooked_at, "measured_at_s": self.measured_at,
+                "measurement_events": self.measurement_events,
                 "submission_time_s": self.submission_time, "time_s": seconds, "events": self.events}
