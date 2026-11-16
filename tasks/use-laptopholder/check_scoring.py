@@ -15,9 +15,9 @@ def main():
     valid=data["phases"][-1]["state"]
     rows=[]
 
-    def evaluate(name,state,expected):
+    def evaluate(name,state,expected,robot_contact=0.0,table_contact=(1.0,1.0)):
         scorer=Score(gear=4,low=(-.06,.19),high=(.27,.41))
-        result=scorer.update(state)
+        result=scorer.update(state,robot_contact,table_contact)
         assert result["score"]==expected, (name,result)
         assert result["success"]==(expected==1.0), (name,result)
         rows.append({"case":name,"success":result["success"],"score":result["score"]})
@@ -25,7 +25,7 @@ def main():
 
     evaluate("measured folded stand",data["phases"][0]["state"],0.0)
     evaluate("measured spread stand",data["phases"][1]["state"],0.25)
-    # The first three items earn credit independently; containment only earns the last quarter.
+    # The first three items earn credit independently; placement earns the last quarter.
     for spread,left,right,inside,expected in (
         (False,False,False,True,0.0),
         (True,False,False,True,0.25),
@@ -53,13 +53,25 @@ def main():
         ("visible seating with offset",lambda m:m["sides"]["L"].__setitem__("seat_error",[.003,.002,.001]),1.0),
         ("outline on inner edge",lambda m:m["high"].__setitem__(1,.41),1.0),
         ("outline past inner edge",lambda m:m["high"].__setitem__(1,.411),.75),
-        ("base height is not scored",lambda m:m["sides"]["R"].__setitem__("base_z",.002),1.0),
-        ("velocity is not scored",lambda m:m.__setitem__("max_speed",.05),1.0),
-        ("joint residual is not scored",lambda m:m.__setitem__("joint_error",.001),1.0),
     ):
         changed=copy.deepcopy(valid)
         change(changed)
         evaluate(name,changed,expected)
+    evaluate("robot holding an otherwise complete stand",valid,.75,robot_contact=20.0)
+    evaluate("only left base supported",valid,.75,table_contact=(1.0,0.0))
+    evaluate("only right base supported",valid,.75,table_contact=(0.0,1.0))
+    evaluate("both bases above the table",valid,.75,table_contact=(0.0,0.0))
+    evaluate("released and both bases supported",valid,1.0)
+    lifted=copy.deepcopy(valid)
+    lifted["low"][2]+=.10
+    lifted["high"][2]+=.10
+    for side in lifted["sides"].values():
+        side["base_z"]+=.10
+    evaluate("held 10 cm above the table",lifted,.75,robot_contact=20.0,table_contact=(0.0,0.0))
+    evaluate("falling above the table",lifted,.75,table_contact=(0.0,0.0))
+    scorer=Score(gear=4,low=(-.06,.19),high=(.27,.41))
+    assert scorer.update(valid,0.0,(1.0,1.0))["success"]
+    assert not scorer.update(lifted,20.0,(0.0,0.0))["success"]
     out=ROOT/"outputs/validation/scoring.json"
     out.parent.mkdir(parents=True,exist_ok=True)
     out.write_text(json.dumps({"passed":True,"cases":rows},indent=2)+"\n")

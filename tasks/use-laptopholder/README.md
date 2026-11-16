@@ -1,16 +1,63 @@
-# Unfold a laptop stand
+# Unfold a laptop stand and set its highest position
 
-Dual YAM arms fully spread a passive laptop stand, seat both support rods in its highest slots, and position its entire top-down outline inside the red rectangle. See `task.json` for the instruction and scoring rules.
+Fully spread the laptop stand, seat both support rods in the highest-setting slots, and leave the stand released on the tabletop inside the red rectangle. Dual YAM arms operate the passive linkage using the calibrated three-camera workstation.
 
-For physical reproduction, use the [Tonmom adjustable folding laptop stand, ASIN B08G84P8ZX](https://www.amazon.com/Tonmom-Laptop-Stand-Adjustable-Riser/dp/B08G84P8ZX?th=1), with its stock passive hinges and seven height settings. Fold the supports and close the lateral linkage; center it at tabletop (0.46, 0) m, its long axis along X and front hooks toward negative X. The 12 mm tape's inner edges enclose a 340 x 240 mm rectangle. The simulation approximates this product; its 276 x 53 x 28 mm folded size, 185 mm open width, 0.24 kg mass and joint resistance are model parameters, not measurements of the purchased product.
+The physical reference is the [Tonmom adjustable folding laptop stand, ASIN B08G84P8ZX](https://www.amazon.com/Tonmom-Laptop-Stand-Adjustable-Riser/dp/B08G84P8ZX?th=1), with its stock hinges and seven height settings. Start folded and centered at tabletop (0.46, 0) m, long axis along X and hooks toward negative X. The 12 mm tape encloses a 340 x 240 mm rectangle. See `task.json` for the full setup and reset procedure.
 
-At the end of the attempt, award 0.25 independently for each of: fully spreading the linkage, the left rod sitting in the highest-setting slot, and the right rod sitting in that slot. Once all three hold, add 0.25 if the whole stand's top-down outline is within the tape's inner edges; touching an inner edge is allowed. No credit is awarded for containment alone. Inspect the lateral opening from above, each rod's entry into its slot from the side, and the whole outline from directly above. Photos suffice; no force sensor, precision gauge or timed stability measurement is required.
+## Scoring
 
-In simulation, full spread is at least 180 mm (185 mm nominal). Slot 1, nearest the front hinge, is highest. Each pin centre must be inside that slot's 10 x 8 mm opening, between its 4 mm floor and 8 mm rim. These are model geometry boundaries, not submillimetre seating-error tolerances. Footprint containment uses all stand collision geometry. Contact, base height, velocity and joint residuals do not contribute to the score.
+Score the final state, up to 1.0:
 
-Use Linux, an NVIDIA RTX GPU and FFmpeg. Install [yam-arena at bd62771](https://github.com/kairosiann/yam-isaac-lab-arena/tree/bd62771e60320433893bd1d2df0fc79b5ddcd6d1) using its `setup.sh`, then activate `source <ARENA_DIR>/yam.env`. Tested with Python 3.12, Isaac Sim 6.1.0.0, Isaac Lab package 17.0.2 and Arena 0.3.0 (commit `c7edf3a9d5d8276565208f72422f8f8a0806d6cf`). `requirements.txt` records the additional tested packages; install these in that environment. The stand USD is self-contained; robot assets and calibration come from yam-arena.
+- **0.25:** Fully spread the stand.
+- **0.25:** Seat the left support rod in its highest-setting slot.
+- **0.25:** Seat the right support rod in its highest-setting slot.
+- **0.25:** With all three setup conditions satisfied, leave the entire top-down outline inside the tape's inner edges, both base rails supported by the tabletop, and both grippers released and clear. Touching the tape's inner edge is allowed.
 
-Asset sources and licenses:
+The first three items earn credit independently. For physical evaluation, inspect the spread and frame boundary from above, each rod's seating from the side, and both base rails resting on the table with the grippers visibly clear. The final quarter represents the stand placed and ready for use.
+
+In simulation, full spread is at least 180 mm (185 mm nominal). Slot 1, nearest the front hinge, is highest; each pin center lies within its 10 x 8 mm opening, between the 4 mm floor and 8 mm rim. `task.Score` checks the complete collision-geometry footprint and uses PhysX contact reports to confirm robot release and tabletop support at both bases. Contact detection uses a 0.01 N numerical threshold. These checks run at every control step.
+
+## Environment and execution
+
+Use Linux, an NVIDIA RTX GPU and FFmpeg. Install [yam-arena at bd62771](https://github.com/kairosiann/yam-isaac-lab-arena/tree/bd62771e60320433893bd1d2df0fc79b5ddcd6d1) using its `setup.sh`, activate `source <ARENA_DIR>/yam.env`, and install `requirements.txt`. Tested with Python 3.12, Isaac Sim 6.1.0.0, Isaac Lab package 17.0.2 and Arena 0.3.0 at `c7edf3a9d5d8276565208f72422f8f8a0806d6cf`.
+
+Run from this directory:
+
+```bash
+python dream_eval.py --check       # Scene, cameras, state and action interface
+python run.py expert              # Scripted robot demonstration
+python dream_eval.py              # Dream-1 evaluation
+```
+
+Trials use the fixed initial layout, seed 0, CPU PhysX TGS at 960 Hz and a 2,400-step limit at 20 Hz (120 simulated seconds). Dream-1 receives the top and wrist camera images plus 14 measured joint/gripper positions. Native 640x360 images become 320x176 JPEGs at the model interface. Both policies execute 14-value robot joint/gripper targets; the scripted expert plans from measured mechanism state. The model uses rigid-body geometry with estimated material and joint parameters.
+
+Dream uses the client's `~/.dreamlabs/credentials`. Each evaluation saves its instruction, source snapshot, actions, measurements and scores under `outputs/`. Inspect the results with:
+
+```bash
+python -c 'import json; print(json.load(open("outputs/expert/headless/result.json"))["final"]["score"])'
+python -m json.tool outputs/dream-highest-<timestamp>/metrics.json
+python verify_dream.py outputs/dream-highest-<timestamp>
+```
+
+A headless demonstration takes about three minutes on an RTX 5090; Dream evaluation wall time also includes model responses. `metrics.json` records each trial's actual runtime and score.
+
+Dream-1 evaluated with the current instruction and rubric on 2026-11-16 UTC scores **0.0/1.0** after 2,400 steps and 120 simulated seconds (438.74 seconds wall time on an RTX 5090). All 2,400 recorded scores were independently recomputed. The robot demonstration scores **1.0/1.0** at 105.05 seconds. A complete 2,101-step replay of its recorded actions with the release-and-support scorer also finishes at **1.0/1.0**, with both bases supported and the robot clear.
+
+Validation and video commands:
+
+```bash
+python run.py validate            # Mechanism checks across all seven settings
+python run.py exercise            # Generate the mechanism scoring fixture
+python check_scoring.py           # Partial credit, release and support cases
+python run.py benchmark           # Scene and physical contact-sensor checks
+python run.py camera_ready        # Four-camera robot demonstration
+python verify_camera_ready.py     # Video, timing and calibration checks
+python replay_dream.py outputs/dream-highest-<timestamp>
+```
+
+Videos use a 1080p observer view and three 640x360 robot views at 30 FPS. Generated data and media are stored in `outputs/`.
+
+## Assets and licenses
 
 | Asset | Source | License |
 | --- | --- | --- |
@@ -19,37 +66,5 @@ Asset sources and licenses:
 | YAM black/white link meshes | I2RT meshes distributed with dreamlabs 1.0.23; [source and hashes](https://github.com/kairosiann/yam-isaac-lab-arena/blob/bd62771e60320433893bd1d2df0fc79b5ddcd6d1/yam_arena/assets/yam/dream/SOURCE) | MIT, under the I2RT license above |
 | Arm and camera calibration | ARISE-Initiative/yamlab, commit `ec0455d2b4ce`, via Dream's standard station and yam-arena | [MIT](https://github.com/ARISE-Initiative/yamlab/blob/ec0455d2b4ce35f21fc126418ea5e74ac567133d/LICENSE) |
 
-The CC BY 4.0 grant applies to the original laptop stand asset. For attribution, identify this task and its source, include the license link, and indicate modifications. The table, tape and camera-stand geometry are constructed procedurally in `benchmark.py` using the standard workstation parameters. The asset licenses above do not relicense the simulation framework or task scripts.
 
-Run from this directory:
-
-```bash
-python dream_eval.py --check       # Scene, RGB, action and state checks; no API calls
-python run.py expert              # Scripted demonstration; scored during execution
-python dream_eval.py              # One Dream-1 trial; requires configured Dream API key
-```
-
-Dream uses the client's `~/.dreamlabs/credentials` configuration. Both runs use seed 0 and a fixed initial layout, with a limit of 2,400 steps at 20 Hz. Dream observes the calibrated top and wrist cameras (native 640x360, model input 320x176) and 14 measured joint positions. Actions are 14 joint/gripper targets. The observer camera provides video for human review. The expert uses measured mechanism state for planning and applies only robot joint targets.
-
-`task.Score` evaluates these four geometric conditions on every control step, without a hold timer. Results and per-step measurements are saved under `outputs/`. Read the recorded scores and verify the archive with:
-
-```bash
-python -c 'import json; print(json.load(open("outputs/expert/headless/result.json"))["final"]["score"])'
-python -m json.tool outputs/dream-highest-<timestamp>/metrics.json
-python verify_dream.py outputs/dream-highest-<timestamp>  # Check archived actions, images and states
-```
-
-The Dream `metrics.json` reports the task's 0/0.25/0.5/0.75/1 score; Inspect Robots' `success_at_end` separately reports binary success. Re-scoring the archived Dream trial gives 0 after 120 simulated seconds (493 seconds wall time on RTX 5090); the submitted robot demo gives 1 at its final 105.05-second state. The archives used the earlier, more detailed instruction; this is score recomputation, not a new model run with the revised instruction. A headless expert run took 164 seconds wall time; initialization and API latency vary.
-
-Additional offline checks and video generation:
-
-```bash
-python run.py validate            # 34 physics checks, including all seven slots
-python run.py exercise            # Force-fixture mechanism test
-python check_scoring.py           # Four-part scoring and geometric counterexamples
-python run.py camera_ready        # Robot demo: 1080p observer + three 640x360 views
-python verify_camera_ready.py     # Timing, calibration and complete video decode
-python replay_dream.py outputs/dream-highest-<timestamp>  # Render archived states without API calls
-```
-
-Video uses real-time RTX at 30 FPS. Generated data, logs and media stay in `outputs/` and are excluded from version control. The model uses estimated rigid-body material and joint parameters; calibration against a physical product remains pending.
+The table, tape and camera-stand geometry are generated by `benchmark.py` using the standard workstation dimensions. Attribute the original stand asset to this task, include its CC BY 4.0 license link, and identify modifications. Framework dependencies retain their upstream licenses.

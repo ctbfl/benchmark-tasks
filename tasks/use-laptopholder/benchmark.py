@@ -105,8 +105,10 @@ class LaptopHolderTask:
             robot_paths += [str(p.GetPath()) for p in Usd.PrimRange(self.sim.stage.GetPrimAtPath('/World/'+side))
                             if p.HasAPI(UsdPhysics.RigidBodyAPI)]
         sensor_paths=list(self.holder.bodies.prim_paths)
-        self.contacts=self.holder.view.create_rigid_contact_view(sensor_paths,filter_patterns=[robot_paths]*len(sensor_paths))
-        assert self.contacts.sensor_count==10 and self.contacts.filter_count==len(robot_paths)
+        self.contacts=self.holder.view.create_rigid_contact_view(
+            sensor_paths,filter_patterns=[robot_paths+["/World/Table"]]*len(sensor_paths))
+        self.base_indices=[self.holder.index["base_"+side] for side in ("L","R")]
+        assert self.contacts.sensor_count==10 and self.contacts.filter_count==len(robot_paths)+1
         self.reset()
 
     def reset(self):
@@ -176,10 +178,12 @@ class LaptopHolderTask:
         for _ in range(round(1/(self.sim.cfg.dt*task.CONTROL_HZ))):
             self._tick()
             matrix=self.contacts.get_contact_force_matrix(self.sim.cfg.dt)
-            contact=max(contact,float(np.linalg.norm(matrix,axis=-1).max()))
+            contact=max(contact,float(np.linalg.norm(matrix[:,:-1],axis=-1).max()))
         self.steps+=1
-        info=self.scorer.update(self.holder.measure())
+        table_contact=np.linalg.norm(matrix[self.base_indices,-1],axis=-1).tolist()
+        info=self.scorer.update(self.holder.measure(),contact,table_contact)
         info["robot_contact_N"]=contact
+        info["table_contact_N"]=table_contact
         info["truncated"]=self.steps>=task.MAX_STEPS
         return self.observe(),info
 
@@ -204,9 +208,11 @@ def smoke(cameras=True):
     for _ in range(20):
         observation,info=env.step(q)
     assert not info["success"] and info["score"]==0
+    assert info["supported"] and info["released"], info
+    table_support=info["table_contact_N"]
     assert env.holder.measure()["width"]<.06
     reset=env.reset()
-    assert env.steps==0 and env.scorer.update(env.holder.measure())["score"]==0
+    assert env.steps==0 and env.holder.measure()["width"]<.06
     out=model.ROOT/"outputs/benchmark"
     out.mkdir(exist_ok=True)
     if cameras:
@@ -215,6 +221,13 @@ def smoke(cameras=True):
             reset=env.observe()
         cv2.imwrite(str(out/"setup.png"),cv2.cvtColor(reset["rgb"],cv2.COLOR_RGB2BGR))
         cv2.imwrite(str(out/"red_frame_setup.png"),cv2.cvtColor(reset["rgb"],cv2.COLOR_RGB2BGR))
+    # Check that both table-support sensors clear when the stand is above the table.
+    root=env.initial_root.copy()
+    root[0,2]+=.10
+    env.art.set_root_transforms(root,np.array([0],np.uint32))
+    _,lifted=env.step(q)
+    assert not lifted["supported"] and lifted["table_contact_N"]==[0.0,0.0], lifted
+    env.reset()
     # Sensor acceptance fixture: drop the stand over the left robot base. This
     # reset-only placement checks real robot/holder contact, not manipulation.
     root=env.initial_root.copy()
@@ -224,11 +237,12 @@ def smoke(cameras=True):
     for _ in range(round(1/env.sim.cfg.dt)):
         env._tick()
         matrix=env.contacts.get_contact_force_matrix(env.sim.cfg.dt)
-        peak_contact=max(peak_contact,float(np.linalg.norm(matrix,axis=-1).max()))
+        peak_contact=max(peak_contact,float(np.linalg.norm(matrix[:,:-1],axis=-1).max()))
     assert peak_contact>.1, f"Robot contact sensor did not detect the contact fixture: {peak_contact} N"
     env.reset()
     (out/"smoke.json").write_text(json.dumps({"passed":True,"action_shape":[14],"control_hz":task.CONTROL_HZ,
         "physics_hz":round(1/env.sim.cfg.dt),
-        "robot_bodies":env.contacts.filter_count,"contact_fixture_peak_N":peak_contact,
+        "robot_bodies":env.contacts.filter_count-1,"contact_fixture_peak_N":peak_contact,
+        "table_support_N":table_support,"lifted_table_contact_N":lifted["table_contact_N"],
         "initial_score":info,"holder":env.holder.measure()},indent=2)+"\n")
     env.sim.stop()
