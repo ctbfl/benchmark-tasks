@@ -1,0 +1,20 @@
+{
+  "title": "Hang an eyelet curtain on its rod",
+  "category": "Societal relevance",
+  "keywords": [
+    "bimanual",
+    "fabric",
+    "eyelet curtain",
+    "threading",
+    "household"
+  ],
+  "instruction": "Hang the eyelet curtain on the rod: both metal rings must end up on the rod between its two supports, with the rod resting in both cradles.",
+  "context": "Rehanging eyelet curtains after washing is a household chore most people have done. The rod is lifted out of one bracket, each metal eyelet is lined up with the free rod end and slid over its end knob, and the rod is set back in the bracket. The eyelets are linked by limp fabric that swings and pulls them out of line, so one arm keeps the lifted rod end in place while the other threads each eyelet onto it.",
+  "setup": "On a table: a blue fabric panel (189x200x0.5 mm) with two steel eyelets (30 mm inner, 36 mm outer diameter, 102 mm apart), flat with its top edge 270 mm ahead of the arm bases. A free 2.5 kg steel stand with rubber feet (711x170x121 mm) holds a 781 mm metal rod (12 mm diameter, 20 mm end knobs), axis 105 mm above the table, in U cradles 679 mm apart. Rod midpoint: 360 mm ahead, 259.5 mm left of the arm-base midpoint. All stand and cradle dimensions are in config.py; see the setup image.",
+  "scoring": "Final state. Score 0 unless the rod rests in both U cradles below the prong tops. If it does, each eyelet that is on the rod (the rod passes through its 30 mm hole) and hangs between the two support posts (inside both cradles and end knobs) earns 0.5: one eyelet 0.5, both 1.0. Checkable by eye or from a photo of the final state.",
+  "run_limit": "3,600 control steps at 20 Hz (180 s). The scripted demo needs 2,362 steps.",
+  "reset_notes": "Lay the curtain flat at its marked place with both eyelets off the rod, seat the rod in both cradles and return the arms to their ready poses.",
+  "fidelity": "GPU PhysX surface-deformable curtain: one continuous ~10 mm triangle mesh with two holes, fixed to rigid eyelets as real eyelets are crimped into the fabric. Bending stiffness approximates a stiff curtain fabric. Eyelets, rod and end knobs are real-size parts. Rod and stand are free rigid bodies; arms use native YAM actuators and move objects only through contact, with no grasp constraints.",
+  "scores": "Dream-1 beta: 0.0 in 180 s (3,600 steps); scripted demo: 1.0 in 118.1 s (2,362 steps).",
+  "media": "M-BHG552"
+}
