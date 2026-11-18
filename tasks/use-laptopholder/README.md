@@ -6,16 +6,16 @@ The physical reference is the [Tonmom adjustable folding laptop stand, ASIN B08G
 
 ## Scoring
 
-Score the final state, up to 1.0:
+Score only the final state, up to 1.0. Lifting, tilting or shaking the stand to unfold it is allowed. The stand need not remain in contact with the tabletop during manipulation; full credit requires both base rails resting on the tabletop and both grippers released and clear at the end:
 
-- **0.25:** Fully spread the stand.
+- **0.25:** Fully spread the stand: use a ruler perpendicular to the two parallel support rails to measure the transverse distance between their outer side edges along the straight sections. At least **18 cm** earns 0.25; below 18 cm earns 0 for this item. Each rail is 2.5 cm wide, so this is equivalent to an inner-edge gap of at least **13 cm**. Nominal fully open outer width is 18.5 cm.
 - **0.25:** Seat the left support rod in its highest-setting slot.
 - **0.25:** Seat the right support rod in its highest-setting slot.
 - **0.25:** With all three setup conditions satisfied, leave the entire top-down outline inside the tape's inner edges, both base rails supported by the tabletop, and both grippers released and clear. Touching the tape's inner edge is allowed.
 
-The first three items earn credit independently. For physical evaluation, inspect the spread and frame boundary from above, each rod's seating from the side, and both base rails resting on the table with the grippers visibly clear. The final quarter represents the stand placed and ready for use.
+The first three items earn credit independently; a stand below the spread threshold can still earn either rod-seating item. For physical evaluation, measure spread with a ruler and inspect the frame boundary from above. From the side, check each rod rests inside slot 1 (nearest the front hinge), rather than on its rim. After the grippers release and move clear, inspect the final overhead and side views to confirm the rods remain seated, both base rails rest on the table, and the stand supports itself without robot contact. The final quarter represents the stand placed and ready for use.
 
-In simulation, full spread is at least 180 mm (185 mm nominal). Slot 1, nearest the front hinge, is highest; each pin center lies within its 10 x 8 mm opening, between the 4 mm floor and 8 mm rim. `task.Score` checks the complete collision-geometry footprint and uses PhysX contact reports to confirm robot release and tabletop support at both bases. Contact detection uses a 0.01 N numerical threshold. These checks run at every control step.
+In simulation, the same outer-width threshold is 180 mm (185 mm nominal). Slot 1, nearest the front hinge, is highest; each pin center lies within its 10 x 8 mm opening, between the 4 mm floor and 8 mm rim. `task.Score` checks the complete collision-geometry footprint and uses PhysX contact reports to confirm robot release and tabletop support at both bases. Contact detection uses a 0.01 N numerical threshold. These checks run at every control step.
 
 ## Environment and execution
 
