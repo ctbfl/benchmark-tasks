@@ -1,0 +1,20 @@
+{
+  "title": "Drain gravy through a bottom-release fat separator and stop before the fat reaches the outlet",
+  "category": "Societal relatability",
+  "keywords": [
+    "gravy",
+    "fat separator",
+    "spring-return valve",
+    "liquid interface",
+    "gravity drainage"
+  ],
+  "instruction": "Drain the gravy into the bowl using the separator's green squeeze paddle. Recover at least 90% of the lower gravy layer with no visible oil on the bowl's surface. Release the paddle before the upper fat layer reaches the outlet and leave the valve shut.",
+  "context": "Pan drippings give gravy its flavor. A bottom-release separator lets a cook recover the liquid drippings while leaving the floating fat in the pitcher.",
+  "setup": "Simulated dual YAM at READY. At (411, -85) mm a fixed cradle holds a 98 mm bore separator above a 142 mm bore bowl. Heights above table: reservoir floor 164 mm, 7.6 mm outlet 135 mm, bowl rim 81 mm. Green 46 x 38 mm paddle faces the arms. Water/oil charges in grams: 290/80.99, 185/111.93, 395/50.05 by seed. For the bench use Cuisipro 747301 in the adjustable fixture in BENCH_PROTOCOL.md.",
+  "scoring": "Full score requires 261.00/166.50/355.50 g water for seeds 0/1/2 and under 25 mm^2 total visible oil area on the bowl surface. Score zero if oil area reaches that cutoff or the valve does not stay within 1.5 mm of rest with no flow or airborne drops for 0.35 s. A settled underfill with a clean surface scores 0.95 times recovered water mass divided by the target.",
+  "run_limit": "600 control steps at 20 Hz (30 simulated seconds), including observation warm-up and settling.",
+  "reset_notes": "Empty the bowl and close the paddle. Weigh the chosen water and vegetable oil masses separately for bench reset. Add the water, then add oil gently and let the layers separate. Reset both arms to READY with open grippers. Screenshot and recorded trials use seed 0.",
+  "fidelity": "PhysX contact and spring return at 240 Hz. A two-phase outlet model and falling drops proxy the wetted plug, entrainment and afterflow. The oil score uses the projected area of the rendered floating patch. Real spreading, breakup, wetting and splashing are omitted. The bench uses a Cuisipro 747301 stock lever and plug. Spring and flow values are estimates. The bench mount and image measurement have not been tested.",
+  "scores": "Dream-1 run: 0.0089904644349111; demo: 1.0",
+  "media": "M-AR3NP5"
+}
