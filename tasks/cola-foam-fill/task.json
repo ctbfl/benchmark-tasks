@@ -1,0 +1,20 @@
+{
+  "title": "Fill a cup with cola from a drink dispenser by reacting to foam rise and collapse without overflowing",
+  "category": "Societal relatability",
+  "keywords": [
+    "cola",
+    "fountain dispenser",
+    "foam collapse",
+    "visual feedback",
+    "binary valve"
+  ],
+  "instruction": "Fill the clear cup with cola to at least the blue line once the foam settles. Hold the red button to pour and release it to stop. Watch the foam and let it fall before topping up. Use at most three pours, never spill liquid or foam over the rim, and finish with the button released.",
+  "context": "At a self-serve fountain or service counter, the cola head rises while the drink is flowing and can keep rising after release. Stop in time and top up once the foam recedes. Keep the stream clear of both grippers so the cola goes directly into the cup.",
+  "setup": "Two YAM arms in the calibrated station, open grippers. Fixed stainless/polymer cola fountain over a grated tray. Empty clear cup in seat (70 mm inside diameter, 105 mm inside depth), 346 mm forward and 55 mm left of the arm-base midpoint. Nozzle 158 mm above the inner floor. Red 38 mm spring-return button at 344.5 mm forward, 118 mm right, 205 mm above the worktop. Blue fill line is 19.5 mm below the rim. See README for dimensions.",
+  "scoring": "0 if liquid or foam crosses the rim, cola hits a gripper or is diverted outside the cup, the valve opens more than three times, or the valve, runoff and foam do not settle for a final 0.25 s. Otherwise score min(1, final net cola mass / (0.90 × full net mass)). The full reference is tared mass at 10 mm below the rim. Inspect side video and check a dry tray liner for a net gain of 0.30 g or more. See README for the measurement procedure.",
+  "run_limit": "800 actions at 20 Hz, equivalent to 40 simulated seconds including settling.",
+  "reset_notes": "Empty and dry the cup and tray. Release the button and return both arms to READY. Run both locked settings with the same chilled cola, in counterbalanced order. Seed 0 sets 52 mL/s and seed 1 sets 74 mL/s. See README for the physical flow and foam checks.",
+  "fidelity": "Physical YAM contact depresses a spring-return prismatic plunger. Locked open flow is 52 or 74 mL/s per trial. A reduced model tracks runoff, liquid mass and evolving foam. Falling streamlets are checked against live PhysX colliders. Intercepted cola goes to the tray balance. The cup is fixed and foam kinetics are uncalibrated.",
+  "scores": "Dream-1 run: 0.0; demo: 1.0",
+  "media": "M-ZZ56GX"
+}
