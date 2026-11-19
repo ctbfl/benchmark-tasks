@@ -1,0 +1,19 @@
+{
+  "title": "Draw a closed Spirograph rosette while keeping the wheel meshed inside its ring",
+  "category": "Societal relatability",
+  "keywords": [
+    "drawing toy",
+    "internal gear",
+    "continuous contact",
+    "rosette"
+  ],
+  "instruction": "Pick up the orange pen. Set its tip on the paper through the hole in the green wheel. Guide the pen around to draw one continuous closed rosette while the wheel stays meshed with the blue ring. It takes two circuits of the wheel center around the ring. Lift the pen when the line meets its starting point.",
+  "context": "The Spirograph is a familiar drawing toy for making decorative figures on paper. A pen placed in an off-center hole both drives the plastic wheel and draws the figure, so keeping the gear meshed and writing continuously are part of the same hand motion.",
+  "setup": "Dual YAM arms at the calibrated worktable. A 254 × 230 mm drawing board holds blank 198 × 172 mm paper and a clamped blue 54-tooth plastic ring (142 mm across). A green 36-tooth plastic wheel sits meshed inside, bore toward the far side. The wheel and ring are 4.8 mm thick. A 90 mm orange felt-tip pen sits upright in its parking socket near the right arm.",
+  "scoring": "1.0 for one ink stroke spanning at least 12.466 rad of wheel-center orbit in rolling phase and ending within 2 mm of the start. A pen lift or unmarked excursion over the 0.8 mm mark width splits the arc. Partial score is the longest qualified arc as a fraction of two circuits, capped at 0.95. More than 8 mm of ink outside valid contact scores zero.",
+  "run_limit": "2,400 control steps (120 seconds at 20 Hz), including any settling.",
+  "reset_notes": "Replace the sheet and park the pen upright. Align the wheel center 19.8 mm forward of the ring center with the 6.7 mm eccentric hole facing forward.",
+  "fidelity": "A freely rolling rigid wheel meshes with convex involute teeth. The grasped pen transmits force through its physical bore and the nib contacts the sheet. Ink appears at measured nib contact. The sheet and ring are held by the drawing board.",
+  "media": "M-DUCM86",
+  "scores": "Dream-1 run: 0.0; demo: 1.0"
+}

@@ -1,0 +1,171 @@
+#usda 1.0
+(
+    defaultPrim = "Object"
+    metersPerUnit = 1
+    upAxis = "Z"
+)
+
+def Xform "Object" (
+    prepend apiSchemas = ["PhysicsRigidBodyAPI", "PhysxRigidBodyAPI", "PhysxContactReportAPI", "PhysicsMassAPI"]
+)
+{
+    point3f physics:centerOfMass = (0, 0, 0.055)
+    bool physics:kinematicEnabled = 0
+    float physics:mass = 0.02
+    float physxContactReport:threshold = 0
+    int physxRigidBody:solverPositionIterationCount = 24
+    int physxRigidBody:solverVelocityIterationCount = 4
+
+    def "Materials"
+    {
+        def Material "OrangeBarrel" (
+            prepend apiSchemas = ["PhysicsMaterialAPI"]
+        )
+        {
+            token outputs:surface.connect = </Object/Materials/OrangeBarrel/Surface.outputs:surface>
+            float physics:dynamicFriction = 0.592
+            float physics:restitution = 0
+            float physics:staticFriction = 0.74
+
+            def Shader "Surface"
+            {
+                uniform token info:id = "UsdPreviewSurface"
+                color3f inputs:diffuseColor = (0.84, 0.2, 0.03)
+                float inputs:opacity = 1
+                float inputs:roughness = 0.38
+                token outputs:surface
+            }
+        }
+
+        def Material "Grip" (
+            prepend apiSchemas = ["PhysicsMaterialAPI"]
+        )
+        {
+            token outputs:surface.connect = </Object/Materials/Grip/Surface.outputs:surface>
+            float physics:dynamicFriction = 0.728
+            float physics:restitution = 0
+            float physics:staticFriction = 0.91
+
+            def Shader "Surface"
+            {
+                uniform token info:id = "UsdPreviewSurface"
+                color3f inputs:diffuseColor = (0.31, 0.067, 0.012)
+                float inputs:opacity = 1
+                float inputs:roughness = 0.38
+                token outputs:surface
+            }
+        }
+
+        def Material "FeltTipFerrule" (
+            prepend apiSchemas = ["PhysicsMaterialAPI"]
+        )
+        {
+            token outputs:surface.connect = </Object/Materials/FeltTipFerrule/Surface.outputs:surface>
+            float physics:dynamicFriction = 0.152
+            float physics:restitution = 0
+            float physics:staticFriction = 0.19
+
+            def Shader "Surface"
+            {
+                uniform token info:id = "UsdPreviewSurface"
+                color3f inputs:diffuseColor = (0.22, 0.25, 0.26)
+                float inputs:opacity = 1
+                float inputs:roughness = 0.25
+                token outputs:surface
+            }
+        }
+
+        def Material "BlueFeltTip" (
+            prepend apiSchemas = ["PhysicsMaterialAPI"]
+        )
+        {
+            token outputs:surface.connect = </Object/Materials/BlueFeltTip/Surface.outputs:surface>
+            float physics:dynamicFriction = 0.152
+            float physics:restitution = 0
+            float physics:staticFriction = 0.19
+
+            def Shader "Surface"
+            {
+                uniform token info:id = "UsdPreviewSurface"
+                color3f inputs:diffuseColor = (0.013, 0.035, 0.17)
+                float inputs:opacity = 1
+                float inputs:roughness = 0.38
+                token outputs:surface
+            }
+        }
+    }
+
+    def Cylinder "Shank" (
+        prepend apiSchemas = ["MaterialBindingAPI", "PhysicsCollisionAPI", "PhysxCollisionAPI"]
+    )
+    {
+        uniform token axis = "Z"
+        double height = 0.0132
+        rel material:binding = </Object/Materials/FeltTipFerrule>
+        rel material:binding:physics = </Object/Materials/FeltTipFerrule>
+        float physxCollision:contactOffset = 0.00023
+        float physxCollision:restOffset = 0
+        double radius = 0.0024
+        double3 xformOp:translate = (0, 0, 0.0079)
+        uniform token[] xformOpOrder = ["xformOp:translate"]
+    }
+
+    def Cylinder "Barrel" (
+        prepend apiSchemas = ["MaterialBindingAPI", "PhysicsCollisionAPI", "PhysxCollisionAPI"]
+    )
+    {
+        uniform token axis = "Z"
+        double height = 0.0715
+        rel material:binding = </Object/Materials/OrangeBarrel>
+        rel material:binding:physics = </Object/Materials/OrangeBarrel>
+        float physxCollision:contactOffset = 0.00023
+        float physxCollision:restOffset = 0
+        double radius = 0.0068
+        double3 xformOp:translate = (0, 0, 0.050249999999999996)
+        uniform token[] xformOpOrder = ["xformOp:translate"]
+    }
+
+    def Cylinder "GripBand" (
+        prepend apiSchemas = ["MaterialBindingAPI", "PhysicsCollisionAPI", "PhysxCollisionAPI"]
+    )
+    {
+        uniform token axis = "Z"
+        double height = 0.023999999999999994
+        rel material:binding = </Object/Materials/Grip>
+        rel material:binding:physics = </Object/Materials/Grip>
+        float physxCollision:contactOffset = 0.00023
+        float physxCollision:restOffset = 0
+        double radius = 0.0071
+        double3 xformOp:translate = (0, 0, 0.062)
+        uniform token[] xformOpOrder = ["xformOp:translate"]
+    }
+
+    def Cylinder "CapPlug" (
+        prepend apiSchemas = ["MaterialBindingAPI", "PhysicsCollisionAPI", "PhysxCollisionAPI"]
+    )
+    {
+        uniform token axis = "Z"
+        double height = 0.0040000000000000036
+        rel material:binding = </Object/Materials/OrangeBarrel>
+        rel material:binding:physics = </Object/Materials/OrangeBarrel>
+        float physxCollision:contactOffset = 0.00023
+        float physxCollision:restOffset = 0
+        double radius = 0.0066
+        double3 xformOp:translate = (0, 0, 0.088)
+        uniform token[] xformOpOrder = ["xformOp:translate"]
+    }
+
+    def Sphere "Nib" (
+        prepend apiSchemas = ["MaterialBindingAPI", "PhysicsCollisionAPI", "PhysxCollisionAPI"]
+    )
+    {
+        rel material:binding = </Object/Materials/BlueFeltTip>
+        rel material:binding:physics = </Object/Materials/BlueFeltTip>
+        float physxCollision:contactOffset = 0.00023
+        float physxCollision:restOffset = 0
+        double radius = 0.00085
+        double3 xformOp:translate = (0, 0, 0.00085)
+        uniform token[] xformOpOrder = ["xformOp:translate"]
+    }
+}
+
