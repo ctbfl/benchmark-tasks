@@ -1,0 +1,223 @@
+{
+  "kind": "CPU scoring replay of recorded native trials",
+  "method": "Recompute cord load, groove, cut, shape and grade on recorded poses and contact forces. Use recorded on-board, resting and handoff checks from the unchanged native scorer. Match actions and video frames by physics tick.",
+  "scorer_code_sha256": {
+    "cord.py": "f104ec644794035b5c1c1063772bf77f3c1285f7f1da5a2f291d7b5031ab0132",
+    "scoring.py": "2a40d3d950142e9703492841c04ecc83b4ddbada39222b35ee56332a3382ada0",
+    "run.py": "8ef81acf8da05523e35989814e085d1b0df81d532c69cea5d8ea3de246003c14",
+    "geometry.py": "d124fb5ee0f3f6bef18badc761d4e83ea832a5be4219ba293178c400cc7f6ad0",
+    "scene.py": "0b24a513f485298522a3b384b66b3127e6e20ec6dacc8b97fdb35204af05ee6f",
+    "dream-defaults.json": "87d341cdb1733eb0f2557518e271ab890bf0678a7093f10ed1c6ec8eaf15aa02"
+  },
+  "groove_limit_m": 0.002,
+  "required_hold_steps": 10,
+  "demo": {
+    "source_gpu_run_id": "50d90d8d-6bae-44df-9f70-364fbcb205a6",
+    "delivery_video_sha256": "4732d5723cacf7a1b8008eaaa474d9fb49c4ec32e187adbbae4ca5055398cc9c",
+    "recorded_input_sha256": {
+      "result.json": "507c6fcdce07dcd837b14260ec3d5daf34c8428a9c243da404d8803b3073f23d",
+      "physics-f32.bin": "a56d689a29732334238d92dc4c918e5e59d6a4fdd2a9b9a9a9ad17f02efc466c",
+      "scorer.jsonl": "967e6b61d85f14b04dddc99cdf94c22c55d7ddab8c09d5b9fe24706dee3303fe",
+      "actions.jsonl": "1fb169b844a594d6c42cb98510932afe6e2343e6b672d9cc61c8675b57750e78",
+      "frame-ticks.json": "d3cad7c95d4c8169cd0a78130c2963ad95b7bff7994723d1bf1984ed778910d6",
+      "videos/original.mp4": "aa9812cc5acee88fc92c171897ef6062a0c027d6274244be01931691b1e07168"
+    },
+    "actions": 519,
+    "video_frames": 779,
+    "original_score": 1.0,
+    "unchanged_solver_dynamics_on_recorded_inputs": true,
+    "score_discrepancy_count": 0,
+    "largest_cord_position_error_m": 4.5023250807796344e-05,
+    "peak_off_plane_groove_m": 0.0,
+    "peak_sampled_off_band_pressure_N": 0.05445808550718391,
+    "max_advancing_cut_offset_m": 0.00905938181702934,
+    "final": {
+      "action": 519,
+      "tick": 6228,
+      "pre_hold_score": 1.0,
+      "hold_steps": 11,
+      "score": 1.0,
+      "released": true,
+      "aligned_loop": true,
+      "height_fraction": 0.9992823980138086,
+      "width_fraction": 1.0002392006620637,
+      "off_plane_groove_m": 0.0,
+      "intact": true,
+      "dough_on_board": true,
+      "dough_resting": true,
+      "tool_put_down": true,
+      "center_shift_m": 0.006210807231071169
+    },
+    "terminal_hold_columns": [
+      "action",
+      "tick",
+      "off_plane_groove_m",
+      "intact",
+      "released",
+      "pre_hold_score",
+      "hold_steps",
+      "score"
+    ],
+    "terminal_hold": [
+      [
+        509,
+        6108,
+        0.0,
+        true,
+        true,
+        1.0,
+        1,
+        0.75
+      ],
+      [
+        510,
+        6120,
+        0.0,
+        true,
+        true,
+        1.0,
+        2,
+        0.75
+      ],
+      [
+        511,
+        6132,
+        0.0,
+        true,
+        true,
+        1.0,
+        3,
+        0.75
+      ],
+      [
+        512,
+        6144,
+        0.0,
+        true,
+        true,
+        1.0,
+        4,
+        0.75
+      ],
+      [
+        513,
+        6156,
+        0.0,
+        true,
+        true,
+        1.0,
+        5,
+        0.75
+      ],
+      [
+        514,
+        6168,
+        0.0,
+        true,
+        true,
+        1.0,
+        6,
+        0.75
+      ],
+      [
+        515,
+        6180,
+        0.0,
+        true,
+        true,
+        1.0,
+        7,
+        0.75
+      ],
+      [
+        516,
+        6192,
+        0.0,
+        true,
+        true,
+        1.0,
+        8,
+        0.75
+      ],
+      [
+        517,
+        6204,
+        0.0,
+        true,
+        true,
+        1.0,
+        9,
+        0.75
+      ],
+      [
+        518,
+        6216,
+        0.0,
+        true,
+        true,
+        1.0,
+        10,
+        1.0
+      ],
+      [
+        519,
+        6228,
+        0.0,
+        true,
+        true,
+        1.0,
+        11,
+        1.0
+      ]
+    ]
+  },
+  "dream": {
+    "source_gpu_run_id": "329e0d15-8281-462c-a445-e18469b147c3",
+    "delivery_video_sha256": "90606816413269bb2efe4e71e2bcb7a26a44cc662b979f266d380d5229e00212",
+    "recorded_input_sha256": {
+      "result.json": "74aa588ecf7f7252564ed16a1a57e572a65c1ebd847877b88794c9e0f328cde5",
+      "physics-f32.bin": "759e87e579391bb2da99b9e2d15bf46b38b98732a0b6dcb1033fcb6c9dff846b",
+      "scorer.jsonl": "0b1b5b91474900029d629ad8fcb76181f900c7e89a80fb18021e465d5fa38490",
+      "actions.jsonl": "1ec6fe89114fead361aded550af60f80fdf88269ded726766722fe78ba35ff61",
+      "frame-ticks.json": "d7a95f10199df67d05e11032d128ee2965f749aa4f01231e3aa4d239a236e4f3",
+      "videos/original.mp4": "eb5e07b1507121690efbe75f002436c2aff91c854874bec099fd627ab69b576e"
+    },
+    "actions": 1800,
+    "video_frames": 2701,
+    "original_score": 0.0,
+    "unchanged_solver_dynamics_on_recorded_inputs": true,
+    "score_discrepancy_count": 0,
+    "largest_cord_position_error_m": 4.2207709694097595e-05,
+    "peak_off_plane_groove_m": 0.0,
+    "peak_sampled_off_band_pressure_N": 0.0,
+    "max_advancing_cut_offset_m": 0.0,
+    "final": {
+      "action": 1800,
+      "tick": 21600,
+      "pre_hold_score": 0.0,
+      "hold_steps": 0,
+      "score": 0.0,
+      "released": false,
+      "aligned_loop": false,
+      "height_fraction": 1.0,
+      "width_fraction": 1.0,
+      "off_plane_groove_m": 0.0,
+      "intact": true,
+      "dough_on_board": true,
+      "dough_resting": true,
+      "tool_put_down": false,
+      "center_shift_m": 3.257178705106567e-05
+    },
+    "terminal_hold_columns": [
+      "action",
+      "tick",
+      "off_plane_groove_m",
+      "intact",
+      "released",
+      "pre_hold_score",
+      "hold_steps",
+      "score"
+    ],
+    "terminal_hold": []
+  }
+}

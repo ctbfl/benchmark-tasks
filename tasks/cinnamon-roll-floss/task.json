@@ -1,0 +1,22 @@
+{
+  "title": "Slice a cinnamon-roll log by drawing floss across it without squashing the spiral",
+  "category": "Societal relatability",
+  "instruction": "Cut the cinnamon-roll log in two at its dark center mark without squashing the spirals. Pick up one blue floss grip in each hand. Keep the floss low and slide it under the log. Bring the ends up both sides, cross them above the log and pull them apart. Keep both loaded strands between the two guide marks, and draw the loop upward through the log. Leave both rolls on the board and put down the floss.",
+  "context": "Home bakers use unflavored floss to divide rolled cinnamon dough into portions. An even pull around the roll helps the soft dough keep its round shape and preserves the cinnamon spiral for proofing and baking.",
+  "setup": "Calibrated bimanual YAM station with three cameras. A 90 × 62 mm raw cinnamon dough log sits on a silicone-faced board with a center mark and guide ticks at ±10 mm. A slack 256 mm length of unflavored floss rests in front, tied to blue wooden grips.",
+  "scoring": "0.35 for an underfed, crossed loop visibly taut in-band for 0.25 s. 0.75 for independently liftable rolls cut within ±10 mm. 1.0 when rolls and grips rest on board, midpoint shift ≤27 mm, grippers open and 40 mm clear for 0.5 s. Zero for lasting off-band cuts, dough left off the board, or height or width outside 89–111% of the corresponding starting end.",
+  "run_limit": "1,800 robot actions (90 s at 20 Hz), ending early once full score is held.",
+  "fidelity": "A tension-only particle cord transmits contact loads to rigid grips. Within ±10 mm, a taut crossed loop and upward load advance a fracture front until a 3 mm ligament parts. Independently, off-band loads above yield accumulate irreversible groove depth for scoring. Rigid portions use approximate flattening.",
+  "reset_notes": "Use a fresh room-temperature 90 mm dough log from the same recipe batch. Align its center score with the board marks. Put the same unflavored floss and grips back in their marked starting positions with slack toward the arms.",
+  "keywords": [
+    "bimanual",
+    "baking",
+    "flexible cord",
+    "tension",
+    "cinnamon rolls",
+    "cutting",
+    "soft dough"
+  ],
+  "media": "M-PKSIVX",
+  "scores": "Dream-1 run: 0.0; demo: 1.0"
+}
