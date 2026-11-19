@@ -1,0 +1,10 @@
+# Install Isaac Sim and Isaac Lab-Arena using their official setup first.
+isaaclab==17.0.2
+isaaclab-arena==0.3.0
+inspect-robots==0.60.0
+inspect-robots-dream==0.1.0
+dreamlabs-client==1.0.14
+numpy
+scipy
+pillow
+imageio-ffmpeg

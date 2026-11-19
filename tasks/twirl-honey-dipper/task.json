@@ -1,0 +1,18 @@
+{
+  "title": "Carry honey on a rotating dipper, stop to drizzle onto toast, then return the dipper to its rest",
+  "category": "Societal relatability",
+  "instruction": "Grip the dry handle of the wooden honey dipper in the teal pot. Lift it and carry it to the toast while rolling the horizontal handle around its long axis to keep the honey on. Over the toast, stop rolling and slowly sweep across the slice while the honey drizzles. Keep honey off the plate and table. Return the dipper to its original notched rest on the teal pot, with the grooved head in the bowl. Open the gripper and move clear. Leave the dipper stable for one second. Finish within 60 seconds.",
+  "context": "At breakfast a grooved dipper lets you carry honey from its dish to toast without dripping across the table. Rolling the shaft keeps the exposed coating on the dipper. Stopping the roll releases honey where you want it.",
+  "setup": "Standard dual-arm YAM station. Teal footed ceramic honey dish (106 mm diameter, 140 mm tall) holds a shallow honey bath. A 155 mm maple dipper with a 15 mm handle and 32 mm grooved head rests across the dish, handle facing the bases. Its grooves start with 4 g of honey. A 117 × 94 × 15 mm slice of toast sits on a 154 mm ceramic plate 245 mm beside the dish. Both vessels are fixed.",
+  "scoring": "Wet-end contact or valid dose <0.20 g scores 0. Use final toast gain for one ≥1 s contact-free stopped sweep within 20° roll. Clean carry: dry grip, near horizontal, ≥30° turn in each marked band and ≤0.15 g spill. 1: clean carry, ≥0.70 g and ≥30 mm spread, plus original rest, hands clear and stable 1 s. 0.75: clean carry and ≥0.30 g short of full credit. 0.5: clean carry and 0.20 g to <0.30 g. 0.25: ≥0.20 g without clean carry. See README.",
+  "run_limit": "1,200 control steps at 20 Hz (60 seconds)",
+  "reset_notes": "Use Rowse Runny Honey (Clear Honey, jar), one lot at 22.0 ± 0.5 °C. Fill to 8.0 ± 0.5 mm above the well floor. Apply 1.00 ± 0.05 g per groove starting at 0, 3, 6 and 9 s while turning the shaft. Seat the dipper at 13.0 ± 0.5 s, then start the trial 1.0 ± 0.2 s later. Replace toast and tare cleanup surfaces. Sim seed is 0.",
+  "fidelity": "The maple dipper and collars are rigid contact geometry. A conservative liquid-film model advects honey around each groove from measured axial roll and models viscous drainage, capillary detachment, and ballistic impacts. The model approximates coefficients and omits cross-groove flow, splashing, absorption and liquid reaction forces.",
+  "keywords": [
+    "axial roll",
+    "liquid retention",
+    "viscous drizzle"
+  ],
+  "media": "M-EMVCJ7",
+  "scores": "Dream-1 run: 0.0; demo: 1.0"
+}
