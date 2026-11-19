@@ -1,0 +1,19 @@
+{
+  "title": "Secure an SO-101 robot arm to a small table edge with plastic clamps",
+  "category": "Impact on AI timelines",
+  "instruction": "Use one hand to hold the complete SO-101 steady while you bring its mounting plate forward to the two marks at the small table edge. Keep supporting it while your other hand fits both spring clamps on the marked pads. Squeeze a clamp's handles to open its jaws, slide the jaws over the plate and under the table edge, then relax the handles to clamp. Withdraw both hands and leave the mounted arm stable.",
+  "context": "Assembling an SO-101 workstation includes clamping the complete arm to a table edge. The operator supports the arm's overhang while threading and closing a clamp across the adapter and underside, then transfers the load to the clamp so the arm stays put after release.",
+  "setup": "On a calibrated bimanual YAM station, a 255 × 322 × 16 mm plywood table is bolted down. A full-size SO-101 is bolted to a 9 mm birch adapter with a left support tongue and two clamp marks. Its far edge starts 41 mm behind the final marks, with the arm extending toward the near edge. Two nylon spring clamps open to about 50 mm and start on a nearby 25 mm rail.",
+  "scoring": "Score 0.5 per clamp that closes from an open straddle into load-bearing contact while the other hand continuously supports the SO-101. Count upper contact within the marked square on the plate and lower contact under the table. A clamp that loses or moves its seat must be fitted again. For 2 s after both hands withdraw, keep within 6 mm X, 8 mm Y, 3 mm height, 3° tilt, 5° yaw and 3 mm drift.",
+  "run_limit": "2,400 steps (120 seconds at 20 Hz), including the two-second retention interval.",
+  "fidelity": "Full-scale SO-101 meshes and URDF mass distribution in a fixed, stowed joint pose. A free rigid assembly and two free spring clamps transfer load through physical jaw, adapter and table contact. Clamp spring and friction parameters are uncalibrated. YAM drive and force limits are native.",
+  "scores": "Dream-1 run: 0.0; demo: 1.0",
+  "media": "M-CR2JW7",
+  "keywords": [
+    "robot workstation",
+    "SO-101",
+    "bimanual support",
+    "plastic spring clamp",
+    "table edge"
+  ]
+}
