@@ -96,6 +96,60 @@ def make_env(out, cameras):
     spec = IsaacLabArenaEnvironment(name="yam_cinnamon_roll_floss", embodiment=yam,
         scene=Scene([*task_room(CONFIG["station"]["scene"], rig.top_cam), *objects]),
         env_cfg_callback=configure)
-    return ArenaEnvBuilder(spec, ArenaEnvBuilderCfg(
+    env = ArenaEnvBuilder(spec, ArenaEnvBuilderCfg(
         num_envs=sim["num_envs"], solve_relations=False, disable_fabric=not sim["use_fabric"],
         device=sim["device"])).make_registered()
+    fit_sleeves(env.unwrapped.sim.stage)
+    return env
+
+
+def fit_sleeves(stage):
+    """Fit closed plastic barriers over all four fingers before task reset.
+
+    The film is approximated as a massless enclosing shell; native finger
+    collision geometry, friction and actuator settings are retained.
+    """
+    import numpy as np
+    from scipy.spatial import ConvexHull
+    from pxr import Gf, Sdf, Usd, UsdGeom, UsdPhysics, UsdShade, Vt
+
+    material = UsdShade.Material.Define(stage, "/World/FoodContactSleeveMaterial")
+    shader = UsdShade.Shader.Define(stage, str(material.GetPath()) + "/Plastic")
+    shader.CreateIdAttr("UsdPreviewSurface")
+    shader.CreateInput("diffuseColor", Sdf.ValueTypeNames.Color3f).Set((.08, .56, .88))
+    shader.CreateInput("roughness", Sdf.ValueTypeNames.Float).Set(.22)
+    shader.CreateInput("metallic", Sdf.ValueTypeNames.Float).Set(0.)
+    material.CreateSurfaceOutput().ConnectToSource(shader.ConnectableAPI(), "surface")
+    count = 0
+    for side in ("Left", "Right"):
+        arm = stage.GetPrimAtPath(f"/World/envs/env_0/{side}Arm")
+        for name in ("tip_left", "tip_right"):
+            fingers = [p for p in Usd.PrimRange(arm) if p.GetName() == name
+                       and p.HasAPI(UsdPhysics.RigidBodyAPI)]
+            assert len(fingers) == 1, (side, name, len(fingers))
+            finger = fingers[0]
+            meshes = [p for p in Usd.PrimRange(finger, Usd.TraverseInstanceProxies())
+                      if p.GetName() == name and p.IsA(UsdGeom.Mesh)]
+            assert len(meshes) == 1, (side, name, len(meshes))
+            source = UsdGeom.Mesh(meshes[0])
+            transform, _ = UsdGeom.XformCache().ComputeRelativeTransform(meshes[0], finger)
+            points = np.array([transform.Transform(Gf.Vec3d(*v))
+                               for v in source.GetPointsAttr().Get()])
+            hull = ConvexHull(points)
+            faces = hull.simplices.copy()
+            corners = points[faces]
+            normals = np.cross(corners[:, 1]-corners[:, 0], corners[:, 2]-corners[:, 0])
+            inward = np.einsum("ij,ij->i", normals, hull.equations[:, :3]) < 0
+            faces[inward] = faces[inward][:, [0, 2, 1]]
+            center = points[hull.vertices].mean(axis=0)
+            radius = np.linalg.norm(points-center, axis=1).max()
+            points = center + (points-center)*(1 + .000075/radius)
+            shell = UsdGeom.Mesh.Define(stage, str(finger.GetPath()) + "/DisposableSleeve")
+            shell.CreatePointsAttr(Vt.Vec3fArray.FromNumpy(points.astype(np.float32)))
+            shell.CreateFaceVertexCountsAttr([3]*len(faces))
+            shell.CreateFaceVertexIndicesAttr(Vt.IntArray.FromNumpy(faces.ravel().astype(np.int32)))
+            shell.CreateSubdivisionSchemeAttr("none")
+            shell.CreateDoubleSidedAttr(True)
+            UsdShade.MaterialBindingAPI.Apply(shell.GetPrim()).Bind(material)
+            count += 1
+    assert count == 4
