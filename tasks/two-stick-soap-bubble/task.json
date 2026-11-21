@@ -1,0 +1,19 @@
+{
+  "title": "Make a free-floating soap bubble with a two-stick string wand",
+  "category": "Societal relatability",
+  "instruction": "Take one wand stick in each hand. Dip the whole string loop into the bubble solution, then lift it to form a continuous soap film across the loop. Spread the tips and sweep the open loop toward you to inflate the film. Bring the tips together to release a closed bubble that floats independently in the air.",
+  "context": "At outdoor play sessions, children and adults make oversized soap bubbles with two sticks and a cotton loop. The operator draws air through the wet opening and closes it while the film is inflated, letting an intact bubble float away.",
+  "setup": "Two 24 cm wooden dowels with silicone grips support a 4 mm cotton loop tied between their tips. The shorter strand is 24.6 cm, the weighted lower strand 39.6 cm. The dry wand rests in a four-post cradle beside a plastic basin of bubble solution. A steady breeze blows away from the robot. See the README for positions and dimensions.",
+  "scoring": "0.5 for a continuous soap film spanning the lifted loop after dipping. A further 0.5 for releasing a closed bubble that floats independently in the air. Score the best achieved result within the run limit; otherwise 0.",
+  "run_limit": "800 control steps at 20 Hz (40 s of simulation time).",
+  "fidelity": "Native YAM grasps two colliding dowels. The loop is a passive chain of colliding capsules. Immersion, air pressure, film inflation and neck separation use a reduced model driven by the measured loop. The bath is a fixed liquid plane. No fluid flow or foam is resolved.",
+  "scores": "Dream-1 run: 0.0; demo: 1.0",
+  "media": "M-X8ZY4B",
+  "keywords": [
+    "soap bubble",
+    "tri-string wand",
+    "two-handed",
+    "soap film",
+    "neck closure"
+  ]
+}

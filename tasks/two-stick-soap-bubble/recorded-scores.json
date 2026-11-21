@@ -1,0 +1,37 @@
+{
+  "demo": {
+    "score": 1.0,
+    "film_formed": true,
+    "bubble_floating": true,
+    "events": [
+      {
+        "time_s": 11.074999999999692,
+        "event": "loop_wetted"
+      },
+      {
+        "time_s": 13.237499999999569,
+        "event": "film_formed"
+      },
+      {
+        "time_s": 18.11666666666596,
+        "event": "bubble_released"
+      },
+      {
+        "time_s": 18.120833333332627,
+        "event": "bubble_floating"
+      }
+    ],
+    "control_steps": 387,
+    "duration_s": 19.35,
+    "trajectory_sha256": "b8d2868a9b3630c5ad036f7bf8f8de3a1d98bd3e63b5acd296fd09c6ec2f6180"
+  },
+  "dream": {
+    "score": 0.0,
+    "film_formed": false,
+    "bubble_floating": false,
+    "events": [],
+    "control_steps": 800,
+    "duration_s": 40.0,
+    "trajectory_sha256": "9590834fbe87f5c357e0b76b320dc3d049eabede6ce0bffaf892591924129250"
+  }
+}
