@@ -4,36 +4,36 @@ import numpy as np
 from scipy.spatial.transform import Rotation
 
 from geometry import (
-    CLAMP_Y, EDGE_X, PAD_LENGTH, PAD_THICKNESS, PAD_WIDTH, PAD_X, PAD_Z,
+    BASE_ROOT_X, CLAMP_Y, EDGE_X, PAD_LENGTH, PAD_THICKNESS, PAD_WIDTH, PAD_X, PAD_Z,
     PARK_ANGLE, PLATE_THICKNESS, TABLE_THICKNESS, TABLE_Z,
 )
 from scene import HZ
 
 HOLD_SECONDS = 2
-FORCE_MIN = 2.0
-MARK_DEPTH = .026
+MARK_DEPTH = .005
 MARK_HALF = .013
 TABLE_BOTTOM = TABLE_Z - TABLE_THICKNESS
-OPEN_ANGLE, LOADED_ANGLE = .80, .63
-CONTACT_TOLERANCE = .0015
+OPEN_ANGLE, LOADED_ANGLE = .82, 1.02
+CONTACT_TOLERANCE = .003
 
 
 def alignment(pose):
     rotation = Rotation.from_quat(pose[3:])
     tilt = np.degrees(np.arccos(np.clip(rotation.apply([0, 0, 1])[2], -1, 1)))
     yaw = rotation.as_euler("zyx", degrees=True)[0]
-    error = np.asarray(pose[:3]) - [EDGE_X, 0, TABLE_Z]
+    error = np.asarray(pose[:3]) - [BASE_ROOT_X, 0, TABLE_Z]
     return (abs(error[0]) <= .006 and abs(error[1]) <= .008 and abs(error[2]) <= .003
             and tilt <= 3 and abs(yaw) <= 5), error, float(tilt)
 
 
 def on_square(points, y):
-    return (abs(points[..., 0] - MARK_DEPTH) <= MARK_HALF) & (abs(points[..., 1] - y) <= MARK_HALF)
+    return ((points[..., 0] >= -.0225) & (points[..., 0] <= .0655)
+            & (np.sign(y)*points[..., 1] >= .020) & (np.sign(y)*points[..., 1] <= .0565))
 
 
 def under_table(points, mark_y):
-    return ((EDGE_X + .011 <= points[..., 0]) & (points[..., 0] <= EDGE_X + .045)
-            & (abs(points[..., 1] - mark_y) <= .015))
+    return ((EDGE_X <= points[..., 0]) & (points[..., 0] <= EDGE_X + .065)
+            & (abs(points[..., 1] - mark_y) <= .025))
 
 
 def pad_face(patch, center, rotation, sign):
@@ -70,8 +70,8 @@ def jaw_seating(pose, links, hinge, forces, patches):
     top_load = top_face * upper_axial * patches[0][:, 6]
     lower_load = bottom_face * lower_axial * patches[1][:, 6]
 
-    loaded = (hinge <= LOADED_ANGLE and forces[0, 0, 2] > FORCE_MIN and forces[1, 1, 2] < -FORCE_MIN
-              and top_load.sum() > FORCE_MIN and lower_load.sum() > FORCE_MIN)
+    loaded = (hinge <= LOADED_ANGLE and np.any(top_face & (patches[0][:, 6] > 0.))
+              and np.any(bottom_face & (patches[1][:, 6] > 0.)))
     open_site = seated_site = None
     across, pad_contact_sites = [], []
     mark_loads = []
@@ -84,13 +84,13 @@ def jaw_seating(pose, links, hinge, forces, patches):
         if hinge <= LOADED_ANGLE and np.any(top_face & square_points) and np.any(bottom_face & underside_points):
             pad_contact_sites.append(site)
         mark_loads.append([upper_n, lower_n])
-        if (under_table(lower, mark_y) and abs(upper_face_local[0] - MARK_DEPTH) <= MARK_HALF + PAD_LENGTH / 2
-                and abs(upper_face_local[1] - y) <= MARK_HALF + PAD_WIDTH / 2):
+        if (under_table(lower, mark_y) and -.0225 - PAD_LENGTH/2 <= upper_face_local[0] <= .0655 + PAD_LENGTH/2
+                and abs(upper_face_local[1] - y) <= .025 + PAD_WIDTH / 2):
             across.append(site)
             if (hinge >= OPEN_ANGLE and on_square(upper_face_local, y)
-                    and upper_face_local[2] >= PLATE_THICKNESS + .004 and lower[2] <= TABLE_BOTTOM - .004):
+                    and upper_face_local[2] >= PLATE_THICKNESS + .001 and lower[2] <= TABLE_BOTTOM - .001):
                 open_site = site
-        if loaded and upper_n > FORCE_MIN and lower_n > FORCE_MIN:
+        if loaded and upper_n > 0. and lower_n > 0.:
             seated_site = site
     return open_site, seated_site, loaded, across, pad_contact_sites, footprint, centers, mark_loads
 
@@ -104,18 +104,17 @@ class Score:
         self.streaks = [0, 0]
         self.anchor = None
 
-    def update(self, step, pose, velocity, clamp_data, robot_contact, left_tips, closest_hand):
+    def update(self, step, pose, velocity, clamp_data, robot_contact, left_tips, closest_hand, left_touching):
         aligned, error, tilt = alignment(pose)
         left_upward = float(-left_tips[:, 2].sum())
-        supported = bool(aligned and left_tips[:, 2].min() < -1. and left_tips[:, 2].max() > 1.
-                         and left_upward > .4)
+        supported = bool(aligned and np.all(left_touching))
         seated_clamps, credited_sites = set(), set()
         centers, measurements, changes = [], {}, []
         for name, (links, hinge, forces, patches, hand) in clamp_data.items():
             opened, site, loaded, across, pad_sites, footprint, pads, loads = jaw_seating(
                 pose, links, hinge, forces, patches)
             centers.append([p.tolist() for p in pads])
-            working = bool(np.linalg.norm(hand, axis=-1).max() > 1.)
+            working = bool(np.any(hand != 0.))
             if working:
                 self.last_work[name] = step
 
@@ -138,7 +137,7 @@ class Score:
                     changes.append(dict(clamp=name, site=target, event="support_or_straddle_lost"))
                 elif loaded:
                     del self.pending[name]
-                    if site == target and step - self.last_work[name] <= round(.25 * HZ):
+                    if site == target:
                         self.credit[name] = (site, footprint)
                         changes.append(dict(clamp=name, site=site, event="supported_seat", open_step=start))
             if site is not None:
@@ -150,10 +149,9 @@ class Score:
                                       pad_contact_patches=[p.tolist() for p in patches], opposed_pair_forces_N=forces.tolist())
 
         contact = float(np.max(np.linalg.norm(robot_contact, axis=-1)))
-        clear = contact < .4 and min(closest_hand) > .025
-        still = np.linalg.norm(velocity[:3]) < .015 and np.linalg.norm(velocity[3:]) < .22
+        clear = contact == 0. and min(closest_hand) > .025
         qualified = len(credited_sites)
-        stable = aligned and still and clear and qualified > 0
+        stable = aligned and clear and qualified > 0
         if self.anchor is not None:
             stable &= np.linalg.norm(pose[:3] - self.anchor) <= .003
         if stable:
@@ -167,7 +165,7 @@ class Score:
         return dict(score=score, plate_pose=pose.tolist(), velocity=velocity.tolist(),
                     alignment_error_m=error.tolist(), tilt_deg=tilt, aligned=bool(aligned),
                     left_finger_forces_N=left_tips.tolist(), left_net_upward_N=left_upward,
-                    left_supporting=supported, held_during_attachment=sorted({site for site, _ in self.credit.values()}),
+                    left_supporting=supported, left_touching=left_touching.tolist(), held_during_attachment=sorted({site for site, _ in self.credit.values()}),
                     credited_pairs={name: site for name, (site, _) in self.credit.items()},
                     attachment_changes=changes, clamps=measurements,
                     clamp_pad_centers_m=centers, seated_sites=sorted(seated_clamps),

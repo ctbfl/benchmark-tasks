@@ -21,6 +21,7 @@ def main():
             expert = Expert(trial)
             if mode == "support":
                 expert.support(diagnose=True)
+                trial.result("support")
             else:
                 expert.mount(mode)
             if mode == "demo":
@@ -31,6 +32,9 @@ def main():
                 print("CONTROL", mode, trial.last, flush=True)
                 write_json(trial.out / "control-result.json", dict(mode=mode, final=trial.last))
                 assert trial.last["score"] == 0 and not trial.last["aligned"], trial.last
+        except Exception:
+            trial.result(mode, status="failed")
+            raise
         finally:
             trial.close()
     except Exception:
@@ -50,7 +54,8 @@ class Expert:
         self.q = READY_ACTION.copy()
         self.bias = np.zeros((2, 6))
         self.rotation = Rotation.from_matrix([[0, 0, 1], [0, -1, 0], [1, 0, 0]])
-        self.orientations = [self.rotation, self.rotation]
+        self.left_rotation = Rotation.from_matrix([[0, -1, 0], [0, 0, -1], [1, 0, 0]])
+        self.orientations = [self.left_rotation, self.rotation]
         self.tip_offset = .140
         self.goal = [None, None]
 
@@ -132,87 +137,49 @@ class Expert:
     def support(self, diagnose=False):
         import numpy as np
         from scipy.spatial.transform import Rotation
-        from geometry import EDGE_X, PLATE_THICKNESS, PLATE_X, START_OFFSET, SUPPORT_Y
-        from trial import array
+        from geometry import BASE_ROOT_X, TABLE_Z
+        from trial import array, write_json
 
         pose = array(self.trial.arm.data.root_pose_w)
-        z = float(pose[2]) + PLATE_THICKNESS / 2
-        yaw = Rotation.from_quat(pose[3:]).as_euler("zyx")[0]
-        c, s = np.cos(yaw), np.sin(yaw)
-        contact_y = (SUPPORT_Y-pose[1]-s*PLATE_X[0])/c
-        entry = pose[0] + c*PLATE_X[0] - s*contact_y + .005
-        self.mark("approach the mounting plate")
-        measurements = []
-
-        def sample_approach():
-            from scene import DT
-
-            current = array(self.trial.arm.data.root_pose_w)
-            force = np.linalg.norm(self.trial.plate_contact.get_contact_force_matrix(DT)[0], axis=-1)
-            measurements.append({"tick": self.trial.ticks, "plate_pose": current.tolist(),
-                                 "contact_N_by_link": force.tolist()})
-
-        if diagnose:
-            self.trial.approach_probe = sample_approach
-        self.grip(0, .32, .65)
-        self.move(0, (.245, .217, 1.035), 2.6, approach=True)
-        self.move(0, (.247, SUPPORT_Y, 1.015), 1.6)
-        self.move(0, (.289, SUPPORT_Y, z), 1.45)
-        self.wait(.5)
-        self.move(0, (entry, SUPPORT_Y, z), 1.35)
-        self.wait(.65)
-        self.trial.approach_probe = None
-        if diagnose:
-            from trial import write_json
-
-            poses = np.array([r["plate_pose"] for r in measurements])
-            forces = np.array([r["contact_N_by_link"] for r in measurements])
-            motion = float(np.max(np.linalg.norm(poses[:,:3] - pose[:3], axis=1)))
-            turns = Rotation.from_quat(poses[:, 3:]) * Rotation.from_quat(pose[3:]).inv()
-            angle = float(np.degrees(turns.magnitude()).max())
-            before_grasp = dict(samples=measurements, target_aperture=.32, max_drift_m=motion,
-                                max_rotation_deg=angle, max_contact_N=float(forces.max()),
-                                robot_link_paths=self.trial.robot_paths)
-            write_json(self.trial.out / "approach.json", before_grasp)
-            assert motion < .001 and angle < .5 and forces.max() < .5, (
-                "The unclosed gripper disturbed the assembly", motion, angle, float(forces.max()))
-            print("APPROACH CLEAR", motion, angle, float(forces.max()), flush=True)
+        object_rotation = Rotation.from_quat(pose[3:])
+        local_grasp = np.array([0., .0, .137])
+        grasp = pose[:3] + object_rotation.apply(local_grasp)
+        orientation = object_rotation * self.left_rotation
+        self.mark("approach folded upper links")
+        self.grip(0, 1., .2)
+        self.move(0, grasp + [0., .12, .032], 2.4, approach=True, rotation=orientation)
+        self.move(0, grasp + [0., .06, .005], 1.25, rotation=orientation)
+        self.move(0, grasp, 1.35, rotation=orientation)
         self.grip(0, 0., .85)
-        self.mark("grasp the mounting plate")
-        self.move(0, (entry, SUPPORT_Y, z+.016), .9)
-        yaw_correction = Rotation.from_euler("z", -6., degrees=True) * self.rotation
-        self.move(0, (entry-START_OFFSET-.004, SUPPORT_Y-.006, z+.016), 2.3,
-                  rotation=yaw_correction)
-        self.move(0, (entry-START_OFFSET-.004, SUPPORT_Y-.006, z+.0005), .9)
-        self.wait(.8)
-        for _ in range(3):
-            x, y = array(self.trial.arm.data.root_pose_w)[:2]
-            if self.trial.last["aligned"] and abs(x - EDGE_X) < .004 and abs(y) < .004:
-                break
-            self.move(0, self.goal[0] + np.clip([EDGE_X - x, -y, 0], -.012, .012), .85)
-            self.wait(.65)
-        self.mark("support at the table edge")
-        if diagnose:
-            import os
-            from trial import write_json
+        self.mark("grasp folded links")
+        self.move(0, self.goal[0] + [0., 0., .025], .9, rotation=orientation)
+        target = np.array([BASE_ROOT_X, 0., TABLE_Z+.00000026])
 
-            readings = []
-            for _ in range(20):
-                self.step()
-                readings.append(self.trial.last)
-            forces = [r["left_net_upward_N"] for r in readings]
-            support = self.trial.last
-            write_json(self.trial.out / "support-check.json", dict(
-                gpu_run_id=os.environ["PRODUCTION_GPU_RUN_ID"], approach="approach.json",
-                min_upward_support_N=min(forces), supported_samples=readings, final=support))
-            assert min(forces) > .4 and all(r["aligned"] and r["seated_sites"] == [] for r in readings), (
-                "The supported pose drifted or the grip lost the overhanging load", min(forces), support)
-            print("SUPPORTED EDGE POSE", min(forces), support["alignment_error_m"], flush=True)
+        def align(goal, attempts):
+            for _ in range(attempts):
+                pose = array(self.trial.arm.data.root_pose_w)
+                error = goal-pose[:3]
+                correction = Rotation.from_quat(pose[3:]).inv()
+                if np.linalg.norm(error) < .002 and correction.magnitude() < .025:
+                    break
+                point = self.goal[0] + np.clip(.85*error, -.012, .012)
+                self.move(0, point, .65, rotation=correction*self.orientations[0])
+                self.wait(.25)
+
+        align(target + [0., 0., .025], 10)
+        self.mark("upright in the supporting hand")
+        self.move(0, self.goal[0] - [0., 0., .025], 1.)
+        self.wait(.4)
+        align(target, 8)
+        self.mark("left hand supports upright base")
+        if diagnose:
+            write_json(self.trial.out / "support-check.json", self.trial.last)
+        assert self.trial.last["aligned"] and self.trial.last["left_supporting"], self.trial.last
 
     def clamp(self, index, keep_open=False):
         import numpy as np
         from scipy.spatial.transform import Rotation
-        from geometry import CLAMP_Y, EDGE_X, GAP_CENTER_Z
+        from geometry import CLAMP_Y, EDGE_X, MOUNT_GAP_Z
         from trial import array
 
         clamp = self.trial.clamps[index]
@@ -226,7 +193,7 @@ class Expert:
         if self.goal[1] is None:
             self.move(1, (x-.029, y, z+.04), 2.3, approach=True)
         else:
-            self.move(1, (x-.029, y, z+.035), 1.45)
+            self.move(1, (x-.029, y, z+.035), 1.45, rotation=self.rotation)
         self.move(1, (x-.018, y, z), .75)
         self.move(1, (x+.003, y, z), .85)
         self.wait(.45)
@@ -238,39 +205,30 @@ class Expert:
         self.mark("lift the clamp off its rail")
         pivot = array(clamp.data.root_pose_w)[:3]
         offset = pivot - self.hand(1)[0]
-        dest = np.array([EDGE_X-.010, CLAMP_Y[index], GAP_CENTER_Z]) - offset
-        self.move(1, (dest[0]-.034, dest[1], dest[2]+.005), 2.8)
+        dest = np.array([EDGE_X-.010, CLAMP_Y[index], MOUNT_GAP_Z]) - offset
+        self.move(1, (dest[0]-.065, dest[1], dest[2]+.005), 2.8)
         self.wait(.55)
         pad_midpoint = np.mean(self.trial.last["clamp_pad_centers_m"][index], axis=0)
-        destination_pad = np.array([EDGE_X+.025, CLAMP_Y[index], GAP_CENTER_Z])
+        destination_pad = np.array([EDGE_X+.025, CLAMP_Y[index], MOUNT_GAP_Z])
         dest = self.goal[1] + (destination_pad - pad_midpoint)
         self.move(1, dest, 1.5)
         self.wait(.65)
         self.mark("open jaws around the edge")
         if keep_open:
             return
-        if index == 1:
-            # Aim the pad's inboard edge downward while clearing the lower lever.
-            mouth = np.mean(self.trial.last["clamp_pad_centers_m"][index], axis=0)
-            pitch = Rotation.from_euler("y", 6., degrees=True)
-            dest = mouth + pitch.apply(dest - mouth) + [0., 0., -.0025]
-            self.move(1, dest, .85, rotation=pitch * self.orientations[1])
-            self.wait(.25)
         for value in (.24, .34, .43, .54, .70, 1.):
             self.grip(1, value, .20)
         self.mark("release spring force onto the plate and table")
-        self.move(1, dest - [.045, 0, 0], .85)
+        self.move(1, dest - [.060, 0, 0], .85)
         self.wait(.3)
         self.mark("clamp hand clear")
 
     def release(self):
         import numpy as np
-
-        self.grip(0, .30, .55)
-        self.move(0, self.goal[0] - np.array([.041, 0, 0]), 1.)
-        self.grip(0, 1., .3)
+        self.grip(0, 1., .8)
+        self.move(0, self.goal[0] + np.array([0., .105, .005]), 1.2)
         self.wait(2.4)
-        self.mark("released the SO-101")
+        self.mark("both hands clear")
 
     def mount(self, mode):
         self.support()

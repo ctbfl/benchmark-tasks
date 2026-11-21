@@ -16,11 +16,10 @@ CLAMPS = ("clamp_a", "clamp_b")
 CAMERAS = tuple(CONFIG["observation"]["camera_names"])
 ROOT = "/World/envs/env_0"
 INSTRUCTION = (
-    "Use one hand to hold the complete SO-101 steady while you bring its mounting plate forward "
-    "to the two marks at the small table edge. Keep supporting it while your other hand fits both "
-    "spring clamps on the marked pads. Squeeze a clamp's handles to open its jaws, slide the jaws "
-    "over the plate and under the table edge, then relax the handles to clamp. Withdraw both hands "
-    "and leave the mounted arm stable."
+    "Use your left hand to raise and steady the folded SO-101 from its forward-resting position. "
+    "Keep supporting it while your right hand fits both spring clamps directly on the two base feet "
+    "and under the small table edge. Squeeze each clamp's handles to open its jaws, position it, "
+    "then relax the handles. Withdraw both hands and leave the arm upright and stable."
 )
 
 
@@ -74,7 +73,7 @@ def make_env(out, cameras=False):
 
     fixtures = Object(name="fixture", object_type=ObjectType.BASE, usd_path=str(ASSETS / "table.usdc"))
     so101 = Object(name="so101", object_type=ObjectType.RIGID, usd_path=str(ASSETS / "so101.usdc"),
-                   initial_pose=Pose((EDGE_X + START_OFFSET, 0., TABLE_Z + .0005), (0., 0., 0., 1.)))
+                   initial_pose=Pose((0.3879883289337158, -7.465807721018791e-05, 0.9463586807250977), (-0.0006314784404821694, 0.13699279725551605, 0.0011553093791007996, 0.9905712604522705)))
     rotation = Rotation.from_euler("y", -PARK_ANGLE / 2).as_quat()
     clamps = [Object(name=name, object_type=ObjectType.ARTICULATION, usd_path=str(ASSETS / "spring-clamp.usdc"),
                      initial_pose=Pose((PARK_PIVOT_X, y, GAP_CENTER_Z), tuple(map(float, rotation))))

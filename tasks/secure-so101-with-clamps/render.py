@@ -14,8 +14,8 @@ def products(base, screenshot):
 
     camera = UsdGeom.Camera.Define(base.sim.stage, "/Observer")
     camera.GetPrim().CreateAttribute("omni:scenePartition", Sdf.ValueTypeNames.Token).Set("env_0")
-    camera.AddTransformOp().Set(Gf.Matrix4d().SetLookAt(Gf.Vec3d(-.40,-.89,1.37),
-        Gf.Vec3d(.32,-.025,1.025), Gf.Vec3d(0,0,1)).GetInverse())
+    camera.AddTransformOp().Set(Gf.Matrix4d().SetLookAt(Gf.Vec3d(.04,-.63,1.58),
+        Gf.Vec3d(.36,-.055,1.025), Gf.Vec3d(0,0,1)).GetInverse())
     camera.CreateFocalLengthAttr(39)
     camera.CreateHorizontalApertureAttr(36)
     camera.CreateClippingRangeAttr(Gf.Vec2f(.012,20))

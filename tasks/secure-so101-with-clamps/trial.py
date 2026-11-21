@@ -64,7 +64,7 @@ class Trial(YamArenaEmbodiment):
         self.approach_probe = None
         self.right_tips = [robot_paths.index(f) for f in fingers[1]]
         self.plate_contact = self.physics.create_rigid_contact_view(TARGET, robot_paths)
-        self.left_contact = self.physics.create_rigid_contact_view(fingers[0], [[TARGET]] * 2)
+        self.left_contact = self.physics.create_rigid_contact_view(fingers[0], [[TARGET]] * 2, max_contact_data_count=128)
         self.pad_contacts = []
         self.clamp_robot = []
         for name, obj in zip(CLAMPS, self.clamps):
@@ -158,7 +158,7 @@ class Trial(YamArenaEmbodiment):
             clearance.append(float(np.min(np.linalg.norm(pads[:, None, :] - targets[None, :, :], axis=-1))))
         return self.scorer.update(self.steps, pose, array(self.arm.data.root_vel_w), clamp_data,
                                   np.vstack(robot_contacts), self.left_contact.get_contact_force_matrix(DT)[:, 0],
-                                  clearance)
+                                  clearance, self.left_contact.get_contact_data(DT)[4].sum(axis=1) > 0)
 
     def perform(self, command):
         assert self.steps < MAX_STEPS
@@ -187,10 +187,10 @@ class Trial(YamArenaEmbodiment):
                           termination_reason="success" if success else None,
                           info={"success": success, "score": result["score"]})
 
-    def result(self, kind):
+    def result(self, kind, status="success"):
         for f in (self.metrics, self.trajectory, self.actions):
             f.flush()
-        result = dict(kind=kind, status="success", score=self.last["score"], max_score=1,
+        result = dict(kind=kind, status=status, score=self.last["score"], max_score=1,
                       steps=self.steps,
                       seconds=self._t, raw_scorer=str(self.out / "scorer.jsonl"),
                       executed_actions=str(self.out / "actions.jsonl"),
