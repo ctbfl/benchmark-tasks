@@ -1,0 +1,32 @@
+#usda 1.0
+(
+    defaultPrim = "Asset"
+    metersPerUnit = 1
+    upAxis = "Z"
+)
+
+def Xform "Asset"
+{
+    def Cube "board" (
+        prepend apiSchemas = ["PhysicsCollisionAPI", "PhysxCollisionAPI", "MaterialBindingAPI"]
+    )
+    {
+        rel material:binding:physics = </Asset/Grip>
+        float physxCollision:contactOffset = 0.0008
+        float physxCollision:restOffset = 0
+        color3f[] primvars:displayColor = [(0.043, 0.31, 0.33)]
+        double size = 1
+        float3 xformOp:scale = (0.132, 0.104, 0.0392)
+        double3 xformOp:translate = (0, 0.01, -0.0196)
+        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+    }
+
+    def Material "Grip" (
+        prepend apiSchemas = ["PhysicsMaterialAPI"]
+    )
+    {
+        float physics:dynamicFriction = 0.67
+        float physics:staticFriction = 0.85
+    }
+}
+

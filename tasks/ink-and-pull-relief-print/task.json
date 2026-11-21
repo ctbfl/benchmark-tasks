@@ -1,0 +1,21 @@
+{
+  "title": "Ink a relief block with a roller and pull a clear print without smearing",
+  "category": "Societal relatability",
+  "instruction": "Roll the brayer back and forth through the ink on the pale slab until it is evenly coated. Roll it over the raised design on the block and set it down. Lay the clean paper on the block and press it evenly. Lift it by its corner tab without dragging it sideways to pull a clear print.",
+  "context": "Pulling a clean relief print is a familiar school-art and card-making project. The brayer must distribute a thin film around its rotating sleeve and leave it on the raised cut. The paper needs pressure across the image and a steady lift to avoid an offset second impression.",
+  "setup": "Calibrated dual-arm YAM. A dry 76 mm brayer rests on a pale acrylic slab with a blue ink bead. A clean 96 × 66 mm block with a raised lighthouse sits at centre. A loose blank 124 × 102 mm sheet has a teal pull tab and rests on a side board. Layout and cut dimensions are in the README.",
+  "scoring": "A print-face touch on the loaded slab or inked roller, or an unverified contact window, bars print credit. Rigidly register the full visible proof at fixed scale. Score 1.0 at ≥90% coverage and ≤4% excess, or 0.65 at ≥65% and ≤18%, both with the sheet clear for 0.4 s. Score 0.4 at ≥45% and ≤18%. Score 0.2 for reaching ≥60% relief inking and 0 otherwise. Clear is ≥8 mm above or outside the relief. Count all ink outside the 2 mm template allowance as excess.",
+  "run_limit": "2,400 control steps at 20 Hz (120 seconds).",
+  "fidelity": "240 Hz CPU PhysX with stock YAM actuators, a passive roller, carved colliders and three sprung paper panels. Measured print-face contacts with the loaded slab or sleeve latch a print disqualification. Finite film transfer and actual slip change the visible image. Paper bending and ink flow are uncalibrated approximations.",
+  "reset_notes": "Fixed seed 0. Clean the brayer, block, slab and paper rest. Use fresh ink and a blank sheet. Physical reference reset uses 0.10 mL of washable relief ink and 120 g/m² paper. Start both arms at ready.",
+  "keywords": [
+    "printmaking",
+    "brayer",
+    "relief block",
+    "wet transfer",
+    "slip",
+    "paper"
+  ],
+  "media": "M-C2SGCY",
+  "scores": "Dream-1 run: 0.0; demo: 1.0"
+}
