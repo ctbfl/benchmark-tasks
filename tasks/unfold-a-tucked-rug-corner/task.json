@@ -1,0 +1,19 @@
+{
+  "title": "Unfold a tucked rug corner inside a taped boundary",
+  "category": "Societal relatability",
+  "keywords": [
+    "rug",
+    "underfold",
+    "deformable manipulation",
+    "placement boundary"
+  ],
+  "instruction": "Retrieve the rug corner tucked underneath and lay the whole rug flat, with every part inside the red tape frame.",
+  "context": "A small entry mat can trap one corner underneath during handling. Recover the hidden corner while preserving the mat's intended placement footprint.",
+  "setup": "Native bimanual YAM station; level tabletop at z=0.7475 m. One soft backed mat, 600 x 400 x 5 mm, centred at (0.45,0) m with its long side along x. The near-right corner is folded underneath along a diagonal 120 mm from both adjacent edges. Red paper tape (18 mm wide, 0.2 mm thick) marks a 640 x 440 mm inner rectangle: x=0.13-0.77 m, y=-0.22-0.22 m. No tools or weights.",
+  "scoring": "1.0: whole mat unfolded and flat, entirely inside or touching the tape's inner edge. 0.5: unfolded and flat, but any part outside. 0: not unfolded and flat, even if inside. Flat requires >=99% projected material area (>=0.2376 m2) and all surfaces -2 to +7 mm relative to the support. Evaluate current final state.",
+  "run_limit": "2,400 control steps (120 seconds at 20 Hz), including any final settling; reset settling is excluded.",
+  "reset_notes": "Restore the fixed layout and underfold, then allow five seconds to settle before the episode. Seed 0; no object jitter.",
+  "fidelity": "Passive native PhysX surface FEM with 5 mm collision thickness and flat rest shape; native YAM drives. Effective backing bending in a single shell approximates a soft backed mat; pile and backing are not separate physical layers and material parameters are not experimentally calibrated. Display meshes follow measured nodes. No grasp attachments or state-triggered unfolding.",
+  "scores": "Dream-1: 0.0 at 2,400 control steps (120.0 s); scripted demo: 1.0 at 500 control steps (25.0 s).",
+  "media": "M-FPXUSZ"
+}

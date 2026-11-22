@@ -1,0 +1,14 @@
+{
+  "isaacsim": "6.1.0.0",
+  "isaaclab": "17.0.2",
+  "isaaclab-arena": "0.3.0",
+  "inspect-robots": "0.60.0",
+  "inspect-robots-dream": "0.1.0",
+  "dreamlabs-client": "1.0.14",
+  "numpy": "2.3.1",
+  "scipy": "1.17.0",
+  "Pillow": "12.3.0",
+  "imageio-ffmpeg": "0.6.0",
+  "isaaclab_arena_commit": "c7edf3a9d5d8276565208f72422f8f8a0806d6cf",
+  "yam_arena_commit": "bd62771e60320433893bd1d2df0fc79b5ddcd6d1"
+}
