@@ -1,0 +1,13 @@
+{
+  "title": "Classify an intact egg as raw or hard-boiled and sort it",
+  "category": "Societal relatability",
+  "instruction": "Determine whether the egg is raw or hard-boiled by spinning it and stopping it abruptly. Place it in the correctly labeled basket.",
+  "context": "Raw and hard-boiled eggs can look alike after cooling. Classifying an intact egg helps a cook sort it without breaking the shell.",
+  "setup": "Calibrated dual YAM station with one intact chicken egg resting on its side with its long axis across the station on a dry 280 × 310 mm polished glass board. Two 246 × 174 mm baskets marked Raw and Hard-boiled sit on either side.",
+  "reset_notes": "Randomly choose a raw or hard-boiled egg from the same carton. Use a dry shell at room temperature. Vary the starting position and yaw and keep the class private.",
+  "scoring": "0.4 for >=1 full tabletop revolution; +0.3 for robot arrest from >=2 rev/s to <=0.5 rad/s within 0.30 s. Final +0.3 requires complete release within 0.5 s after arrest, >=0.25 s contact-free on the board, then released placement fully inside the correct basket. No full turn: 0; turn without qualifying arrest: 0.4; qualifying spin/arrest without release protocol or correct placement: 0.7. Any shell crack or leakage zeros the entire trial.",
+  "run_limit": "2,400 control steps at 20 Hz (120 seconds).",
+  "fidelity": "Matched rigid shells, mass and friction. Raw contents use full rigid inertia below 2 rev/s, then a passive rotor with 20/80 shell/internal inertia and 30 ms slip relaxation. No resolved fluid flow or measured tabletop calibration. Native YAM drives. No simulated fracture: shell_broken is false by construction; real cracks/leaks supply the scorer's whole-trial zero event. Overload telemetry is diagnostic only.",
+  "scores": "Dream-1: 0.0 (2,400 steps); scripted demo: 1.0 (377 steps, raw egg). Additional hard-boiled demo: 1.0 (375 steps).",
+  "media": "M-VSGF7E"
+}
